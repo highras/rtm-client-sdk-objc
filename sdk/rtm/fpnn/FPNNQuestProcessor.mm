@@ -96,7 +96,7 @@ thread_local FPQuestProcessorDelegate* tl_processor;
         else
         {
             if (quest->isTwoWay())
-                answer = [FPNNAnswer answerWithErrorCode:fpnn::FPNN_EC_CORE_DECODING andDescription:@"Convert quest payload to Objective-C failed." withRaiser:@"FPNN Objective-C SDK (Base on C++)"];
+                answer = [FPNNAnswer answerWithErrorCode:fpnn::FPNN_EC_CORE_DECODING andDescription:@"Convert quest payload to Objective-C failed."];
         }
     }
     else
@@ -174,15 +174,6 @@ thread_local FPQuestProcessorDelegate* tl_processor;
     FPNNAsyncAnswer* async = [self genAsyncAnswer];
     if (async)
         return [async sendErrorAnswerWithErrorCode:errorCode andDescription:message];
-    else
-        return NO;
-}
-
-- (BOOL)sendErrorAnswerWithErrorCode:(int)errorCode andDescription:(NSString*)message withRaiser:(NSString*)raiser
-{
-    FPNNAsyncAnswer* async = [self genAsyncAnswer];
-    if (async)
-        return [async sendErrorAnswerWithErrorCode:errorCode andDescription:message withRaiser:raiser];
     else
         return NO;
 }

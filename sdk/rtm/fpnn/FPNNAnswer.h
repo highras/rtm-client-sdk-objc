@@ -23,13 +23,11 @@
 
 + (instancetype)answerWithErrorCode:(int)errorCode;
 + (instancetype)answerWithErrorCode:(int)errorCode andDescription:(NSString*)message;
-+ (instancetype)answerWithErrorCode:(int)errorCode andDescription:(NSString*)message withRaiser:(NSString*)raiser;
 
 - (instancetype)initEmptyAnswer;
 - (instancetype)initWithPayload:(NSDictionary*)payload;
 
 - (instancetype)initWithErrorCode:(int)errorCode;
 - (instancetype)initWithErrorCode:(int)errorCode andDescription:(NSString*)message;
-- (instancetype)initWithErrorCode:(int)errorCode andDescription:(NSString*)message withRaiser:(NSString*)raiser;
 
 @end

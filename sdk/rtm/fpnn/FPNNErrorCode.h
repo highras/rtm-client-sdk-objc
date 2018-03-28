@@ -1,9 +1,9 @@
 //
 //  FPNNErrorCode.h
-//  rtm
+//  fpnn
 //
 //  Created by 施王兴 on 2018/1/12.
-//  Copyright © 2018年 施王兴. All rights reserved.
+//  Copyright © 2018年 FunPlus. All rights reserved.
 //
 
 #ifndef FPNNErrorCode_h

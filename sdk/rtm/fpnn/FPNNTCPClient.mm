@@ -178,7 +178,7 @@
     fpnn::FPQuestPtr quest = [self buildCppQuest:method withPayload:params];
     if (quest == nullptr)
     {
-        return [FPNNAnswer answerWithErrorCode:fpnn::FPNN_EC_CORE_ENCODING andDescription:@"Convert quest params to msgPack failed." withRaiser:@"FPNN Objective-C SDK (Base on C++)"];
+        return [FPNNAnswer answerWithErrorCode:fpnn::FPNN_EC_CORE_ENCODING andDescription:@"Convert quest params to msgPack failed."];
     }
     
     fpnn::FPAnswerPtr answer = _client->sendQuest(quest, timeout);

@@ -52,17 +52,6 @@
     }
     return self;
 }
-- (instancetype)initWithErrorCode:(int)errorCode andDescription:(NSString*)message withRaiser:(NSString*)raiser
-{
-    NSMutableDictionary* payload = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:errorCode], @"code", message, @"ex", raiser, @"raiser", nil];
-                                    
-    self = [super initWithPayload:payload];
-    if (self)
-    {
-        _errorAnswer = YES;
-    }
-    return self;
-}
 
 + (instancetype)emptyAnswer
 {
@@ -82,11 +71,6 @@
 + (instancetype)answerWithErrorCode:(int)errorCode andDescription:(NSString*)message
 {
     return [[FPNNAnswer alloc] initWithErrorCode:errorCode andDescription:message];
-}
-
-+ (instancetype)answerWithErrorCode:(int)errorCode andDescription:(NSString*)message withRaiser:(NSString*)raiser
-{
-    return [[FPNNAnswer alloc] initWithErrorCode:errorCode andDescription:message withRaiser:raiser];
 }
 
 @end

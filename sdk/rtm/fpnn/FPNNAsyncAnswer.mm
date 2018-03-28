@@ -72,18 +72,4 @@
         return _asyncAnswer->sendErrorAnswer(errorCode, NULL, NULL);
 }
 
-- (BOOL)sendErrorAnswerWithErrorCode:(int)errorCode andDescription:(NSString*)message withRaiser:(NSString*)raiser
-{
-    char *ex = NULL;
-    char *rs = NULL;
-    
-    if (message)
-        ex = (char*)[message UTF8String];
-    
-    if (raiser)
-        rs = (char*)[raiser UTF8String];
-    
-    return _asyncAnswer->sendErrorAnswer(errorCode, ex, rs);
-}
-
 @end

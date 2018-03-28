@@ -18,6 +18,5 @@
 - (BOOL)sendAnswerWithPayload:(NSDictionary*)payload;
 - (BOOL)sendErrorAnswerWithErrorCode:(int)errorCode;
 - (BOOL)sendErrorAnswerWithErrorCode:(int)errorCode andDescription:(NSString*)message;
-- (BOOL)sendErrorAnswerWithErrorCode:(int)errorCode andDescription:(NSString*)message withRaiser:(NSString*)raiser;
 
 @end

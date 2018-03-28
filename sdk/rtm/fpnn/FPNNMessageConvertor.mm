@@ -47,9 +47,8 @@
         fpnn::FPAReader ar(cppAnswer);
         int code = (int)ar.getInt("code", fpnn::FPNN_EC_CORE_UNKNOWN_ERROR);
         std::string ex = ar.getString("ex");
-        std::string raiser = ar.getString("raiser");
         
-        return [FPNNAnswer answerWithErrorCode:code andDescription:[NSString stringWithUTF8String:ex.c_str()] withRaiser:[NSString stringWithUTF8String:raiser.c_str()]];
+        return [FPNNAnswer answerWithErrorCode:code andDescription:[NSString stringWithUTF8String:ex.c_str()]];
     }
     
     const std::string& cppPayload = cppAnswer->payload();
@@ -66,10 +65,10 @@
     
     std::size_t off = 0;
     if (msgpack::parse(cppPayload.c_str(), cppPayload.length(), off, msgVisitor) == false)
-        return [FPNNAnswer answerWithErrorCode:fpnn::FPNN_EC_CORE_DECODING andDescription:@"Convert answer payload to Objective-C failed. Visitor error." withRaiser:@"FPNN Objective-C SDK (Base on C++)"];
+        return [FPNNAnswer answerWithErrorCode:fpnn::FPNN_EC_CORE_DECODING andDescription:@"Convert answer payload to Objective-C failed. Visitor error."];
     
     if (!ocBuilder.buildFinish)
-        return [FPNNAnswer answerWithErrorCode:fpnn::FPNN_EC_CORE_DECODING andDescription:@"Convert answer payload to Objective-C failed. Uncompleted data." withRaiser:@"FPNN Objective-C SDK (Base on C++)"];
+        return [FPNNAnswer answerWithErrorCode:fpnn::FPNN_EC_CORE_DECODING andDescription:@"Convert answer payload to Objective-C failed. Uncompleted data."];
     
     return [FPNNAnswer answerWithPayload:ocBuilder.payload];
 }
