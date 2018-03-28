@@ -46,17 +46,6 @@
     }
 }
 
-- (FPNNAnswer*)bye:(NSDictionary*)params
-{
-    if (_eventHandler)
-        [_eventHandler bye];
-    
-    if (_rtmClient)
-        [_rtmClient internalClose];
-        
-    return nil;
-}
-
 - (FPNNAnswer*)kickout:(NSDictionary*)params
 {
     if (_eventHandler)
@@ -65,6 +54,17 @@
     if (_rtmClient)
         [_rtmClient internalClose];
     
+    return nil;
+}
+
+- (FPNNAnswer*)kickoutroom:(NSDictionary*)params
+{
+    [self sendEmptyAnswer];
+    if (_eventHandler)
+    {
+        NSNumber* roomId = (NSNumber*)[params objectForKey:@"rid"];
+        [_eventHandler roomKickout:roomId.longLongValue];
+    }
     return nil;
 }
 
@@ -264,6 +264,11 @@
         [_eventHandler unreadMessageStatus:unreadP2PUids uidOfUnreadGroupMessages:unreadGroupGids haveUnreadBroadcastMessages:haveBroadcastMessage.boolValue];
     }
     return nil;
+}
+
+- (FPNNAnswer*)ping:(NSDictionary*)params
+{
+    return [FPNNAnswer emptyAnswer];
 }
 
 @end

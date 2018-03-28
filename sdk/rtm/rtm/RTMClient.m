@@ -189,7 +189,6 @@
 
 - (void)defaultInit
 {
-    _clientId = 0;
     _questTimeout = 0;
     _status = RTM_Closed;
     _eventHandler = nil;
@@ -305,11 +304,6 @@
 {
     //[_authInfo reset];
     _authInfo.autoAuth = NO;
-}
-
-+ (void)setPingInterval:(int)intervalInSeconds
-{
-    [RTMResourceCenter instance].pingInterval = intervalInSeconds;
 }
 
 //-----------[ Encryption Configure Functions ]----------------//
@@ -505,8 +499,6 @@
     if([_eventHandler respondsToSelector:@selector(auth:)])
         [_eventHandler auth:YES];
     
-    [RTMResourceCenter registerRTMClient:self];
-    
     NSMutableArray* failedQuestCache;
     @synchronized(self)
     {
@@ -663,7 +655,7 @@
     if (status)
         return [callback getAnswer];
     else
-        return [[FPNNAnswer alloc] initWithErrorCode:FPNN_EC_CORE_SEND_ERROR andDescription:@"Unknown sending error." withRaiser:@"Objective-C SDK"];
+        return [[FPNNAnswer alloc] initWithErrorCode:FPNN_EC_CORE_SEND_ERROR andDescription:@"Unknown sending error."];
 }
 
 - (BOOL)sendQuest:(FPNNQuest*)quest withCallbackBlock:(void(^)(int errorCode, NSDictionary* payload))block timeout:(int)timeout
@@ -718,37 +710,6 @@
 }
 
 //============================[ RTM Gated Functions ]============================//
-
-//-----------------[ ping ]-----------------//
-- (BOOL)ping:(int)timeout
-{
-    FPNNQuest* quest = [FPNNQuest quest:@"ping"];
-    FPNNAnswer* answer = [self sendQuest:quest withTimeout:timeout];
-    return !answer.errorAnswer;
-}
-
-- (BOOL)ping
-{
-    return [self ping:_questTimeout];
-}
-
-- (BOOL)pingWithCallbackBlock:(void(^)(BOOL done, int errorCode, NSString* errorMessage))block timeout:(int)timeout
-{
-    FPNNQuest* quest = [FPNNQuest quest:@"ping"];
-    return [self sendQuest:quest withCallbackBlock:^(int errorCode, NSDictionary* payload){
-        NSString* errorMessage = nil;
-        if (payload)
-            errorMessage = [payload objectForKey:@"ex"];
-        
-        block(errorCode == FPNN_EC_OK, errorCode, errorMessage);
-    } timeout:timeout];
-}
-
-- (BOOL)pingWithCallbackBlock:(void(^)(BOOL done, int errorCode, NSString* errorMessage))block
-{
-    return [self pingWithCallbackBlock:block timeout:_questTimeout];
-}
-
 //-----------------[ bye ]-----------------//
 - (BOOL)bye:(int)timeout
 {
@@ -800,8 +761,6 @@
 
 - (void)internalConnetionWillCloseEvent:(int64_t)connectionId closedByError:(BOOL)closedByError
 {
-    [RTMResourceCenter unregisterRTMClient:self];
-    
     NSMutableArray* questCache = nil;
     
     @synchronized(self)

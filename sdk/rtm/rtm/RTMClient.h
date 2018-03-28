@@ -24,7 +24,6 @@ enum RTMClientStatus
 
 @interface RTMClient : NSObject
 
-@property (nonatomic) int64_t clientId;     //-- Using in SDK internal. Cannot be modified out of SDK.
 @property (nonatomic) int questTimeout;     //-- In seconds
 @property (readonly, nonatomic) enum RTMClientStatus status;
 @property (strong, nonatomic) id<RTMEventHandlerDelegate> eventHandler;
@@ -52,8 +51,6 @@ enum RTMClientStatus
 
 - (void)disableAutoAuth;
 
-+ (void)setPingInterval:(int)intervalInSeconds;
-
 //-----------[ Encryption Configure Functions ]----------------//
 
 - (void)enableEncryptorWithCurve:(NSString*)curve serverPublicKey:(NSData*)publicKey packageMode:(BOOL)packageMode withReinforce:(BOOL)reinforce;
@@ -80,12 +77,6 @@ enum RTMClientStatus
 - (BOOL)sendQuest:(FPNNQuest*)quest withCallbackBlock:(void(^)(int errorCode, NSDictionary* payload))block timeout:(int)timeout;
 
 //============================[ RTM Gated Functions ]============================//
-//-----------------[ ping ]-----------------//
-- (BOOL)ping:(int)timeout;
-- (BOOL)ping;
-- (BOOL)pingWithCallbackBlock:(void(^)(BOOL done, int errorCode, NSString* errorMessage))block timeout:(int)timeout;
-- (BOOL)pingWithCallbackBlock:(void(^)(BOOL done, int errorCode, NSString* errorMessage))block;
-
 //-----------------[ bye ]-----------------//
 - (BOOL)bye:(int)timeout;
 - (BOOL)bye;

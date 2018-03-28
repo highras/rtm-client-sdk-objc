@@ -21,8 +21,8 @@
 
 - (void)connectionWillClose:(BOOL)closeByError;
 
-- (FPNNAnswer*)bye:(NSDictionary*)params;
 - (FPNNAnswer*)kickout:(NSDictionary*)params;
+- (FPNNAnswer*)kickoutroom:(NSDictionary*)params;
 
 - (FPNNAnswer*)pushmsg:(NSDictionary*)params;
 - (FPNNAnswer*)pushgroupmsg:(NSDictionary*)params;
@@ -35,5 +35,7 @@
 - (FPNNAnswer*)transbroadcastmsg:(NSDictionary*)params;
 
 - (FPNNAnswer*)pushunread:(NSDictionary*)params;
+
+- (FPNNAnswer*)ping:(NSDictionary*)params;
  
 @end

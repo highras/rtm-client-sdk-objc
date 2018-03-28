@@ -13,13 +13,8 @@
 
 @interface RTMResourceCenter : NSObject
 
-@property (nonatomic) int pingInterval;     //-- in seconds
-
 + (instancetype)instance;
 
 + (FPNNTCPClient*)getFileClientWithEndpoint:(NSString*)endpoint questTimeout:(int)questTimeout;
-
-+ (void)registerRTMClient:(RTMClient*)client;
-+ (void)unregisterRTMClient:(RTMClient*)client;
 
 @end

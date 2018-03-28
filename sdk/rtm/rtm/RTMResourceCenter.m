@@ -10,7 +10,6 @@
 #import "RTMResourceCenter.h"
 
 static const int fileGateKeptSeconds = 10 * 60;
-static const int defaultPingIntervalSeconds = 20;
 static RTMResourceCenter* _center = nil;
 
 //==========================================//
@@ -84,9 +83,7 @@ static RTMResourceCenter* _center = nil;
 
 @implementation RTMResourceCenter
 {
-    int64_t _clientIdBase;
     NSMutableDictionary<NSString *, FileGateInfo*>* _fileGateCache;
-    NSMutableDictionary<NSNumber *, RTMClientInfo*>* _rtmClients;
     NSTimer* _timer;
 }
 
@@ -95,10 +92,7 @@ static RTMResourceCenter* _center = nil;
     self = [super init];
     if (self)
     {
-        _pingInterval = defaultPingIntervalSeconds;
-        _clientIdBase = [NSDate date].timeIntervalSince1970;
         _fileGateCache = [NSMutableDictionary<NSString *, FileGateInfo*> dictionary];
-        _rtmClients = [NSMutableDictionary<NSNumber *, RTMClientInfo*> dictionary];
         
         _timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(routine) userInfo:nil repeats:YES];
     }
@@ -175,70 +169,6 @@ static RTMResourceCenter* _center = nil;
     }
 }
 
-- (void)registerRTMClient:(RTMClient*)client
-{
-    NSNumber *clientId = [NSNumber numberWithLongLong:client.clientId];
-    
-    @synchronized(self)
-    {
-        RTMClientInfo* info = [_rtmClients objectForKey:clientId];
-        if (!info)
-        {
-            int64_t newClientId = _clientIdBase++;
-            client.clientId = newClientId;
-            clientId = [NSNumber numberWithLongLong:newClientId];
-            
-            info = [[RTMClientInfo alloc] initWithRTMClient:client];
-            info.refCount = 1;
-            [_rtmClients setObject:info forKey:clientId];
-        }
-        else
-            info.refCount += 1;
-    }
-}
-
-- (void)unregisterRTMClient:(RTMClient*)client
-{
-    NSNumber *clientId = [NSNumber numberWithLongLong:client.clientId];
-    
-    @synchronized(self)
-    {
-        RTMClientInfo* info = [_rtmClients objectForKey:clientId];
-        if (info)
-        {
-            if (info.refCount == 1)
-                [_rtmClients removeObjectForKey:clientId];
-            else
-                info.refCount -= 1;
-        }
-    }
-}
-
-+ (void)registerRTMClient:(RTMClient*)client
-{
-    return [[RTMResourceCenter instance] registerRTMClient:client];
-}
-
-+ (void)unregisterRTMClient:(RTMClient*)client
-{
-    return [[RTMResourceCenter instance] unregisterRTMClient:client];
-}
-
-//-- need in @synchronized(self) block
-- (void)RTMClientPing
-{
-    int64_t curr = [NSDate date].timeIntervalSince1970;
-    int64_t threshold = curr - _pingInterval;
-    for (NSNumber* clietId in _rtmClients) {
-        RTMClientInfo *info = [_rtmClients objectForKey:clietId];
-        if (info.lastPingTime <= threshold)
-        {
-            [info.client pingWithCallbackBlock:^(BOOL done, int errorCode, NSString* errorMessage){}];
-            info.lastPingTime = curr;
-        }
-    }
-}
-
 - (void)routine
 {
     /*
@@ -247,7 +177,6 @@ static RTMResourceCenter* _center = nil;
     
     @synchronized(self)
     {
-        [self RTMClientPing];
         [self cleanFileGate];
     }
 }

@@ -12,8 +12,8 @@
 
 @required
 
-- (void)bye;
 - (void)kickout;
+- (void)roomKickout:(int64_t)roomId;
 
 - (void)recvP2PMessage:(int64_t)fromUid mType:(int8_t)mType fType:(int8_t)fType mid:(int64_t)mid message:(NSString*)message attrs:(NSString*)attrs;
 - (void)recvGroupMessage:(int64_t)groupId fromUid:(int64_t)fromUid mType:(int8_t)mType fType:(int8_t)fType mid:(int64_t)mid message:(NSString*)message attrs:(NSString*)attrs;
