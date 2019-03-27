@@ -1,0 +1,9 @@
+{
+  "commitish" : "1.4.5",
+  "iOS" : [
+    {
+      "name" : "MPMessagePack",
+      "hash" : "0d1a6f989e7731eea92358b836816ec9e6a99e8872c3b0a34edb2177d90fb807"
+    }
+  ]
+}
