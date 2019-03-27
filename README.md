@@ -1,1 +1,1 @@
-# rtm-client-sdk-objective-c
+# rtm-client-sdk-objc
