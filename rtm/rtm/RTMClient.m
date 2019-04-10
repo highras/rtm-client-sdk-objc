@@ -38,11 +38,21 @@
             
             count = 0;
         }
-        
-        NSString * countStr = [NSString stringWithFormat:@"%ld", (long)count];
-        NSInteger timestamp = [[NSDate dateWithTimeIntervalSinceNow:0] timeIntervalSince1970] * 1000;
 
-        return [[[NSString stringWithFormat:@"%ld", (long)timestamp] stringByAppendingString:countStr] integerValue];
+        NSString * strFix = [NSString stringWithFormat:@"%ld", (long)count];
+        
+        if (count < 100) {
+            
+            strFix = [@"0" stringByAppendingString:strFix];
+        }
+        
+        if (count < 10) {
+            
+            strFix = [@"0" stringByAppendingString:strFix];
+        }
+
+        NSInteger timestamp = [[NSDate dateWithTimeIntervalSinceNow:0] timeIntervalSince1970] * 1000;
+        return [[[NSString stringWithFormat:@"%ld", (long)timestamp] stringByAppendingString:strFix] integerValue];
     }
 }
 
