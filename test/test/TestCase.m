@@ -34,7 +34,7 @@
 
 - (void) beginTest {
     
-    _client = [[RTMClient alloc] initWithDispatch:@"52.83.245.22:13325" andPid:1000012 andUid:654321 andToken:@"E397902F2C03C4216D115A488E2F687C" andVersion:@"" andAttrs:@{} andReconnect:YES andTimeout:20 * 1000 andStartTimerThread:YES];
+    _client = [[RTMClient alloc] initWithDispatch:@"52.83.245.22:13325" andPid:1000012 andUid:654321 andToken:@"C797FB2911C73A3D1659258C2C23576D" andVersion:@"" andAttrs:@{} andReconnect:YES andTimeout:20 * 1000 andStartTimerThread:YES];
     
     EventBlock listener = ^(EventData * event) {
         

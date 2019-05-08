@@ -21,10 +21,10 @@
     // Do any additional setup after loading the view, typically from a nib.
    
     // case 1
-//    [self baseTest];
+    [self baseTest];
     
     // case 2
-    [self asyncStressTest];
+//    [self asyncStressTest];
 }
 
 - (void) baseTest {
