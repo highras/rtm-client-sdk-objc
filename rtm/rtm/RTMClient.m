@@ -1607,27 +1607,24 @@
     _baseClient = [[BaseClient alloc] init];
     
     [self.baseClient initWithEndpoint:self.endpoint andReconnect:NO andTimeout:timeout andStartTimerThread:self.startTimerThread];
-    
-    EventBlock listener = ^(EventData * event) {
+
+    [self.baseClient.event addType:@"connect" andListener:^(EventData * event) {
         
-        if ([event.type isEqualToString:@"connect"]) {
-            
-            [self authWithTimeout:timeout];
-        } else if ([event.type isEqualToString:@"close"]) {
-            
-            [self.event fireEvent:[[EventData alloc] initWithType:@"close" andRetry:!self.isClose && self.reconnect]];
-            
-            self.endpoint = nil;
-            [self reConnect];
-        } else if ([event.type isEqualToString:@"error"]) {
-            
-            [self.event fireEvent:[[EventData alloc] initWithType:@"error" andError:event.error]];
-        }
-    };
+        [self authWithTimeout:timeout];
+    }];
     
-    [self.baseClient.event addType:@"connect" andListener:listener];
-    [self.baseClient.event addType:@"close" andListener:listener];
-    [self.baseClient.event addType:@"error" andListener:listener];
+    [self.baseClient.event addType:@"close" andListener:^(EventData * event) {
+        
+        [self.event fireEvent:[[EventData alloc] initWithType:@"close" andRetry:!self.isClose && self.reconnect]];
+        
+        self.endpoint = nil;
+        [self reConnect];
+    }];
+    
+    [self.baseClient.event addType:@"error" andListener:^(EventData * event) {
+        
+        [self.event fireEvent:[[EventData alloc] initWithType:@"error" andError:event.error]];
+    }];
     
     self.baseClient.psr.processor = self.processor;
     [self.baseClient connect];
@@ -1709,26 +1706,23 @@
     _baseClient = [[BaseClient alloc] init];
     
     [self.baseClient initWithEndpoint:self.endpoint andReconnect:NO andTimeout:timeout andStartTimerThread:self.startTimerThread];
-    
-    EventBlock listener = ^(EventData * event) {
+
+    [self.baseClient.event addType:@"connect" andListener:^(EventData * event) {
         
-        if ([event.type isEqualToString:@"connect"]) {
-            
-            [self.event fireEvent:[[EventData alloc] initWithType:@"connect"]];
-        } else if ([event.type isEqualToString:@"close"]) {
-            
-            [self.event fireEvent:[[EventData alloc] initWithType:@"close" andRetry:!self.isClose && self.reconnect]];
-            [self.baseClient.event removeAll];
-            [self reConnect];
-        } else if ([event.type isEqualToString:@"error"]) {
-            
-            [self.event fireEvent:[[EventData alloc] initWithType:@"error" andError:event.error]];
-        }
-    };
+        [self.event fireEvent:[[EventData alloc] initWithType:@"connect"]];
+    }];
     
-    [self.baseClient.event addType:@"connect" andListener:listener];
-    [self.baseClient.event addType:@"close" andListener:listener];
-    [self.baseClient.event addType:@"error" andListener:listener];
+    [self.baseClient.event addType:@"close" andListener:^(EventData * event) {
+        
+        [self.event fireEvent:[[EventData alloc] initWithType:@"close" andRetry:!self.isClose && self.reconnect]];
+        [self.baseClient.event removeAll];
+        [self reConnect];
+    }];
+    
+    [self.baseClient.event addType:@"error" andListener:^(EventData * event) {
+        
+        [self.event fireEvent:[[EventData alloc] initWithType:@"error" andError:event.error]];
+    }];
     
     self.baseClient.psr.processor = self.processor;
     [self.baseClient connect];
@@ -1871,20 +1865,16 @@
 - (void) initWithEndpoint:(NSString *)endpoint andTimeout:(NSInteger)timeout andStartTimerThread:(BOOL)startTimerThread {
     
     [super initWithEndpoint:endpoint andReconnect:NO andTimeout:timeout andStartTimerThread:startTimerThread];
-    
-    EventBlock listener = ^(EventData * event) {
+
+    [self.event addType:@"connect" andListener:^(EventData * event) {
         
-        if ([event.type isEqualToString:@"connect"]) {
-            
-            [self onConnect_DispatchClient];
-        } else if ([event.type isEqualToString:@"error"]) {
-            
-            [self onError_DispatchClient:event.error];
-        }
-    };
+        [self onConnect_DispatchClient];
+    }];
     
-    [self.event addType:@"connect" andListener:listener];
-    [self.event addType:@"error" andListener:listener];
+    [self.event addType:@"error" andListener:^(EventData * event) {
+        
+        [self onError_DispatchClient:event.error];
+    }];
 }
 
 - (void) whichWithPayload:(NSDictionary *)payload andTimeout:(NSInteger)timeout andBlock:(CallbackBlock)callback {
@@ -1937,24 +1927,21 @@
 - (void) initWithEndpoint:(NSString *)endpoint andTimeout:(NSInteger)timeout andStartTimerThread:(BOOL)startTimerThread {
     
     [super initWithEndpoint:endpoint andReconnect:NO andTimeout:timeout andStartTimerThread:startTimerThread];
-    
-    EventBlock listener = ^(EventData * event) {
+
+    [self.event addType:@"connect" andListener:^(EventData * event) {
         
-        if ([event.type isEqualToString:@"connect"]) {
-            
-            [self onConnect_FileClient];
-        } else if ([event.type isEqualToString:@"close"]) {
-            
-            [self onClose_FileClient];
-        } else if ([event.type isEqualToString:@"error"]) {
-            
-            [self onError_FileClient:event.error];
-        }
-    };
+        [self onConnect_FileClient];
+    }];
     
-    [self.event addType:@"connect" andListener:listener];
-    [self.event addType:@"close" andListener:listener];
-    [self.event addType:@"error" andListener:listener];
+    [self.event addType:@"close" andListener:^(EventData * event) {
+        
+        [self onClose_FileClient];
+    }];
+    
+    [self.event addType:@"error" andListener:^(EventData * event) {
+        
+        [self onError_FileClient:event.error];
+    }];
 }
 
 - (void) sendWithMethod:(NSString *)method andFileData:(NSData *)file andToken:(NSString *)token andPayload:(NSDictionary *)payload andTimeout:(NSInteger)timeout andBlock:(CallbackBlock)callback {

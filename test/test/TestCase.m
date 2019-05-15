@@ -36,29 +36,26 @@
     
     _client = [[RTMClient alloc] initWithDispatch:@"52.83.245.22:13325" andPid:1000012 andUid:654321 andToken:@"E2D12386286BCBD93C1684E96A984331" andVersion:@"" andAttrs:@{} andReconnect:YES andTimeout:20 * 1000 andStartTimerThread:YES];
     
-    EventBlock listener = ^(EventData * event) {
+    [self.client.event addType:@"login" andListener:^(EventData * event) {
         
-        if ([event.type isEqualToString:@"login"]) {
-            
-            if (event.error != nil) {
-                
-                [self onError:event.error];
-                return;
-            }
-            
-            [self onLogin:event.payload];
-        } else if ([event.type isEqualToString:@"close"]) {
-            
-            [self onClose:event.retry];
-        } else if ([event.type isEqualToString:@"error"]) {
+        if (event.error != nil) {
             
             [self onError:event.error];
+            return;
         }
-    };
+        
+        [self onLogin:event.payload];
+    }];
     
-    [self.client.event addType:@"login" andListener:listener];
-    [self.client.event addType:@"close" andListener:listener];
-    [self.client.event addType:@"error" andListener:listener];
+    [self.client.event addType:@"close" andListener:^(EventData * event) {
+        
+        [self onClose:event.retry];
+    }];
+    
+    [self.client.event addType:@"error" andListener:^(EventData * event) {
+        
+        [self onError:event.error];
+    }];
     
     [self.client.processor.event addType:RTMConfig.SERVER_PUSH_recvPing andListener:^(EventData *event) {
         
