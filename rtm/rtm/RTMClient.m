@@ -93,7 +93,7 @@
     
     if (self.baseClient != nil) {
         
-        [self.baseClient sendQuest:data andBlock:[self.baseClient questWithBlock:callback]];
+        [self.baseClient sendQuest:data andBlock:callback];
     }
 }
 
@@ -101,7 +101,7 @@
     
     if (self.baseClient != nil) {
         
-        [self.baseClient sendQuest:data andBlock:[self.baseClient questWithBlock:callback] andTimeout:timeout];
+        [self.baseClient sendQuest:data andBlock:callback andTimeout:timeout];
     }
 }
 
@@ -157,7 +157,7 @@
     
     NSDictionary * payload = @{ @"pid": @(self.pid), @"uid": @(self.uid), @"what": @"rtmGated", @"addrType": self.ipv6 ? @"ipv6" : @"ipv4", @"version": self.version };
 
-    [self.dispatchClient whichWithPayload:payload andTimeout:self.timeout andBlock:[self.dispatchClient questWithBlock:^(CallbackData *cbd) {
+    [self.dispatchClient whichWithPayload:payload andTimeout:self.timeout andBlock:^(CallbackData *cbd) {
         
         NSError * err = (NSError *)cbd.error;
         NSDictionary * dict = (NSDictionary *)cbd.payload;
@@ -172,7 +172,7 @@
             
             [self.event fireEvent:[[EventData alloc] initWithType:@"error" andError:err]];
         }
-    }]];
+    }];
 }
 
 /*
@@ -1749,25 +1749,14 @@
     }
 }
 
-- (void)enableConnect {
+- (void) sendQuestWithData:(FPData *)data andBlock:(CallbackBlock)callback {
     
-    [self connect];
+    [super sendQuest:data andBlock:[self questWithBlock:callback]];
 }
 
-- (CallbackBlock) questWithBlock:(CallbackBlock)callback {
+- (void) sendQuestWithData:(FPData *)data andBlock:(CallbackBlock)callback andTimeout:(NSInteger)timeout {
     
-    CallbackBlock block = ^(CallbackData *cbd) {
-        
-        if (callback == nil) {
-            
-            return;
-        }
-        
-        [self checkWithData:cbd];
-        callback(cbd);
-    };
-    
-    return block;
+    [super sendQuest:data andBlock:[self questWithBlock:callback] andTimeout:timeout];
 }
 
 - (NSString *) md5WithData:(NSData *)data {
@@ -1820,6 +1809,22 @@
 /*
  *  Private Method
  */
+- (CallbackBlock) questWithBlock:(CallbackBlock)callback {
+    
+    CallbackBlock block = ^(CallbackData *cbd) {
+        
+        if (callback == nil) {
+            
+            return;
+        }
+        
+        [self checkWithData:cbd];
+        callback(cbd);
+    };
+    
+    return block;
+}
+
 - (void) checkWithData:(CallbackData *)cbd{
     
     NSError * error = nil;
@@ -1902,7 +1907,7 @@
     
     buffer.msgpack = data;
 
-    [self sendQuest:buffer andBlock:[self questWithBlock:callback] andTimeout:timeout];
+    [self sendQuest:buffer andBlock:callback andTimeout:timeout];
 }
 
 /*
@@ -1992,7 +1997,7 @@
     
     NSInteger mid = [[payload objectForKey:@"mid"] integerValue];
     
-    [self sendQuest:buffer andBlock:[self questWithBlock:^(CallbackData *cbd) {
+    [self sendQuest:buffer andBlock:^(CallbackData *cbd) {
         
         cbd.mid = mid;
         
@@ -2002,7 +2007,7 @@
             
             callback(cbd);
         }
-    }] andTimeout:timeout];
+    } andTimeout:timeout];
 }
 
 /*

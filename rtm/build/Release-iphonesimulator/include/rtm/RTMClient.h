@@ -55,6 +55,7 @@ static NSInteger count = 0;
 
 - (void) sendQuestWithData:(FPData *)data andBlock:(CallbackBlock)callback;
 - (void) sendQuestWithData:(FPData *)data andBlock:(CallbackBlock)callback andTimeout:(NSInteger)timeout;
+
 - (void) destroy;
 
 /*
@@ -825,9 +826,9 @@ static NSInteger count = 0;
 @interface BaseClient : FPClient
 
 - (void) initWithEndpoint:(NSString *)endpoint andReconnect:(BOOL)reconnect andTimeout:(NSInteger)timeout andStartTimerThread:(BOOL)startTimerThread;
-- (void) enableConnect;
 
-- (CallbackBlock) questWithBlock:(CallbackBlock)callback;
+- (void) sendQuestWithData:(FPData *)data andBlock:(CallbackBlock)callback;
+- (void) sendQuestWithData:(FPData *)data andBlock:(CallbackBlock)callback andTimeout:(NSInteger)timeout;
 
 - (BOOL) isBlankString:(NSString *)str;
 - (NSString *) md5WithData:(NSData *)data;
