@@ -1825,6 +1825,9 @@
     return block;
 }
 
+/*
+ *  Private Method
+ */
 - (void) checkWithData:(CallbackData *)cbd{
     
     NSError * error = nil;
