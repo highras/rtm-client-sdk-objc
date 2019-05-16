@@ -36,30 +36,30 @@
     
     _client = [[RTMClient alloc] initWithDispatch:@"52.83.245.22:13325" andPid:1000012 andUid:654321 andToken:@"E2D12386286BCBD93C1684E96A984331" andVersion:@"" andAttrs:@{} andReconnect:YES andTimeout:20 * 1000 andStartTimerThread:YES];
     
-    [self.client.event addType:@"login" andListener:^(EventData * event) {
+    [self.client.event addType:@"login" andListener:^(EventData * evd) {
         
-        if (event.error != nil) {
+        if (evd.error != nil) {
             
-            [self onError:event.error];
+            [self onError:evd.error];
             return;
         }
         
-        [self onLogin:event.payload];
+        [self onLogin:evd.payload];
     }];
     
-    [self.client.event addType:@"close" andListener:^(EventData * event) {
+    [self.client.event addType:@"close" andListener:^(EventData * evd) {
         
-        [self onClose:event.retry];
+        [self onClose:evd.retry];
     }];
     
-    [self.client.event addType:@"error" andListener:^(EventData * event) {
+    [self.client.event addType:@"error" andListener:^(EventData * evd) {
         
-        [self onError:event.error];
+        [self onError:evd.error];
     }];
     
-    [self.client.processor.event addType:RTMConfig.SERVER_PUSH_recvPing andListener:^(EventData *event) {
+    [self.client.processor.event addType:RTMConfig.SERVER_PUSH_recvPing andListener:^(EventData * evd) {
         
-        NSLog(@"[PUSH] %@", event.type);
+        NSLog(@"[PUSH] %@", evd.type);
     }];
     
     [self.client loginWithEndpoint:nil andIPv6:NO];

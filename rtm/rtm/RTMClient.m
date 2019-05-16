@@ -83,7 +83,7 @@
  */
 - (void) initProcessor {
     
-    [self.processor.event addType:RTMConfig.SERVER_PUSH_kickOut andListener:^(EventData *event) {
+    [self.processor.event addType:RTMConfig.SERVER_PUSH_kickOut andListener:^(EventData *evd) {
        
         self.isClose = YES;
     }];
@@ -134,7 +134,7 @@
         
         _dispatchClient = [[DispatchClient alloc] init];
 
-        [self.dispatchClient.event addType:@"close" andListener:^(EventData * event) {
+        [self.dispatchClient.event addType:@"close" andListener:^(EventData * evd) {
             
             NSLog(@"[DispatchClient] closed.");
             
@@ -1608,12 +1608,12 @@
     
     [self.baseClient initWithEndpoint:self.endpoint andReconnect:NO andTimeout:timeout andStartTimerThread:self.startTimerThread];
 
-    [self.baseClient.event addType:@"connect" andListener:^(EventData * event) {
+    [self.baseClient.event addType:@"connect" andListener:^(EventData * evd) {
         
         [self authWithTimeout:timeout];
     }];
     
-    [self.baseClient.event addType:@"close" andListener:^(EventData * event) {
+    [self.baseClient.event addType:@"close" andListener:^(EventData * evd) {
         
         [self.event fireEvent:[[EventData alloc] initWithType:@"close" andRetry:!self.isClose && self.reconnect]];
         
@@ -1621,9 +1621,9 @@
         [self reConnect];
     }];
     
-    [self.baseClient.event addType:@"error" andListener:^(EventData * event) {
+    [self.baseClient.event addType:@"error" andListener:^(EventData * evd) {
         
-        [self.event fireEvent:[[EventData alloc] initWithType:@"error" andError:event.error]];
+        [self.event fireEvent:[[EventData alloc] initWithType:@"error" andError:evd.error]];
     }];
     
     self.baseClient.psr.processor = self.processor;
@@ -1707,21 +1707,21 @@
     
     [self.baseClient initWithEndpoint:self.endpoint andReconnect:NO andTimeout:timeout andStartTimerThread:self.startTimerThread];
 
-    [self.baseClient.event addType:@"connect" andListener:^(EventData * event) {
+    [self.baseClient.event addType:@"connect" andListener:^(EventData * evd) {
         
         [self.event fireEvent:[[EventData alloc] initWithType:@"connect"]];
     }];
     
-    [self.baseClient.event addType:@"close" andListener:^(EventData * event) {
+    [self.baseClient.event addType:@"close" andListener:^(EventData * evd) {
         
         [self.event fireEvent:[[EventData alloc] initWithType:@"close" andRetry:!self.isClose && self.reconnect]];
         [self.baseClient.event removeAll];
         [self reConnect];
     }];
     
-    [self.baseClient.event addType:@"error" andListener:^(EventData * event) {
+    [self.baseClient.event addType:@"error" andListener:^(EventData * evd) {
         
-        [self.event fireEvent:[[EventData alloc] initWithType:@"error" andError:event.error]];
+        [self.event fireEvent:[[EventData alloc] initWithType:@"error" andError:evd.error]];
     }];
     
     self.baseClient.psr.processor = self.processor;
@@ -1866,14 +1866,14 @@
     
     [super initWithEndpoint:endpoint andReconnect:NO andTimeout:timeout andStartTimerThread:startTimerThread];
 
-    [self.event addType:@"connect" andListener:^(EventData * event) {
+    [self.event addType:@"connect" andListener:^(EventData * evd) {
         
         [self onConnect_DispatchClient];
     }];
     
-    [self.event addType:@"error" andListener:^(EventData * event) {
+    [self.event addType:@"error" andListener:^(EventData * evd) {
         
-        [self onError_DispatchClient:event.error];
+        [self onError_DispatchClient:evd.error];
     }];
 }
 
@@ -1928,19 +1928,19 @@
     
     [super initWithEndpoint:endpoint andReconnect:NO andTimeout:timeout andStartTimerThread:startTimerThread];
 
-    [self.event addType:@"connect" andListener:^(EventData * event) {
+    [self.event addType:@"connect" andListener:^(EventData * evd) {
         
         [self onConnect_FileClient];
     }];
     
-    [self.event addType:@"close" andListener:^(EventData * event) {
+    [self.event addType:@"close" andListener:^(EventData * evd) {
         
         [self onClose_FileClient];
     }];
     
-    [self.event addType:@"error" andListener:^(EventData * event) {
+    [self.event addType:@"error" andListener:^(EventData * evd) {
         
-        [self onError_FileClient:event.error];
+        [self onError_FileClient:evd.error];
     }];
 }
 

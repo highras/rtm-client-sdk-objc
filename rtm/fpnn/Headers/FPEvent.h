@@ -13,7 +13,7 @@
 
 @class EventData;
 
-typedef void(^EventBlock)(EventData * event);
+typedef void(^EventBlock)(EventData * evd);
 
 @interface FPEvent : NSObject
 
@@ -21,7 +21,7 @@ typedef void(^EventBlock)(EventData * event);
 
 - (void) addType:(NSString *)type andListener:(EventBlock)listener;
 
-- (void) fireEvent:(EventData *)event;
+- (void) fireEvent:(EventData *)evd;
 
 - (void) removeAll;
 - (void) removeType:(NSString *)type;
