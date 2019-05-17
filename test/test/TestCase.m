@@ -34,7 +34,7 @@
 
 - (void) beginTest {
     
-    _client = [[RTMClient alloc] initWithDispatch:@"52.83.245.22:13325" andPid:1000012 andUid:654321 andToken:@"E2D12386286BCBD93C1684E96A984331" andVersion:@"" andAttrs:@{} andReconnect:YES andTimeout:20 * 1000 andStartTimerThread:YES];
+    _client = [[RTMClient alloc] initWithDispatch:@"52.83.245.22:13325" andPid:1000012 andUid:654321 andToken:@"AB582B55028ACE1354E0257D9E2673C6" andVersion:@"" andAttrs:@{} andReconnect:YES andTimeout:20 * 1000 andStartTimerThread:YES];
     
     [self.client.event addType:@"login" andListener:^(EventData * evd) {
         
