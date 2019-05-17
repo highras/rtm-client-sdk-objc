@@ -93,7 +93,7 @@
     
     if (self.baseClient != nil) {
         
-        [self.baseClient sendQuestWithData:data andBlock:callback];
+        [self.baseClient sendQuest:data andBlock:callback];
     }
 }
 
@@ -101,7 +101,7 @@
     
     if (self.baseClient != nil) {
         
-        [self.baseClient sendQuestWithData:data andBlock:callback andTimeout:timeout];
+        [self.baseClient sendQuest:data andBlock:callback andTimeout:timeout];
     }
 }
 
@@ -1743,12 +1743,12 @@
     }
 }
 
-- (void) sendQuestWithData:(FPData *)data andBlock:(CallbackBlock)callback {
+- (void) sendQuest:(FPData *)data andBlock:(CallbackBlock)callback {
     
     [super sendQuest:data andBlock:[self questWithBlock:callback]];
 }
 
-- (void) sendQuestWithData:(FPData *)data andBlock:(CallbackBlock)callback andTimeout:(NSInteger)timeout {
+- (void) sendQuest:(FPData *)data andBlock:(CallbackBlock)callback andTimeout:(NSInteger)timeout {
     
     [super sendQuest:data andBlock:[self questWithBlock:callback] andTimeout:timeout];
 }
@@ -1900,7 +1900,7 @@
     
     buffer.msgpack = data;
 
-    [self sendQuestWithData:buffer andBlock:callback andTimeout:timeout];
+    [self sendQuest:buffer andBlock:callback andTimeout:timeout];
 }
 
 /*
@@ -1987,7 +1987,7 @@
     
     NSInteger mid = [[payload objectForKey:@"mid"] integerValue];
     
-    [self sendQuestWithData:buffer andBlock:^(CallbackData *cbd) {
+    [self sendQuest:buffer andBlock:^(CallbackData *cbd) {
         
         cbd.mid = mid;
         
