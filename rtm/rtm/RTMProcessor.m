@@ -36,7 +36,6 @@
 - (void) destroy {
     
     [self.midMap removeAllObjects];
-    [self.event removeAll];
 }
 
 - (void) service:(FPData *)data andAnswer:(AnswerBlock)answer {
