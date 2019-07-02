@@ -163,7 +163,6 @@
 
     [self.dispatchClient whichWithPayload:payload andTimeout:self.timeout andBlock:^(CallbackData *cbd) {
         
-        NSError * err = (NSError *)cbd.error;
         NSDictionary * dict = (NSDictionary *)cbd.payload;
 
         if (dict != nil) {
@@ -172,10 +171,7 @@
             [self loginWithEndpoint:endpoint andIPv6:self.ipv6];
         }
 
-        if (err != nil) {
-            
-            [self.event fireEvent:[[EventData alloc] initWithType:@"error" andError:err]];
-        }
+        [self.dispatchClient closeWithError:(NSError *)cbd.error];
     }];
 }
 
