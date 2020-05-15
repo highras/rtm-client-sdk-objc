@@ -1,9 +1,0 @@
-{
-  "commitish" : "1.1.0",
-  "iOS" : [
-    {
-      "name" : "GHODictionary",
-      "hash" : "075be2cf88440158480c374a90eac745c9a29f87f4618f4b6daadcf38f654ab9"
-    }
-  ]
-}
