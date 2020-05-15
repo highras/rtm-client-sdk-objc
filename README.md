@@ -7,8 +7,8 @@ iOS RTM 使用文档 （集成+接口说明）
 * [代理方法](#代理方法)
 * [校验登录](#校验登录)
 * [单聊接口](#单聊接口)
-* [群组接口](#群组接口)
-* [房间接口](#房间接口)
+* [群组接口](#群组接口)//加入状态会持久化
+* [房间接口](#房间接口)//加入状态不会持久化，每次需要加入房间
 * [广播接口](#广播接口)
 * [文件接口](#文件接口)
 * [好友接口](#好友接口)
@@ -37,7 +37,7 @@ iOS RTM 使用文档 （集成+接口说明）
 * 导入SDK 引入头文件 #import <Rtm/Rtm.h>
 * 在TARGETS->Build Settings->Other Linker Flags （选中ALL视图）中添加-ObjC，字母O和C大写，符号“-”请勿忽略
 * 静态库中采用Objective-C++实现，因此需要您保证您工程中至少有一个.mm后缀的源文件(您可以将任意一个.m后缀的文件改名为.mm)
-
+* 添加库libresolv.9.tbd
 
 
 
@@ -107,8 +107,8 @@ iOS RTM 使用文档 （集成+接口说明）
 
 RTMClient * client = [RTMClient clientWithEndpoint:@"XXXXXX"
                                                pid:XXXXXX
-                                      	       uid:XXXXXX
-                                    	     token:@"XXXXXX"];
+                                               uid:XXXXXX
+                                           token:@"XXXXXX"];
 client.delegate = self;
 [client verifyConnectSuccess:^(NSDictionary * _Nullable data) {
                        
@@ -1403,5 +1403,3 @@ client.delegate = self;
                                         fail:(RTMAnswerFailCallBack)failCallback;
 
 ```
-
-
