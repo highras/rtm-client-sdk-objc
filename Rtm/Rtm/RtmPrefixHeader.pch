@@ -1,0 +1,99 @@
+//
+//  RtmPrefixHeader.pch
+//  Rtm
+//
+//  Created by zsl on 2019/12/12.
+//  Copyright © 2019 FunPlus. All rights reserved.
+//
+
+#ifndef RtmPrefixHeader_pch
+#define RtmPrefixHeader_pch
+
+#define Client *(fpnn::TCPClientPtr*)((void* (*)(id, SEL))[self methodForSelector:NSSelectorFromString(@"getPrivateClient")])(self, NSSelectorFromString(@"getPrivateClient"))
+#define Quest(quest) *(fpnn::FPQuestPtr*)((void* (*)(id, SEL))[quest methodForSelector:NSSelectorFromString(@"getQuest")])(quest, NSSelectorFromString(@"getQuest"))
+#define Listen *(FPNNCppConnectionListenPtr*)((void* (*)(id, SEL))[self methodForSelector:NSSelectorFromString(@"getPrivatelistenCall")])(self, NSSelectorFromString(@"getPrivatelistenCall"))
+
+#define ListenWithClient(client) *(FPNNCppConnectionListenPtr*)((void* (*)(id, SEL))[client methodForSelector:NSSelectorFromString(@"getPrivatelistenCall")])(client, NSSelectorFromString(@"getPrivatelistenCall"))
+
+#define mainClient  ((FPNNTCPClient *)[self valueForKey:@"usingClient"])
+
+#define messageTypeCallFilter(messageType)  if (messageType < 51 || messageType > 127) { NSLog(@"rtm messageType invalid"); return;}
+#define messageTypeFilter(messageType)  if (messageType < 51 || messageType > 127) { NSLog(@"rtm messageType invalid"); return nil;}
+
+#define _successCallback(data,tag)    if (successCallback) { successCallback(data,tag);}
+#define _failCallback(error,tag)       if (failCallback) { failCallback(error,tag);}
+
+//#define handlerCallResult(quest,timeout,tag)  [mainClient sendQuest:quest timeout:timeout success:^(NSDictionary * _Nullable data) {_successCallback(data,tag);if([self.delegate respondsToSelector:@selector(rtmReceiveDataSuccess:data:tag:)]) {[self.delegate rtmReceiveDataSuccess:self data:data tag:tag];}}fail:^(FPNError * _Nullable error) {_failCallback(error,tag);if ([self.delegate respondsToSelector:@selector(rtmReceiveDataError:error:tag:)]) {[self.delegate rtmReceiveDataError:self error:error tag:tag];}}];
+
+#define clientCallStatueVerify  if (self.clientStatus != RTMConnected) {FPNError * error = [FPNError errorWithEx:@"rtm clientStatus is not RTMConnected" code:300006];_failCallback(error,tag);}
+
+#define clientStatueVerify  if (self.clientStatus != RTMConnected) {FPNError * error = [FPNError errorWithEx:@"rtm clientStatus is not RTMConnected" code:300006];return [RTMAnswer answerWithError:error];}
+
+
+#define handlerCallResult(quest,timeout,tag)   [mainClient sendQuest:quest timeout:(timeout <= 0 ? self.sendQuestTimeout : timeout) success:^(NSDictionary * _Nullable data) {_successCallback(data,tag);}fail:^(FPNError * _Nullable error) {_failCallback(error,tag);}];
+
+#define handlerResultFail  if (result == NO) {if (failCallback) {FPNError * error = [FPNError errorWithEx:@"network error" code:300007];failCallback(error,tag);}}
+
+#define handlerResult(quest,timeout)     (RTMAnswer*)[mainClient sendQuest:quest timeout:(timeout <= 0 ? self.sendQuestTimeout : timeout)];
+
+
+#define mid  Int64Number(  (long long)((long long* (*)(id, SEL))[self methodForSelector:NSSelectorFromString(@"_getMessageId")])(self, NSSelectorFromString(@"_getMessageId"))  )
+#define Int64Number(num)   [NSNumber numberWithLongLong:num]
+#define Int32Number(num)   [NSNumber numberWithInt:num]
+
+#define RTMNullString(string) ([string isKindOfClass:[NSNull class]] || string == nil || [string length] < 1 ? YES : NO )
+
+#ifndef rtmWeakify
+    #if DEBUG
+        #if __has_feature(objc_arc)
+        #define rtmWeakify(object) autoreleasepool{} __weak __typeof__(object) weak##_##object = object;
+        #else
+        #define rtmWeakify(object) autoreleasepool{} __block __typeof__(object) block##_##object = object;
+        #endif
+    #else
+        #if __has_feature(objc_arc)
+        #define rtmWeakify(object) try{} @finally{} {} __weak __typeof__(object) weak##_##object = object;
+        #else
+        #define rtmWeakify(object) try{} @finally{} {} __block __typeof__(object) block##_##object = object;
+        #endif
+    #endif
+#endif
+
+#ifndef rtmStrongify
+    #if DEBUG
+        #if __has_feature(objc_arc)
+        #define rtmStrongify(object) autoreleasepool{} __typeof__(object) object = weak##_##object;
+        #else
+        #define rtmStrongify(object) autoreleasepool{} __typeof__(object) object = block##_##object;
+        #endif
+    #else
+        #if __has_feature(objc_arc)
+        #define rtmStrongify(object) try{} @finally{} __typeof__(object) object = weak##_##object;
+        #else
+        #define rtmStrongify(object) try{} @finally{} __typeof__(object) object = block##_##object;
+        #endif
+    #endif
+#endif
+
+
+#ifdef DEBUG
+
+#define FPNSLog(...) NSLog(__VA_ARGS__)
+
+#else
+
+#define FPNSLog(...) 
+
+#endif
+
+//#ifdef DEBUG //调试
+//
+//#define NSAllLog(FORMAT, ...) fprintf(stderr, "%s:%zd\t%s\n", [[[NSString stringWithUTF8String: __FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat: FORMAT, ## __VA_ARGS__] UTF8String]);
+//
+//#else // 发布
+//
+//#define NSLog(FORMAT, ...) nil
+//
+//#endif
+
+#endif /* RtmPrefixHeader_pch */

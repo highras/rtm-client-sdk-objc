@@ -1,0 +1,24 @@
+//
+//  FpnnPrefixHeader.pch
+//  Fpnn
+//
+//  Created by zsl on 2019/12/10.
+//  Copyright © 2019 FunPlus. All rights reserved.
+//
+
+#ifndef FpnnPrefixHeader_pch
+#define FpnnPrefixHeader_pch
+
+#ifdef DEBUG  
+
+#define NSLog(...)  NSLog(__VA_ARGS__)
+
+#else
+
+#define NSLog(...)
+
+#endif
+
+
+
+#endif /* FpnnPrefixHeader_pch */
