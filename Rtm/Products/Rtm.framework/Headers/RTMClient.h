@@ -38,10 +38,6 @@ typedef NS_ENUM(NSInteger, RTMClientStatus)
 @property (nonatomic,readonly,strong) NSString * connectedHost;
 @property (nonatomic,readonly,assign) int connectedPort;
 
-//@property(nonatomic,copy)RTMConnectStateSuccessCallBack connectStateSuccessBlock;
-//@property(nonatomic,copy)RTMConnectstateCloseCallBack connectstateCloseBlock;
-//@property (nonatomic,copy)RTMListenAndReplyCallBack listenAndReplyMessageCallBack;
-
 @property (nonatomic,assign)id <RTMProtocol> delegate;
 
 @property (nonatomic,readonly,assign) RTMClientStatus clientStatus;
@@ -57,8 +53,8 @@ typedef NS_ENUM(NSInteger, RTMClientStatus)
 @property (nonatomic,assign) int sendQuestTimeout;//默认30秒
 
 - (void)verifyConnectSuccess:(RTMConnectSuccessCallBack)success connectFali:(RTMConnectFailCallBack)fail;
-- (void)closeConnect;//调用了offLineWithTimeout接口
-- (void)reconnect;//clientStatus = RTMConnectClose || RTMConnectFail 有效
+- (void)closeConnect;
+- (void)reconnect;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
