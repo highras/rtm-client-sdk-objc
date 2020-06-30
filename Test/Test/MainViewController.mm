@@ -285,7 +285,7 @@
                 self.client.delegate = self;
                 [self.client verifyConnectSuccess:^(NSDictionary * _Nullable data) {
                      __strong typeof(weakSelf)strongSelf = weakSelf;
-                    NSLog(@"验证成功 verifyConnectSuccess  %ld",(long)strongSelf.client.clientStatus);
+                    NSLog(@"验证成功 verifyConnectSuccess  %ld 版本号 %@ %@",(long)strongSelf.client.clientStatus,strongSelf.client.sdkVersion,strongSelf.client.apiVersion);
 
                     
                     //子线程
@@ -308,7 +308,7 @@
         if (indexPath.row == 0) {//发送P2P消息
         
                [self.client sendP2PMessageWithId:[NSNumber numberWithLongLong:12]
-                                     messageType:[NSNumber numberWithLongLong:32]
+                                     messageType:[NSNumber numberWithLongLong:77]
                                          message:@""
                                            attrs:@"attrs"
                                          timeout:10
@@ -774,7 +774,40 @@
             } fail:^(FPNError * _Nullable error, id  _Nullable tag) {
                 
             }];
+        }else if (indexPath.row == 3){//添加黑名单
+            [self.client addBlacklistWithUserIds:@[[NSNumber numberWithLongLong:10]]
+                                                     timeout:10
+                                                         tag:nil
+                                                     success:^(NSDictionary * _Nullable data, id  _Nullable tag) {
+                NSLog(@"%@",data);
+            } fail:^(FPNError * _Nullable error, id  _Nullable tag) {
+                NSLog(@"%@",error);
+                        
+            }];
+                        
+        }else if (indexPath.row == 4){//解除黑名单
+            [self.client deleteBlacklistWithUserIds:@[[NSNumber numberWithLongLong:10]]
+                                         timeout:10
+                                             tag:nil
+                                         success:^(NSDictionary * _Nullable data, id  _Nullable tag) {
+                NSLog(@"%@",data);
+            } fail:^(FPNError * _Nullable error, id  _Nullable tag) {
+                NSLog(@"%@",error);
+            }];
+            
+        }else if (indexPath.row == 5){//拉取黑名单
+            [self.client getBlacklistWithTimeout:10 tag:nil success:^(NSDictionary * _Nullable data, id  _Nullable tag) {
+                
+                NSLog(@"%@",data);
+                
+            } fail:^(FPNError * _Nullable error, id  _Nullable tag) {
+                
+            }];
+            
         }
+        
+        
+        
         
     }else if (indexPath.section == 7){
         #pragma mark 用户接口
@@ -1073,7 +1106,7 @@
         }else if (indexPath.row == 3){// 获取历史group消息 对 getGroupMessageWithId 的封装 mtypes = [30,31,32]
             
             
-            [self.client getGroupHistoryMessageChatWithUserId:[NSNumber numberWithLongLong:12]
+            [self.client getGroupHistoryMessageChatWithGroupId:[NSNumber numberWithLongLong:12]
                                                          desc:YES
                                                           num:[NSNumber numberWithLongLong:10]
                                                         begin:nil
@@ -1143,7 +1176,7 @@
             }];
             
         }else if (indexPath.row == 3){//获取历史Room消息 对 getRoomMessageWithId 的封装 mtypes = [30,31,32]
-            [self.client getRoomHistoryMessageChatWithUserId:[NSNumber numberWithLongLong:12]
+            [self.client getRoomHistoryMessageChatWithRoomId:[NSNumber numberWithLongLong:12]
                                                          desc:YES
                                                           num:[NSNumber numberWithLongLong:10]
                                                         begin:nil
@@ -1321,6 +1354,9 @@
                     @"添加好友，每次最多添加100人",
                     @"删除好友，每次最多删除100人",
                     @"获取好友",
+                    @"添加黑名单",
+                    @"解除黑名单",
+                    @"拉取黑名单",
                        
             ]
         },

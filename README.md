@@ -746,6 +746,41 @@ client.delegate = self;
                              tag:(id _Nullable)tag
                          success:(RTMAnswerSuccessCallBack)successCallback
                             fail:(RTMAnswerFailCallBack)failCallback;
+                            
+                            
+
+/// 添加黑名单 只对chat类接口生效（不包含cmd类型）
+/// @param friendids 用户ID数组
+/// @param timeout 请求超时时间 秒
+/// @param tag 请求标识
+/// @param successCallback 成功回调
+/// @param failCallback 失败回调
+-(void)addBlacklistWithUserIds:(NSArray <NSNumber* >* _Nonnull)friendids
+                       timeout:(int)timeout
+                           tag:(id _Nullable)tag
+                       success:(RTMAnswerSuccessCallBack)successCallback
+                          fail:(RTMAnswerFailCallBack)failCallback;
+   
+
+/// 解除黑名单
+/// @param friendids 用户ID数组
+/// @param timeout 请求超时时间 秒
+/// @param tag 请求标识
+-(void)deleteBlacklistWithUserIds:(NSArray <NSNumber* >* _Nonnull)friendids
+                          timeout:(int)timeout
+                              tag:(id _Nullable)tag
+                          success:(RTMAnswerSuccessCallBack)successCallback
+                             fail:(RTMAnswerFailCallBack)failCallback;
+                          
+/// 拉取黑名单
+/// @param timeout 请求超时时间 秒
+/// @param tag 请求标识
+/// @param successCallback 成功回调
+/// @param failCallback 失败回调
+-(void)getBlacklistWithTimeout:(int)timeout
+                           tag:(id _Nullable)tag
+                       success:(RTMAnswerSuccessCallBack)successCallback
+                          fail:(RTMAnswerFailCallBack)failCallback;
 
 ```
 
@@ -1278,7 +1313,7 @@ client.delegate = self;
 /// @param tag 请求标识
 /// @param successCallback 成功回调
 /// @param failCallback 失败回调
--(void)getGroupHistoryMessageChatWithUserId:(NSNumber * _Nonnull)groupId
+-(void)getGroupHistoryMessageChatWithGroupId:(NSNumber * _Nonnull)groupId
                                         desc:(BOOL)desc
                                          num:(NSNumber * _Nonnull)num
                                        begin:(NSNumber * _Nullable)begin
@@ -1366,7 +1401,7 @@ client.delegate = self;
 /// @param tag 请求标识
 /// @param successCallback 成功回调
 /// @param failCallback 失败回调
--(void) getRoomHistoryMessageChatWithUserId:(NSNumber * _Nonnull)roomId
+-(void) getRoomHistoryMessageChatWithRoomId:(NSNumber * _Nonnull)roomId
                                        desc:(BOOL)desc
                                         num:(NSNumber * _Nonnull)num
                                       begin:(NSNumber * _Nullable)begin

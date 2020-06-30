@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 会产生离线提醒 通过getUnreadMessagesWithClear获取 会产生聊天会话 通过getAllSessionsWithTimeout获取
 /// 对音频大小有限制
 /// @param groupId int64
-/// @param audioFilePath 音频数据路径  音频要求 16KHZ 16位 单声道 
+/// @param audioFilePath 音频数据路径  音频要求 16KHZ 16位 单声道
 /// @param attrs 属性 建议使用可解析的json字符串
 /// @param lang 音频语言
 /// @param duration 音频时长 毫秒 必传
@@ -118,7 +118,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /// 获取历史group消息 对 getGroupMessageWithId 的封装 mtypes = [30,31,32,40,41,42] （只包含sendGroupMessageChatWithId，sendGroupAudioMessageChatWithId，sendGroupCmdMessageChatWithId产生的历史消息）
-/// @param groupId int64 
+/// @param groupId int64
 /// @param desc 是否降序排列
 /// @param num int16 条数
 /// @param begin int64 开始时间戳，精确到 毫秒
@@ -128,7 +128,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param tag 请求标识
 /// @param successCallback 成功回调
 /// @param failCallback 失败回调
--(void)getGroupHistoryMessageChatWithUserId:(NSNumber * _Nonnull)groupId
+-(void)getGroupHistoryMessageChatWithGroupId:(NSNumber * _Nonnull)groupId
                                         desc:(BOOL)desc
                                          num:(NSNumber * _Nonnull)num
                                        begin:(NSNumber * _Nullable)begin
@@ -138,7 +138,7 @@ NS_ASSUME_NONNULL_BEGIN
                                          tag:(id _Nullable)tag
                                      success:(RTMAnswerSuccessCallBack)successCallback
                                         fail:(RTMAnswerFailCallBack)failCallback;
--(RTMAnswer*)getGroupHistoryMessageChatWithUserId:(NSNumber * _Nonnull)groupId
+-(RTMAnswer*)getGroupHistoryMessageChatWithGroupId:(NSNumber * _Nonnull)groupId
                                              desc:(BOOL)desc
                                               num:(NSNumber * _Nonnull)num
                                             begin:(NSNumber * _Nullable)begin
@@ -148,3 +148,4 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+

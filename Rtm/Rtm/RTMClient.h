@@ -26,7 +26,6 @@ typedef NS_ENUM(NSInteger, RTMClientStatus)
 @property (nonatomic,readonly,strong) NSString * token;//验证用 server获取
 @property (nonatomic,readonly,assign) int32_t pid;//项目id
 @property (nonatomic,readonly,assign) int64_t uid;//用户id
-@property (nonatomic,strong) NSString * _Nullable version;//版本
 @property (nonatomic,strong) NSString * _Nullable lang;//当前语言
 @property (nonatomic,strong) NSDictionary * _Nullable attrs;//例如 设置客户端信息，会保存在当前链接中，客户端可以获取到
 @property (nonatomic,strong) NSString * _Nullable os;//系统
@@ -42,8 +41,8 @@ typedef NS_ENUM(NSInteger, RTMClientStatus)
 
 @property (nonatomic,readonly,assign) RTMClientStatus clientStatus;
 
-@property (nonatomic,strong)NSString * sdkVersion;
-@property (nonatomic,strong)NSString * apiVersion;
+@property (nonatomic,readonly,strong)NSString * sdkVersion;
+@property (nonatomic,readonly,strong)NSString * apiVersion;
 
 - (instancetype _Nullable)initWithEndpoint:(NSString * _Nonnull)endpoint pid:(int32_t)pid uid:(int64_t)uid token:(NSString*)token;
 - (instancetype _Nullable)initWithHost:(NSString * _Nonnull)host port:(int)port pid:(int32_t)pid uid:(int64_t)uid token:(NSString*)token;
@@ -54,7 +53,6 @@ typedef NS_ENUM(NSInteger, RTMClientStatus)
 
 - (void)verifyConnectSuccess:(RTMConnectSuccessCallBack)success connectFali:(RTMConnectFailCallBack)fail;
 - (void)closeConnect;
-- (void)reconnect;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

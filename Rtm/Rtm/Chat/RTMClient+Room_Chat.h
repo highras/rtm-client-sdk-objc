@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 发送音频消息 对 sendRoomMessageWithId 的封装 mtype=31
 /// 对音频大小有限制
 /// @param roomId int64
-/// @param audioFilePath 音频数据路径  音频要求 16KHZ 16位 单声道 
+/// @param audioFilePath 音频数据路径  音频要求 16KHZ 16位 单声道
 /// @param attrs 属性
 /// @param lang 音频语言
 /// @param duration 音频时长 毫秒 必传
@@ -123,7 +123,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param tag 请求标识
 /// @param successCallback 成功回调
 /// @param failCallback 失败回调
--(void) getRoomHistoryMessageChatWithUserId:(NSNumber * _Nonnull)roomId
+-(void) getRoomHistoryMessageChatWithRoomId:(NSNumber * _Nonnull)roomId
                                        desc:(BOOL)desc
                                         num:(NSNumber * _Nonnull)num
                                       begin:(NSNumber * _Nullable)begin
@@ -133,7 +133,7 @@ NS_ASSUME_NONNULL_BEGIN
                                         tag:(id _Nullable)tag
                                     success:(RTMAnswerSuccessCallBack)successCallback
                                        fail:(RTMAnswerFailCallBack)failCallback;
--(RTMAnswer*)getRoomHistoryMessageChatWithUserId:(NSNumber * _Nonnull)roomId
+-(RTMAnswer*)getRoomHistoryMessageChatWithRoomId:(NSNumber * _Nonnull)roomId
                                             desc:(BOOL)desc
                                              num:(NSNumber * _Nonnull)num
                                            begin:(NSNumber * _Nullable)begin
@@ -143,3 +143,4 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+

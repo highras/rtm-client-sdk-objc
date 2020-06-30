@@ -291,7 +291,7 @@
 }
 
 
--(void)getRoomHistoryMessageChatWithUserId:(NSNumber * _Nonnull)roomId
+-(void)getRoomHistoryMessageChatWithRoomId:(NSNumber * _Nonnull)roomId
                                         desc:(BOOL)desc
                                          num:(NSNumber * _Nonnull)num
                                        begin:(NSNumber * _Nullable)begin
@@ -315,12 +315,35 @@
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroommsg" message:dic twoWay:YES];
     
-    BOOL result = handlerCallResult(quest,timeout,tag);
+    BOOL result = [mainClient sendQuest:quest
+                                timeout:(timeout <= 0 ? self.sendQuestTimeout : timeout)
+                                success:^(NSDictionary * _Nullable data) {
+
+        NSMutableArray * msgArray = [NSMutableArray arrayWithArray:(NSArray*)[data objectForKey:@"msgs"]];
+        [msgArray enumerateObjectsUsingBlock:^(NSArray *  itemArray,  NSUInteger idx, BOOL * _Nonnull stop) {
+            int mType = [[itemArray objectAtIndex:2] intValue];
+            if (mType == 31) {//音频的要去头再返回
+                NSData * msg = [itemArray objectAtIndex:5];
+                NSData * noHeaderData = [RTMAudioTools audioDataRemoveHeader:msg];
+                NSMutableArray * noHeaderItemArray = [NSMutableArray arrayWithArray:itemArray];
+                [noHeaderItemArray replaceObjectAtIndex:5 withObject:noHeaderData];
+                [msgArray replaceObjectAtIndex:idx withObject:noHeaderItemArray];
+            }
+        }];
+        NSMutableDictionary * newData = [NSMutableDictionary dictionaryWithDictionary:data];
+        [newData setValue:msgArray forKey:@"msgs"];
+        _successCallback(newData,tag);
+        
+    }
+                                   fail:^(FPNError * _Nullable error) {
+        _failCallback(error,tag);
+        
+    }];
+    
     handlerResultFail;
-    //return  handlerCallResult(quest,timeout,tag);
     
 }
--(RTMAnswer*)getRoomHistoryMessageChatWithUserId:(NSNumber * _Nonnull)roomId
+-(RTMAnswer*)getRoomHistoryMessageChatWithRoomId:(NSNumber * _Nonnull)roomId
                                               desc:(BOOL)desc
                                                num:(NSNumber * _Nonnull)num
                                              begin:(NSNumber * _Nullable)begin
@@ -341,7 +364,28 @@
     
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroommsg" message:dic twoWay:YES];
-    return  handlerResult(quest,timeout);
+    
+    RTMAnswer * answer = (RTMAnswer*)[mainClient sendQuest:quest timeout:(timeout <= 0 ? self.sendQuestTimeout : timeout)];
+    if (answer.error == nil && answer.responseData != nil) {
+        
+        NSDictionary * data = answer.responseData;
+        NSMutableArray * msgArray = [NSMutableArray arrayWithArray:(NSArray*)[data objectForKey:@"msgs"]];
+        [msgArray enumerateObjectsUsingBlock:^(NSArray *  itemArray,  NSUInteger idx, BOOL * _Nonnull stop) {
+            int mType = [[itemArray objectAtIndex:2] intValue];
+            if (mType == 31) {//音频的要去头再返回
+                NSData * msg = [itemArray objectAtIndex:5];
+                NSData * noHeaderData = [RTMAudioTools audioDataRemoveHeader:msg];
+                NSMutableArray * noHeaderItemArray = [NSMutableArray arrayWithArray:itemArray];
+                [noHeaderItemArray replaceObjectAtIndex:5 withObject:noHeaderData];
+                [msgArray replaceObjectAtIndex:idx withObject:noHeaderItemArray];
+            }
+        }];
+        NSMutableDictionary * newData = [NSMutableDictionary dictionaryWithDictionary:data];
+        [newData setValue:msgArray forKey:@"msgs"];
+        answer.responseData = newData;
+    }
+    return  answer;
     
 }
 @end
+

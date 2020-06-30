@@ -54,11 +54,11 @@
 #pragma mark init
 - (void)_defaultSettings{
 //    _clientStatus = RTMConnectClose;
-    _sdkVersion = @"2.0.0";
-    _apiVersion = @"2.0.2";
+    _sdkVersion = @"2.0.1";
+    _apiVersion = @"2.1.0";
     _connectStatus = RTMConnectClose;
     _sendQuestTimeout = 30;
-    _version = nil;
+//    _version = nil;
     _lang = nil;
     _attrs = nil;
     _os = nil;
@@ -139,14 +139,13 @@
         
             self.gatedQuestDic = [NSMutableDictionary dictionary];
             [self.gatedQuestDic setValue:@"rtmGated" forKey:@"what"];
-//            if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
-//                [self.gatedQuestDic setValue:@"domain" forKey:@"addrType"];
-//            }else{
-            
-//              }
-            [self.gatedQuestDic setValue:self.addrType forKey:@"addrType"];
+            if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
+                [self.gatedQuestDic setValue:@"ipv6" forKey:@"addrType"];
+            }else{
+                [self.gatedQuestDic setValue:self.addrType forKey:@"addrType"];
+            }
             [self.gatedQuestDic setValue:self.proto forKey:@"proto"];
-            [self.gatedQuestDic setValue:self.version forKey:@"version"];
+//            [self.gatedQuestDic setValue:self.apiVersion forKey:@"version"];
         
         }
         
@@ -154,12 +153,8 @@
         
     });
     
-   
-    
 }
 
-//ipv4地址在ipv4 ipv6环境下均可正常访问
-//ipv6在ipv6环境下正常在ipv4环境下访问失败；
 
 -(void)_rtmGatedAllQuestHandle{
     @synchronized (self) {
@@ -277,7 +272,7 @@
     [questDic setValue:@(_pid) forKey:@"pid"];
     [questDic setValue:@(_uid) forKey:@"uid"];
     [questDic setValue:_token forKey:@"token"];
-    [questDic setValue:_version forKey:@"version"];
+    [questDic setValue:_sdkVersion forKey:@"version"];
     [questDic setValue:_lang forKey:@"lang"];
     [questDic setValue:_attrs forKey:@"attrs"];
     [questDic setValue:_os forKey:@"os"];
@@ -349,8 +344,14 @@
 - (void)closeConnect{
     
     if (self.connectStatus == RTMConnected) {
-        [self offLineWithTimeout:_sendQuestTimeout];
+        [self offLineWithTimeout:_sendQuestTimeout tag:nil success:^(NSDictionary * _Nullable data, id  _Nullable tag) {
+        
+        } fail:^(FPNError * _Nullable error, id  _Nullable tag) {
+            
+        }];
+        sleep(1);
         [self.usingClient closeConnect];
+        [self _cancelPingTimer];
     }
     
 }
@@ -792,7 +793,7 @@
     
    
     [self _cancelPingTimer];
-    FPNSLog(@"启动计时器");
+//    FPNSLog(@"启动计时器");
         
     
     @synchronized (self) {
@@ -877,7 +878,7 @@
     [self.usingClient closeConnect];
     self.usingClient = nil;
     [self _cancelPingTimer];
-    FPNSLog(@"client dealloc");
+//    FPNSLog(@"client dealloc");
 }
 
 //+ (BOOL)isIpv6{
@@ -888,25 +889,25 @@
 //       IOS_WIFI @"/" IP_ADDR_IPv4,
 //       IOS_CELLULAR @"/" IP_ADDR_IPv6,
 //       IOS_CELLULAR @"/" IP_ADDR_IPv4 ] ;
-//    
+//
 //    NSDictionary *addresses = [self getIPAddresses];
 //    NSLog(@"addresses: %@", addresses);
-//    
+//
 //    __block BOOL isIpv6 = NO;
 //    [searchArray enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop)
 //     {
-//         
+//
 //         NSLog(@"---%@---%@---",key, addresses[key] );
-//         
+//
 //         if ([key rangeOfString:@"ipv6"].length > 0  && ![[NSString stringWithFormat:@"%@",addresses[key]] hasPrefix:@"(null)"] ) {
 //             NSLog(@"====");
 //             if ( ![addresses[key] hasPrefix:@"fe80"]) {
 //                 isIpv6 = YES;
 //             }
 //         }
-//         
+//
 //      } ];
-//    
+//
 //    return isIpv6;
 //}
 //
@@ -931,7 +932,7 @@
 //                if(addr->sin_family == AF_INET) {
 //                    if(inet_ntop(AF_INET, &addr->sin_addr, addrBuf, INET_ADDRSTRLEN)) {
 //                        type = IP_ADDR_IPv4;
-//                        
+//
 //                        NSLog(@"ipv4 %@",name);
 //                    }
 //                } else {
@@ -939,7 +940,7 @@
 //                    if(inet_ntop(AF_INET6, &addr6->sin6_addr, addrBuf, INET6_ADDRSTRLEN)) {
 //                        type = IP_ADDR_IPv6;
 //                        NSLog(@"ipv6 %@",name);
-//                        
+//
 //                    }
 //                }
 //                if(type) {
