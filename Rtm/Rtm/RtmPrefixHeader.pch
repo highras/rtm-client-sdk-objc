@@ -25,7 +25,7 @@
 
 //#define handlerCallResult(quest,timeout,tag)  [mainClient sendQuest:quest timeout:timeout success:^(NSDictionary * _Nullable data) {_successCallback(data,tag);if([self.delegate respondsToSelector:@selector(rtmReceiveDataSuccess:data:tag:)]) {[self.delegate rtmReceiveDataSuccess:self data:data tag:tag];}}fail:^(FPNError * _Nullable error) {_failCallback(error,tag);if ([self.delegate respondsToSelector:@selector(rtmReceiveDataError:error:tag:)]) {[self.delegate rtmReceiveDataError:self error:error tag:tag];}}];
 
-#define clientCallStatueVerify  if (self.clientStatus != RTMConnected) {FPNError * error = [FPNError errorWithEx:@"rtm clientStatus is not RTMConnected" code:300006];_failCallback(error,tag);}
+#define clientCallStatueVerify  if (self.clientStatus != RTMConnected) {FPNError * error = [FPNError errorWithEx:@"rtm clientStatus is not RTMConnected" code:300006];_failCallback(error,tag); return;}
 
 #define clientStatueVerify  if (self.clientStatus != RTMConnected) {FPNError * error = [FPNError errorWithEx:@"rtm clientStatus is not RTMConnected" code:300006];return [RTMAnswer answerWithError:error];}
 

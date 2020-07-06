@@ -30,11 +30,11 @@
 		56B9EF3A246E900000CB9766 /* libvo-amrwbenc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 56B9EF2E246E900000CB9766 /* libvo-amrwbenc.a */; };
 		56B9EF3B246E900000CB9766 /* RtmVoiceConverterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B9EF32246E900000CB9766 /* RtmVoiceConverterManager.m */; };
 		56C5C7B123ED1269004CCF71 /* 16HZ 16BIT 1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 56C5C7B023ED1269004CCF71 /* 16HZ 16BIT 1.wav */; };
+		56CE2CC624B2BFFC002647B6 /* Rtm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56CE2CC524B2BFFC002647B6 /* Rtm.framework */; };
 		56E013E1245814800097E98F /* head2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 56E013E0245814800097E98F /* head2.jpg */; };
 		56E664CA23FD377200C680BC /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 56E664C923FD376100C680BC /* libresolv.9.tbd */; };
 		56E664CB23FD377C00C680BC /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 56E664C823FD376100C680BC /* libresolv.tbd */; };
 		56EA004E23B1F9CB002B5B77 /* mp4Test.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 56EA004C23B1F9CB002B5B77 /* mp4Test.mp4 */; };
-		56F66FD924AB14CD003F72B0 /* Rtm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56F66FD824AB14CD003F72B0 /* Rtm.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,11 +98,11 @@
 		56B9EF31246E900000CB9766 /* interf_enc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = interf_enc.h; sourceTree = "<group>"; };
 		56B9EF32246E900000CB9766 /* RtmVoiceConverterManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RtmVoiceConverterManager.m; sourceTree = "<group>"; };
 		56C5C7B023ED1269004CCF71 /* 16HZ 16BIT 1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "16HZ 16BIT 1.wav"; sourceTree = "<group>"; };
+		56CE2CC524B2BFFC002647B6 /* Rtm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Rtm.framework; path = ../Rtm/Products/Rtm.framework; sourceTree = "<group>"; };
 		56E013E0245814800097E98F /* head2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = head2.jpg; sourceTree = "<group>"; };
 		56E664C823FD376100C680BC /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		56E664C923FD376100C680BC /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = usr/lib/libresolv.9.tbd; sourceTree = SDKROOT; };
 		56EA004C23B1F9CB002B5B77 /* mp4Test.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = mp4Test.mp4; sourceTree = "<group>"; };
-		56F66FD824AB14CD003F72B0 /* Rtm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Rtm.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,7 +112,7 @@
 			files = (
 				56B9EF3A246E900000CB9766 /* libvo-amrwbenc.a in Frameworks */,
 				56E664CA23FD377200C680BC /* libresolv.9.tbd in Frameworks */,
-				56F66FD924AB14CD003F72B0 /* Rtm.framework in Frameworks */,
+				56CE2CC624B2BFFC002647B6 /* Rtm.framework in Frameworks */,
 				56B9EF38246E900000CB9766 /* libopencore-amrwb.a in Frameworks */,
 				56B9EF39246E900000CB9766 /* libopencore-amrnb.a in Frameworks */,
 				56E664CB23FD377C00C680BC /* libresolv.tbd in Frameworks */,
@@ -139,7 +139,7 @@
 		566F06D623A090D800D1D949 = {
 			isa = PBXGroup;
 			children = (
-				56F66FD824AB14CD003F72B0 /* Rtm.framework */,
+				56CE2CC524B2BFFC002647B6 /* Rtm.framework */,
 				56B9EF19246E900000CB9766 /* Opencore-AMR */,
 				566F06E123A090D800D1D949 /* Test */,
 				566F06FD23A090D900D1D949 /* TestTests */,
