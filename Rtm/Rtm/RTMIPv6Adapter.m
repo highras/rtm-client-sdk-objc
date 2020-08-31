@@ -1,15 +1,9 @@
-//
-//  OSSIPv6Adapter.m
-//
-//  Created by lingkun on 16/5/16.
-//  Copyright © 2016 Ali. All rights reserved.
-//
+
 
 #import <Foundation/Foundation.h>
 #import "RTMIPv6Adapter.h"
 #import "RTMIPv6PrefixResolver.h"
-//#import "OSSReachabilityManager.h"
-//#import "OSSLog.h"
+
 
 #include <arpa/inet.h>
 #include <dns.h>

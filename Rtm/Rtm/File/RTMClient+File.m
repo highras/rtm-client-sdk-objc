@@ -12,68 +12,104 @@
 #import "NSData+RTMTools.h"
 #import "NSString+RTMTools.h"
 #import <CommonCrypto/CommonDigest.h>
-
+#import "RTMIPv6Adapter.h"
+#define NSAllLog(FORMAT, ...) fprintf(stderr, "%s:%zd\t%s\n", [[[NSString stringWithUTF8String: __FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat: FORMAT, ## __VA_ARGS__] UTF8String]);
 
 @implementation RTMClient (File)
--(BOOL)getP2PFileTokenWithId:(NSNumber*)userId
+-(void)getP2PFileTokenWithId:(NSNumber*)userId
                      timeout:(int)timeout
-                         tag:(id)tag
                      success:(RTMAnswerSuccessCallBack)successCallback
                         fail:(RTMAnswerFailCallBack)failCallback{
     
     
-    
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:userId forKey:@"to"];
     [dic setValue:@"sendfile" forKey:@"cmd"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
-    return  handlerCallResult(quest,timeout,tag);
+    BOOL result = [mainClient sendQuest:quest
+                                timeout:RTMClientSendQuestTimeout
+                                success:^(NSDictionary * _Nullable data) {
+        
+        if (successCallback) {
+            successCallback(data);
+        }
+    
+    }fail:^(FPNError * _Nullable error) {
+          _failCallback(error);
+
+    }];
+        
+    handlerNetworkError;
     
 }
--(RTMAnswer*)getP2PFileTokenWithId:(NSNumber*)userId
-                        timeout:(int)timeout{
-    
-    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    [dic setValue:userId forKey:@"to"];
-    [dic setValue:@"sendfile" forKey:@"cmd"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
-    
-    return  handlerResult(quest,timeout);
-    
-}
+//-(RTMAnswer*)getP2PFileTokenWithId:(NSNumber*)userId
+//                        timeout:(int)timeout{
+//
+//    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+//    [dic setValue:userId forKey:@"to"];
+//    [dic setValue:@"sendfile" forKey:@"cmd"];
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
+//    BOOL result = [mainClient sendQuest:quest
+//                                timeout:RTMClientSendQuestTimeout
+//                                success:^(NSDictionary * _Nullable data) {
+//
+//        if (successCallback) {
+//            successCallback(data);
+//        }
+//
+//    }fail:^(FPNError * _Nullable error) {
+//
+//          _failCallback(error);
+//
+//    }];
+//
+//    handlerNetworkError;
+//
+//}
 
 
 
--(BOOL)getGroupFileTokenWithId:(NSNumber*)groupId
-                  timeout:(int)timeout
-                           tag:(id)tag
-                  success:(RTMAnswerSuccessCallBack)successCallback
-                     fail:(RTMAnswerFailCallBack)failCallback{
+-(void)getGroupFileTokenWithId:(NSNumber*)groupId
+                       timeout:(int)timeout
+                       success:(RTMAnswerSuccessCallBack)successCallback
+                          fail:(RTMAnswerFailCallBack)failCallback{
     
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:groupId forKey:@"gid"];
     [dic setValue:@"sendgroupfile" forKey:@"cmd"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
+    BOOL result = [mainClient sendQuest:quest
+                                timeout:RTMClientSendQuestTimeout
+                                success:^(NSDictionary * _Nullable data) {
+        
+        if (successCallback) {
+            successCallback(data);
+        }
     
-    return  handlerCallResult(quest,timeout,tag);
+    }fail:^(FPNError * _Nullable error) {
+        
+          _failCallback(error);
+
+    }];
+        
+    handlerNetworkError;
     
 }
--(RTMAnswer*)getGroupFileTokenWithId:(NSNumber*)groupId
-                        timeout:(int)timeout{
-    
-    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    [dic setValue:groupId forKey:@"gid"];
-    [dic setValue:@"sendgroupfile" forKey:@"cmd"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
-    
-    return  handlerResult(quest,timeout);
-    
-}
+//-(RTMAnswer*)getGroupFileTokenWithId:(NSNumber*)groupId
+//                        timeout:(int)timeout{
+//
+//    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+//    [dic setValue:groupId forKey:@"gid"];
+//    [dic setValue:@"sendgroupfile" forKey:@"cmd"];
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
+//
+//    return  handlerResult(quest,timeout);
+//
+//}
 
 
--(BOOL)getRoomFileTokenWithId:(NSNumber*)roomId
+-(void)getRoomFileTokenWithId:(NSNumber*)roomId
                   timeout:(int)timeout
-                          tag:(id)tag
                   success:(RTMAnswerSuccessCallBack)successCallback
                          fail:(RTMAnswerFailCallBack)failCallback{
     
@@ -82,22 +118,35 @@
     [dic setValue:roomId forKey:@"rid"];
     [dic setValue:@"sendroomfile" forKey:@"cmd"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
+    BOOL result = [mainClient sendQuest:quest
+                                timeout:RTMClientSendQuestTimeout
+                                success:^(NSDictionary * _Nullable data) {
+        
+        if (successCallback) {
+            successCallback(data);
+        }
     
-    return  handlerCallResult(quest,timeout,tag);
+    }fail:^(FPNError * _Nullable error) {
+        
+          _failCallback(error);
+
+    }];
+        
+    handlerNetworkError;
     
 }
--(RTMAnswer*)getRoomFileTokenWithId:(NSNumber*)roomId
-                            timeout:(int)timeout{
-    
-    
-    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    [dic setValue:roomId forKey:@"rid"];
-    [dic setValue:@"sendroomfile" forKey:@"cmd"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
-    
-    return  handlerResult(quest,timeout);
-    
-}
+//-(RTMAnswer*)getRoomFileTokenWithId:(NSNumber*)roomId
+//                            timeout:(int)timeout{
+//
+//
+//    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+//    [dic setValue:roomId forKey:@"rid"];
+//    [dic setValue:@"sendroomfile" forKey:@"cmd"];
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
+//
+//    return  handlerResult(quest,timeout);
+//
+//}
 
 
 -(void)sendP2PFileWithId:(NSNumber * _Nonnull)userId
@@ -106,138 +155,179 @@
               fileSuffix:(NSString * _Nonnull)fileSuffix
                 fileType:(RTMFileType)fileType
                  timeout:(int)timeout
-                     tag:(id)tag
-                 success:(RTMAnswerSuccessCallBack)successCallback
+                 success:(void(^)(int64_t mtime))successCallback
                     fail:(RTMAnswerFailCallBack)failCallback{
     
     
-    clientCallStatueVerify
-    if (fileData == nil) {
-//        FPNError * error = [FPNError errorWithEx:@"rtm sendP2PFile error. fileData is nil" code:0];
-//        failCallback(error,tag);
-        FPNSLog(@"rtm sendP2PFile error. fileData is nil");
-        return;
-    }
-    
+    clientConnectStatueVerify
+        
     [self getP2PFileTokenWithId:userId
-                        timeout:timeout
-                            tag:tag
-                        success:^(NSDictionary * _Nullable data,id _Nullable tag) {
+                        timeout:RTMClientFileQuestTimeout
+                        success:^(NSDictionary * _Nullable data) {
         
         if (RTMNullString(data[@"endpoint"]) || RTMNullString(data[@"token"])) {
-            FPNError * error = [FPNError errorWithEx:@"rtm sendP2PFile error. getP2PFileToken return data is nil" code:0];
-            failCallback(error,tag);
+            FPNSLog(@"rtm sendFile error. getGroupFileToken return data is nil");
             return ;
         }
-        
         NSDictionary * resultBody = [self _getFileQuestBody:data recvId:userId fileData:fileData fileName:fileName fileSuffix:fileSuffix fileType:fileType];
         [resultBody setValue:userId forKey:@"to"];
 //        NSLog(@"%@",resultBody);
-        FPNNTCPClient * fileClient = [self _getFileClient:data[@"endpoint"]];
-        FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendfile" message:resultBody twoWay:YES];
-        FPNNAnswer* answer = [fileClient sendQuest:quest timeout:timeout];
-        if (answer.responseData) {
-            successCallback(answer.responseData,tag);
-        }else{
-            failCallback(answer.error,tag);
+        
+        NSString * endPoint = data[@"endpoint"];
+        if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
+            endPoint = [[RTMIPv6Adapter getInstance] handleIpv4Address:endPoint];
         }
+        FPNNTCPClient * fileClient = [self _getFileClient:endPoint];
+        FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendfile" message:resultBody twoWay:YES];
+        [fileClient sendQuest:quest
+                      timeout:RTMClientSendQuestTimeout
+                      success:^(NSDictionary * _Nullable data) {
+
+            if (successCallback) {
+                successCallback([[data objectForKey:@"mtime"] longLongValue]);
+            }
+
+        } fail:^(FPNError * _Nullable error) {
+            _failCallback(error);
+
+        }];
+        
+//        FPNNAnswer* answer = [fileClient sendQuest:quest timeout:RTMClientSendQuestTimeout];
+//        if (answer.responseData) {
+//            NSLog(@"answer.responseData  %@",answer.responseData);
+////            successCallback([[data objectForKey:@"mtime"] longLongValue]);
+//        }else{
+//            NSLog(@"answer.responseData  %@",answer.error);
+//            failCallback(answer.error);
+//        }
        
-    } fail:^(FPNError * _Nullable error,id _Nullable tag) {
-        failCallback(error,tag);
+    } fail:^(FPNError * _Nullable error) {
+        
+        _failCallback(error);
+        
     }];
         
 }
 -(void)sendGroupFileWithId:(NSNumber * _Nonnull)groupId
-                   fileData:(NSData * _Nonnull)fileData
-                   fileName:(NSString * _Nonnull)fileName
-                 fileSuffix:(NSString * _Nonnull)fileSuffix
-                   fileType:(RTMFileType)fileType
-                    timeout:(int)timeout
-                       tag:(id)tag
-                    success:(RTMAnswerSuccessCallBack)successCallback
+                  fileData:(NSData * _Nonnull)fileData
+                  fileName:(NSString * _Nonnull)fileName
+                fileSuffix:(NSString * _Nonnull)fileSuffix
+                  fileType:(RTMFileType)fileType
+                   timeout:(int)timeout
+                   success:(void(^)(int64_t mtime))successCallback
                       fail:(RTMAnswerFailCallBack)failCallback{
     
-    clientCallStatueVerify
-    if (fileData == nil) {
-//        FPNError * error = [FPNError errorWithEx:@"rtm sendGroupFile error. fileData is nil" code:0];
-//        failCallback(error,tag);
-        FPNSLog(@"rtm sendGroupFile error. fileData is nil");
-        return;
-    }
+    clientConnectStatueVerify
     
     [self getGroupFileTokenWithId:groupId
-                          timeout:timeout
-                              tag:tag
-                          success:^(NSDictionary * _Nullable data,id _Nullable tag) {
+                          timeout:RTMClientFileQuestTimeout
+                          success:^(NSDictionary * _Nullable data) {
         
         if (RTMNullString(data[@"endpoint"]) || RTMNullString(data[@"token"])) {
-            FPNError * error = [FPNError errorWithEx:@"rtm sendGroupFile error. getP2PFileToken return data is nil" code:0];
-            failCallback(error,tag);
+            FPNSLog(@"rtm sendFile error. getGroupFileToken return data is nil");
             return ;
         }
         
-        NSDictionary * resultBody = [self _getFileQuestBody:data recvId:groupId fileData:fileData fileName:fileName fileSuffix:fileSuffix fileType:fileType];
+        NSDictionary * resultBody = [self _getFileQuestBody:data
+                                                     recvId:groupId
+                                                   fileData:fileData
+                                                   fileName:fileName
+                                                 fileSuffix:fileSuffix
+                                                   fileType:fileType];
+        
         [resultBody setValue:groupId forKey:@"gid"];
 //        NSLog(@"%@",resultBody);
-        FPNNTCPClient * fileClient = [self _getFileClient:data[@"endpoint"]];
-        FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendgroupfile" message:resultBody twoWay:YES];
-        FPNNAnswer* answer = [fileClient sendQuest:quest timeout:timeout];
-        if (answer.responseData) {
-            successCallback(answer.responseData,tag);
-        }else{
-            failCallback(answer.error,tag);
+        NSString * endPoint = data[@"endpoint"];
+        if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
+            endPoint = [[RTMIPv6Adapter getInstance] handleIpv4Address:endPoint];
         }
+        
+        FPNNTCPClient * fileClient = [self _getFileClient:endPoint];
+        FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendgroupfile" message:resultBody twoWay:YES];
+        [fileClient sendQuest:quest
+                      timeout:RTMClientSendQuestTimeout
+                      success:^(NSDictionary * _Nullable data) {
+            
+            if (successCallback) {
+                successCallback([[data objectForKey:@"mtime"] longLongValue]);
+            }
+            
+        } fail:^(FPNError * _Nullable error) {
+            
+            _failCallback(error);
+            
+        }];
+//        FPNNAnswer* answer = [fileClient sendQuest:quest timeout:timeout];
+//        if (answer.responseData) {
+//            successCallback(answer.responseData,tag);
+//        }else{
+//            failCallback(answer.error,tag);
+//        }
        
-    } fail:^(FPNError * _Nullable error,id _Nullable tag) {
-        failCallback(error,tag);
+    } fail:^(FPNError * _Nullable error) {
+        _failCallback(error);
     }];
     
 }
-
+//
 -(void)sendRoomFileWithId:(NSNumber * _Nonnull)roomId
                  fileData:(NSData * _Nonnull)fileData
                  fileName:(NSString * _Nonnull)fileName
                fileSuffix:(NSString * _Nonnull)fileSuffix
                  fileType:(RTMFileType)fileType
                   timeout:(int)timeout
-                      tag:(id)tag
-                  success:(RTMAnswerSuccessCallBack)successCallback
+                  success:(void(^)(int64_t mtime))successCallback
                      fail:(RTMAnswerFailCallBack)failCallback{
     
     
-    clientCallStatueVerify
-    if (fileData == nil) {
-//        FPNError * error = [FPNError errorWithEx:@"rtm sendRoomFile error. fileData is nil" code:0];
-//        failCallback(error,tag);
-        FPNSLog(@"rtm sendRoomFile error. fileData is nil");
-        return;
-    }
+    clientConnectStatueVerify
     
     [self getRoomFileTokenWithId:roomId
-                         timeout:timeout
-                             tag:tag
-                         success:^(NSDictionary * _Nullable data,id _Nullable tag) {
+                         timeout:RTMClientFileQuestTimeout
+                         success:^(NSDictionary * _Nullable data) {
         
         if (RTMNullString(data[@"endpoint"]) || RTMNullString(data[@"token"])) {
-            FPNError * error = [FPNError errorWithEx:@"rtm sendRoomFile error. getP2PFileToken return data is nil" code:0];
-            failCallback(error,tag);
+            FPNSLog(@"rtm sendFile error. getGroupFileToken return data is nil");
             return ;
         }
         
-        NSDictionary * resultBody = [self _getFileQuestBody:data recvId:roomId fileData:fileData fileName:fileName fileSuffix:fileSuffix fileType:fileType];
+        NSDictionary * resultBody = [self _getFileQuestBody:data
+                                                     recvId:roomId
+                                                   fileData:fileData
+                                                   fileName:fileName
+                                                 fileSuffix:fileSuffix
+                                                   fileType:fileType];
         [resultBody setValue:roomId forKey:@"rid"];
 //        NSLog(@"%@",resultBody);
-        FPNNTCPClient * fileClient = [self _getFileClient:data[@"endpoint"]];
-        FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroomfile" message:resultBody twoWay:YES];
-        FPNNAnswer* answer = [fileClient sendQuest:quest timeout:timeout];
-        if (answer.responseData) {
-            successCallback(answer.responseData,tag);
-        }else{
-            failCallback(answer.error,tag);
+        NSString * endPoint = data[@"endpoint"];
+        if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
+            endPoint = [[RTMIPv6Adapter getInstance] handleIpv4Address:endPoint];
         }
+        
+        FPNNTCPClient * fileClient = [self _getFileClient:endPoint];
+        FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroomfile" message:resultBody twoWay:YES];
+        [fileClient sendQuest:quest
+                      timeout:RTMClientSendQuestTimeout
+                      success:^(NSDictionary * _Nullable data) {
+            
+            if (successCallback) {
+                successCallback([[data objectForKey:@"mtime"] longLongValue]);
+            }
+            
+        } fail:^(FPNError * _Nullable error) {
+            
+            _failCallback(error);
+            
+        }];
+//        FPNNAnswer* answer = [fileClient sendQuest:quest timeout:timeout];
+//        if (answer.responseData) {
+//            successCallback(answer.responseData);
+//        }else{
+//            failCallback(answer.error);
+//        }
        
-    } fail:^(FPNError * _Nullable error,id _Nullable tag) {
-        failCallback(error,tag);
+    } fail:^(FPNError * _Nullable error) {
+        _failCallback(error);
     }];
     
 }
@@ -253,9 +343,9 @@
 //    NSString * endpoint = data[@"endpoint"];
     
     NSMutableDictionary * questDic = [NSMutableDictionary dictionary];
-    [questDic setValue:@(self.pid) forKey:@"pid"];
+    [questDic setValue:@(self.projectId) forKey:@"pid"];
     [questDic setValue:token forKey:@"token"];
-    [questDic setValue:@(self.uid) forKey:@"from"];
+    [questDic setValue:@(self.userId) forKey:@"from"];
     [questDic setValue:mid forKey:@"mid"];
     [questDic setValue:fileData forKey:@"file"];
     [self _fileType:fileType questDic:questDic];
@@ -274,21 +364,22 @@
     return questDic;
 }
 -(FPNNTCPClient*)_getFileClient:(NSString*)endPoint{
-    
-    NSCache * fileClientCache = (NSCache *)[self valueForKey:@"fileClientCache"];
-    if (fileClientCache) {
-        FPNNTCPClient * cacheClient = [fileClientCache objectForKey:endPoint];
-        if (cacheClient) {
-            return cacheClient;
+    @synchronized (self) {
+        NSCache * fileClientCache = (NSCache *)[self valueForKey:@"fileClientCache"];
+        if (fileClientCache) {
+            FPNNTCPClient * cacheClient = [fileClientCache objectForKey:endPoint];
+            if (cacheClient) {
+                return cacheClient;
+            }else{
+                FPNNTCPClient * newClient = [FPNNTCPClient clientWithEndpoint:endPoint];
+                [fileClientCache setObject:newClient forKey:endPoint];
+                return newClient;
+            }
         }else{
             FPNNTCPClient * newClient = [FPNNTCPClient clientWithEndpoint:endPoint];
             [fileClientCache setObject:newClient forKey:endPoint];
             return newClient;
         }
-    }else{
-        FPNNTCPClient * newClient = [FPNNTCPClient clientWithEndpoint:endPoint];
-        [fileClientCache setObject:newClient forKey:endPoint];
-        return newClient;
     }
 }
 -(void)_fileType:(RTMFileType)fileType questDic:(NSMutableDictionary*)questDic{

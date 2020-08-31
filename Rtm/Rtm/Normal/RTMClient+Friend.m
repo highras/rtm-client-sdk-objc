@@ -15,169 +15,293 @@
 @implementation RTMClient (Friend)
 -(void)addFriendWithId:(NSArray*)friendids
                timeout:(int)timeout
-                   tag:(id)tag
-               success:(RTMAnswerSuccessCallBack)successCallback
+               success:(void(^)(void))successCallback
                   fail:(RTMAnswerFailCallBack)failCallback{
     
-    clientCallStatueVerify
+    clientConnectStatueVerify
+    
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:friendids forKey:@"friends"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"addfriends" message:dic twoWay:YES];
     
-    BOOL result = handlerCallResult(quest,timeout,tag);
-    handlerResultFail;
-    //return  handlerCallResult(quest,timeout,tag);
+    BOOL result = [mainClient sendQuest:quest
+                                timeout:RTMClientSendQuestTimeout
+                                success:^(NSDictionary * _Nullable data) {
+        
+        if (successCallback) {
+            successCallback();
+        }
+    
+    }fail:^(FPNError * _Nullable error) {
+        
+          _failCallback(error);
+
+    }];
+        
+    handlerNetworkError;
     
 }
--(RTMAnswer*)addFriendWithId:(NSArray*)friendids
-                     timeout:(int)timeout{
+-(RTMBaseAnswer*)addFriendWithId:(NSArray*)friendids
+                         timeout:(int)timeout{
     
-    clientStatueVerify
+    RTMBaseAnswer * model = [RTMBaseAnswer new];
+    clientConnectStatueVerifySync
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:friendids forKey:@"friends"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"addfriends" message:dic twoWay:YES];
+    FPNNAnswer * answer = [mainClient sendQuest:quest
+                                        timeout:RTMClientSendQuestTimeout];
     
-    return  handlerResult(quest,timeout);
+    if (answer.error == nil) {
+       
+    }else{
+        model.error = answer.error;
+    }
+    
+    return model;
     
 }
-
-
-
+//
+//
+//
 -(void)deleteFriendWithId:(NSArray*)friendids
                   timeout:(int)timeout
-                      tag:(id)tag
-                  success:(RTMAnswerSuccessCallBack)successCallback
+                  success:(void(^)(void))successCallback
                      fail:(RTMAnswerFailCallBack)failCallback{
     
-    clientCallStatueVerify
+    clientConnectStatueVerify
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:friendids forKey:@"friends"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"delfriends" message:dic twoWay:YES];
     
-    BOOL result = handlerCallResult(quest,timeout,tag);
-    handlerResultFail;
-    //return  handlerCallResult(quest,timeout,tag);
+    BOOL result = [mainClient sendQuest:quest
+                                timeout:RTMClientSendQuestTimeout
+                                success:^(NSDictionary * _Nullable data) {
+        
+        if (successCallback) {
+            successCallback();
+        }
+    
+    }fail:^(FPNError * _Nullable error) {
+        
+          _failCallback(error);
+
+    }];
+        
+    handlerNetworkError;
     
 }
--(RTMAnswer*)deleteFriendWithId:(NSArray*)friendids
+-(RTMBaseAnswer*)deleteFriendWithId:(NSArray*)friendids
                         timeout:(int)timeout{
     
-    clientStatueVerify
+    RTMBaseAnswer * model = [RTMBaseAnswer new];
+    clientConnectStatueVerifySync
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:friendids forKey:@"friends"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"delfriends" message:dic twoWay:YES];
+    FPNNAnswer * answer = [mainClient sendQuest:quest
+                                        timeout:RTMClientSendQuestTimeout];
     
-    return  handlerResult(quest,timeout);
+    if (answer.error == nil) {
+       
+    }else{
+        model.error = answer.error;
+    }
+    
+    return model;
     
 }
-
-
-
+//
+//
+//
 -(void)getUserFriendsWithTimeout:(int)timeout
-                             tag:(id)tag
-                         success:(RTMAnswerSuccessCallBack)successCallback
+                         success:(void(^)(NSArray * _Nullable uidsArray))successCallback
                             fail:(RTMAnswerFailCallBack)failCallback{
     
-    clientCallStatueVerify
+    clientConnectStatueVerify
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getfriends" message:nil twoWay:YES];
     
-    BOOL result = handlerCallResult(quest,timeout,tag);
-    handlerResultFail;
-    //return  handlerCallResult(quest,timeout,tag);
+    BOOL result = [mainClient sendQuest:quest
+                                timeout:RTMClientSendQuestTimeout
+                                success:^(NSDictionary * _Nullable data) {
+        
+        if (successCallback) {
+            successCallback([data objectForKey:@"uids"]);
+        }
+    
+    }fail:^(FPNError * _Nullable error) {
+        
+          _failCallback(error);
+
+    }];
+        
+    handlerNetworkError;
 }
                           
--(RTMAnswer*)getUserFriendsWithTimeout:(int)timeout{
+-(RTMMemberAnswer*)getUserFriendsWithTimeout:(int)timeout{
     
-    clientStatueVerify
+    RTMMemberAnswer * model = [RTMMemberAnswer new];
+    clientConnectStatueVerifySync
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getfriends" message:nil twoWay:YES];
+    FPNNAnswer * answer = [mainClient sendQuest:quest
+                                        timeout:RTMClientSendQuestTimeout];
     
-    return  handlerResult(quest,timeout);
+    if (answer.error == nil) {
+        model.dataArray = [answer.responseData objectForKey:@"uids"];
+    }else{
+        model.error = answer.error;
+    }
+    
+    return model;
 }
+//
 
 -(void)addBlacklistWithUserIds:(NSArray <NSNumber* >* _Nonnull)friendids
                        timeout:(int)timeout
-                           tag:(id _Nullable)tag
-                       success:(RTMAnswerSuccessCallBack)successCallback
+                       success:(void(^)(void))successCallback
                           fail:(RTMAnswerFailCallBack)failCallback{
     
-    clientCallStatueVerify
+    clientConnectStatueVerify
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:friendids forKey:@"blacks"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"addblacks" message:dic twoWay:YES];
     
-    BOOL result = handlerCallResult(quest,timeout,tag);
-    handlerResultFail;
+    BOOL result = [mainClient sendQuest:quest
+                                timeout:RTMClientSendQuestTimeout
+                                success:^(NSDictionary * _Nullable data) {
+        
+        if (successCallback) {
+            successCallback();
+        }
+    
+    }fail:^(FPNError * _Nullable error) {
+        
+          _failCallback(error);
+
+    }];
+        
+    handlerNetworkError;
     
 }
--(RTMAnswer*)addBlacklistWithUserIds:(NSArray <NSNumber* >* _Nonnull)friendids
+-(RTMBaseAnswer*)addBlacklistWithUserIds:(NSArray <NSNumber* >* _Nonnull)friendids
                              timeout:(int)timeout{
     
-    clientStatueVerify
-    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    [dic setValue:friendids forKey:@"blacks"];
-    
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"addblacks" message:dic twoWay:YES];
-    
-    return  handlerResult(quest,timeout);
+        RTMBaseAnswer * model = [RTMBaseAnswer new];
+       clientConnectStatueVerifySync
+       NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+       [dic setValue:friendids forKey:@"blacks"];
+       FPNNQuest * quest = [FPNNQuest questWithMethod:@"addblacks" message:dic twoWay:YES];
+       FPNNAnswer * answer = [mainClient sendQuest:quest
+                                           timeout:RTMClientSendQuestTimeout];
+       
+       if (answer.error == nil) {
+          
+       }else{
+           model.error = answer.error;
+       }
+       
+       return model;
     
 }
-   
-
+//   
+//
+//
 -(void)deleteBlacklistWithUserIds:(NSArray <NSNumber* >* _Nonnull)friendids
-                       timeout:(int)timeout
-                           tag:(id _Nullable)tag
-                       success:(RTMAnswerSuccessCallBack)successCallback
+                          timeout:(int)timeout
+                          success:(void(^)(void))successCallback
                              fail:(RTMAnswerFailCallBack)failCallback{
     
     
-    clientCallStatueVerify
+    clientConnectStatueVerify
+    
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:friendids forKey:@"blacks"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"delblacks" message:dic twoWay:YES];
     
-    BOOL result = handlerCallResult(quest,timeout,tag);
-    handlerResultFail;
+    BOOL result = [mainClient sendQuest:quest
+                                timeout:RTMClientSendQuestTimeout
+                                success:^(NSDictionary * _Nullable data) {
+        
+        if (successCallback) {
+            successCallback();
+        }
+    
+    }fail:^(FPNError * _Nullable error) {
+        
+          _failCallback(error);
+
+    }];
+        
+    handlerNetworkError;
     
 }
--(RTMAnswer*)deleteBlacklistWithUserIds:(NSArray <NSNumber* >* _Nonnull)friendids
+-(RTMBaseAnswer*)deleteBlacklistWithUserIds:(NSArray <NSNumber* >* _Nonnull)friendids
                                 timeout:(int)timeout{
     
     
-    clientStatueVerify
+    RTMBaseAnswer * model = [RTMBaseAnswer new];
+    clientConnectStatueVerifySync
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:friendids forKey:@"blacks"];
-    
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"delblacks" message:dic twoWay:YES];
+    FPNNAnswer * answer = [mainClient sendQuest:quest
+                                        timeout:RTMClientSendQuestTimeout];
     
-    return  handlerResult(quest,timeout);
+    if (answer.error == nil) {
+       
+    }else{
+        model.error = answer.error;
+    }
+    
+    return model;
     
 }
-
+//
+//
+//
 -(void)getBlacklistWithTimeout:(int)timeout
-                           tag:(id _Nullable)tag
-                       success:(RTMAnswerSuccessCallBack)successCallback
+                       success:(void(^)(NSArray * _Nullable uidsArray))successCallback
                           fail:(RTMAnswerFailCallBack)failCallback{
     
-    clientCallStatueVerify
+    clientConnectStatueVerify
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getblacks" message:nil twoWay:YES];
+    BOOL result = [mainClient sendQuest:quest
+                                timeout:RTMClientSendQuestTimeout
+                                success:^(NSDictionary * _Nullable data) {
+        
+        if (successCallback) {
+            successCallback([data objectForKey:@"uids"]);
+        }
+    
+    }fail:^(FPNError * _Nullable error) {
+        
+          _failCallback(error);
 
-    BOOL result = handlerCallResult(quest,timeout,tag);
-    handlerResultFail;
+    }];
+        
+    handlerNetworkError;
     
 }
--(RTMAnswer*)getBlacklistWithTimeout:(int)timeout{
+-(RTMMemberAnswer*)getBlacklistWithTimeout:(int)timeout{
     
-    clientStatueVerify
+    RTMMemberAnswer * model = [RTMMemberAnswer new];
+    clientConnectStatueVerifySync
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getblacks" message:nil twoWay:YES];
+    FPNNAnswer * answer = [mainClient sendQuest:quest
+                                        timeout:RTMClientSendQuestTimeout];
     
-    return  handlerResult(quest,timeout);
+    if (answer.error == nil) {
+        model.dataArray = [answer.responseData objectForKey:@"uids"];
+    }else{
+        model.error = answer.error;
+    }
+    
+    return model;
        
     
 }
-
 @end
-

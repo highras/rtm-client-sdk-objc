@@ -5,6 +5,7 @@
 //  Created by zsl on 2019/12/11.
 //  Copyright © 2019 FunPlus. All rights reserved.
 //
+
 #import "RTMClientManger.h"
 #import "RTMClient.h"
 #import "RTMIPv6Adapter.h"
@@ -13,836 +14,656 @@
 #import "RTMClient+User.h"
 #import <objc/runtime.h>
 #import "RTMAudioTools.h"
+#import "FPNetworkReachabilityManager.h"
+#import "RTMClient+MessagesManager.h"
 
-
-//#define IOS_CELLULAR    @"pdp_ip0"
-//#define IOS_WIFI        @"en0"
-//#define IOS_VPN         @"utun0"
-//#define IP_ADDR_IPv4    @"ipv4"
-//#define IP_ADDR_IPv6    @"ipv6"
-//#import <ifaddrs.h>
-//#import <arpa/inet.h>
-//#import <net/if.h>
+typedef NS_ENUM(NSInteger, RTMClientNetStatus){
+    RTMClientNetStatusNoDetection = -1,
+    RTMClientNetStatusNone = 0,
+    RTMClientNetStatusReachableViaWWAN = 1,
+    RTMClientNetStatusReachableWifi = 2
+};
 
 @interface RTMClient()
 
-@property(nonatomic,strong)FPNNTCPClient * rtmGatedClient;
-@property(nonatomic,strong)NSString * rtmGatedEndPoint;
 
+//netState
+@property(nonatomic,assign)RTMClientNetStatus netStatus;
+//relogin
+@property(nonatomic,assign)BOOL autoRelogin;  //
+@property(nonatomic,assign)int reloginNum;    //
+//@property(nonatomic,assign)BOOL isCanRelogin;   //主动断开  被T  token无效等行为 置为false
+@property(nonatomic,assign)int quickReloginNum; //两次 重连前两次 不询问用户
+
+//init
+@property(nonatomic,strong)RTMClientConfig * config;
+
+//login
+@property(nonatomic,copy)NSString * whichEndpoint;
+@property (nonatomic,copy)NSString * token;
+@property (nonatomic,copy)NSString * language;
+@property (nonatomic,strong)NSDictionary * attribute;
+@property (nonatomic,copy)RTMLoginSuccessCallBack loginSuccess;
+@property (nonatomic,copy)RTMLoginFailCallBack loginFail;
+@property(nonatomic,assign)RTMClientConnectStatus connectStatus;
+@property(nonatomic,assign)int loginTimeout;//which + auth 总计  超过则fail回调
+
+//which
+@property (nonatomic,strong)FPNNTCPClient * whichClient;
+
+//auth
 @property(nonatomic,strong)FPNNTCPClient * authClient;
-@property(nonatomic,strong)NSString * authEndPoint;
-
 @property(nonatomic,strong)FPNNTCPClient * usingClient;
+@property(nonatomic,strong)NSString * authEndPoint;
+@property(nonatomic,assign)BOOL authFinish;//auth登录成功后 为YES
 
-@property(nonatomic,copy)RTMConnectSuccessCallBack connectSuccessBlock;
-@property(nonatomic,copy)RTMConnectFailCallBack connectFailBlock;
-@property(nonatomic,strong)NSMutableDictionary * gatedQuestDic;
-@property(nonatomic,assign)BOOL authFinish;
-
-@property(nonatomic,strong)NSCache * fileClientCache;
+//ping
 @property(nonatomic,strong)dispatch_source_t pingTimer;
 @property(nonatomic,strong)NSDate * lastPingTime;
 
+//file
+@property(nonatomic,strong)NSCache * fileClientCache;
+
+//duplicate message
 @property(nonatomic,strong)NSCache * messageDuplicatedCache;
 
+//messageId
 @property(nonatomic,assign)long long  messageId;
 
-@property(nonatomic,assign)RTMClientStatus connectStatus;
+//
+//@property(nonatomic,strong)NSDate * toBacKGroudTime;
+
+//是否触发 fpn close回调标识 kickout  切网   bye   主动close 飞行模式 不处理close回调   只有ping超时2分钟处理
+@property(nonatomic,assign)BOOL isOverlookFpnnCloseCallBack;
 @end
 
 @implementation RTMClient
+
 #pragma mark init
-- (void)_defaultSettings{
-//    _clientStatus = RTMConnectClose;
-    _sdkVersion = @"2.0.2";
-    _apiVersion = @"2.1.0";
-    _connectStatus = RTMConnectClose;
-    _sendQuestTimeout = 30;
-//    _version = nil;
-    _lang = nil;
-    _attrs = nil;
-    _os = nil;
-    _addrType = nil;
-    _proto = nil;
-    _fileClientCache = [[NSCache alloc]init];
-    _fileClientCache.countLimit = 5;
-    _messageDuplicatedCache = [[NSCache alloc]init];
-    _messageDuplicatedCache.countLimit = 10000;
-    _messageId = [[NSDate date] timeIntervalSince1970] * 1000 * 1000;
++ (nullable instancetype)clientWithEndpoint:(nonnull NSString * )endpoint
+                                  projectId:(int64_t)projectId
+                                     userId:(int64_t)userId
+                                   delegate:(id<RTMProtocol>)delegate
+                                     config:(nullable RTMClientConfig *)config
+                                autoRelogin:(BOOL)autoRelogin{
     
-    //....
-}
-- (BOOL)_initializeExceptionHandle{
-    if (_rtmGatedEndPoint == nil || _pid == 0 || _uid == 0 || _token == nil) {
-        return NO;
-    }
-    return YES;
-}
-- (instancetype _Nullable)initWithEndpoint:(NSString * _Nonnull)endpoint pid:(int32_t)pid uid:(int64_t)uid token:(NSString*)token{
-    self = [super init];
-    if (self) {
-        
-        _rtmGatedEndPoint = endpoint;
-        _pid = pid;
-        _uid = uid;
-        _token = token;
-        
-        if ([self _initializeExceptionHandle]) {
-            [self _defaultSettings];
-        }else{
-            FPNSLog(@"rtm initClient invalid parameter");
-            return nil;
-        }
-
-        ((void* (*)(id, SEL,RTMClient*))[[RTMClientManger shareInstance] methodForSelector:NSSelectorFromString(@"addRecordClient:")])([RTMClientManger shareInstance], NSSelectorFromString(@"addRecordClient:"),self);
-        
-    }
-    return self;
-}
-- (instancetype _Nullable)initWithHost:(NSString * _Nonnull)host port:(int)port pid:(int32_t)pid uid:(int64_t)uid token:(NSString*)token{
-    self = [super init];
-    if (self) {
-        
-        _rtmGatedEndPoint = [NSString stringWithFormat:@"%@:%d",host,port];;
-        _pid = pid;
-        _uid = uid;
-        _token = token;
-        
-        if ([self _initializeExceptionHandle]) {
-            [self _defaultSettings];
-        }else{
-            FPNSLog(@"rtm initClient invalid parameter");
-            return nil;
-        }
-        
-        ((void* (*)(id, SEL,RTMClient*))[[RTMClientManger shareInstance] methodForSelector:NSSelectorFromString(@"addRecordClient:")])([RTMClientManger shareInstance], NSSelectorFromString(@"addRecordClient:"),self);
-    }
-    return self;
-}
-+ (instancetype _Nullable)clientWithEndpoint:(NSString * _Nonnull)endpoint pid:(int32_t)pid uid:(int64_t)uid token:(NSString*)token{
-    return [[self alloc]initWithEndpoint:endpoint pid:pid uid:uid token:token];
-}
-+ (instancetype _Nullable)clientWithHost:(NSString * _Nonnull)host port:(int)port pid:(int32_t)pid uid:(int64_t)uid token:(NSString*)token{
-    return [[self alloc]initWithHost:host port:port pid:pid uid:uid token:token];
-}
-
-#pragma mark Handle
-- (void)verifyConnectSuccess:(RTMConnectSuccessCallBack)success connectFali:(RTMConnectFailCallBack)fail{
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    if (endpoint == nil || endpoint.length == 0 || projectId == 0 || userId == 0) {
+        FPNSLog(@"rtm init client invalid parameter");
+        return nil;
+    }
+    
+    RTMClient * client = [[RTMClient alloc] initWithEndpoint:endpoint
+                                                   projectId:projectId
+                                                      userId:userId
+                                                    delegate:delegate
+                                                      config:config
+                                                 autoRelogin:autoRelogin];
+    
+    return client;
+    
+}
+- (instancetype)initWithEndpoint:(NSString * _Nonnull)endpoint
+                       projectId:(int64_t)projectId
+                          userId:(int64_t)userId
+                        delegate:(id<RTMProtocol>)delegate
+                          config:(RTMClientConfig *)config
+                     autoRelogin:(BOOL)autoRelogin{
+    
+    self = [super init];
+    
    
-        @synchronized (self) {
+    if (self) {
+        _netStatus = RTMClientNetStatusNoDetection;
+        _whichEndpoint = endpoint;
+        _projectId = projectId;
+        _userId = userId;
+        _config = config;
+        _autoRelogin = autoRelogin;
+        _sdkVersion = @"2.0.3";
+        _apiVersion = @"2.2.1";
+        _reloginNum = 0;
+        _connectStatus = RTMClientConnectStatusConnectClosed;
+        _delegate = delegate;
+        _messageId = [[NSDate date] timeIntervalSince1970] * 1000 * 1000;
+        _fileClientCache = [[NSCache alloc]init];
+        _fileClientCache.countLimit = 5;
+        
+        if (config == nil) {
             
-            self.connectSuccessBlock = success;
-            self.connectFailBlock = fail;
-            self.connectStatus = RTMConnecting;
-        
-            self.gatedQuestDic = [NSMutableDictionary dictionary];
-            [self.gatedQuestDic setValue:@"rtmGated" forKey:@"what"];
-            if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
-                [self.gatedQuestDic setValue:@"ipv6" forKey:@"addrType"];
-            }else{
-                [self.gatedQuestDic setValue:self.addrType forKey:@"addrType"];
+            RTMClientConfig * config = [RTMClientConfig new];
+            config.sendQuestTimeout = 30;
+            config.fileQuestTimeout = 60;
+            config.translateTimeout = 120;
+            _clientConfig = config;
+            
+        }else{
+            
+            _clientConfig = config;
+            if (_clientConfig.sendQuestTimeout <= 0 ) {
+                _clientConfig.sendQuestTimeout = 30;
             }
-            [self.gatedQuestDic setValue:self.proto forKey:@"proto"];
-//            [self.gatedQuestDic setValue:self.apiVersion forKey:@"version"];
+            if (_clientConfig.fileQuestTimeout <= 0 ) {
+                _clientConfig.fileQuestTimeout = 60;
+            }
+            if (_clientConfig.translateTimeout <= 0 ) {
+                _clientConfig.translateTimeout = 120;
+            }
+            
+        }
+        [self _startNetMonitor];
         
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    }
+    
+    return self;
+    
+}
+//-(void)didBecomeActive{
+//    NSLog(@"didBecomeActive");
+//}
+//-(void)didEnterBackground{
+//    NSLog(@"didEnterBackground");
+////    self.toBacKGroudTime = [NSDate date];
+////    float f = self.toBacKGroudTime.timeIntervalSinceNow;
+////    if (-ceil(f) >= 120) {
+////        if (self.autoRelogin) {
+////            [self _closeConnectHandle:NO];
+////            [self _reLogin];
+////        }else{
+////            [self _closeConnectHandle:YES];
+////        }
+////    }
+//}
+
+- (void)loginWithToken:(NSString * _Nonnull)token
+              language:(NSString * _Nullable)language
+             attribute:(NSDictionary * _Nullable)attribute
+               timeout:(int)timeout
+               success:(RTMLoginSuccessCallBack)loginSuccess
+           connectFail:(RTMLoginFailCallBack)loginFail{
+    
+    
+    
+    if ([self.delegate respondsToSelector:@selector(rtmReloginCompleted:reloginCount:reloginResult:error:)] == NO ||
+        [self.delegate respondsToSelector:@selector(rtmReloginWillStart:reloginCount:)] == NO)  {
+        FPNSLog(@"rtm loginWithToken error , no implement RTMProtocol required delegate methods");
+        return;
+    }
+    
+    if (token == nil || token.length == 0) {
+        FPNSLog(@"rtm loginWithToken error , invalid token");
+        return;
+    }
+    
+    if (self.connectStatus == RTMClientConnectStatusConnectClosed && self.authFinish == NO) {
+        
+        self.token = token;
+        self.language = language;
+        self.loginSuccess = loginSuccess;
+        self.loginFail = loginFail;
+        self.loginTimeout = timeout;
+        if (self.loginTimeout <= 0) {
+            self.loginTimeout = 30;
+        }
+        [self _toLogin:YES];
+        
+    }
+        
+}
+-(void)_toLogin:(BOOL)isLogin{
+    
+   
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        self.connectStatus = RTMClientConnectStatusConnecting;
+
+        if (self.authEndPoint == nil) {
+            [self _whichRequest];
+        }else{
+            [self _authRequest];
         }
         
-        [self _rtmGatedQuestHandle];
+        if (isLogin) {
+            [self performSelector:@selector(_checkLoginIsFinish) withObject:nil afterDelay:self.loginTimeout];
+        }
+        
         
     });
     
+    
 }
-
-
--(void)_rtmGatedAllQuestHandle{
-    @synchronized (self) {
-        self.rtmGatedClient = [FPNNTCPClient clientWithEndpoint:_rtmGatedEndPoint];
+#pragma mark login
+- (void)_whichRequest{
+    
+    NSMutableDictionary * whichQuestDic = [NSMutableDictionary dictionary];
+    [whichQuestDic setValue:@"rtmGated" forKey:@"what"];
+    if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
+        [whichQuestDic setValue:@"ipv6" forKey:@"addrType"];
     }
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"whichall" message:_gatedQuestDic twoWay:YES];
-    @rtmWeakify(self);
-    BOOL result = [self.rtmGatedClient sendQuest:quest timeout:self.sendQuestTimeout success:^(NSDictionary * _Nullable data) {
-        @rtmStrongify(self);
-        NSArray * endpointsArray = data[@"endpoints"];
-        if (RTMNullString(endpointsArray.firstObject) == NO) {
+    
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"which"
+                                           message:whichQuestDic
+                                            twoWay:YES];
+    
+        @rtmWeakify(self);
+        BOOL result = [self.whichClient sendQuest:quest
+                                          timeout:self.loginTimeout
+                                          success:^(NSDictionary * _Nullable data) {
             
-            [self.rtmGatedClient closeConnect];
-            
-            @synchronized (self) {
-                self.authEndPoint = endpointsArray.firstObject;
-                self.rtmGatedClient = nil;
-            }
-            [self _authQuestHandle];
+            @rtmStrongify(self);
+//            NSLog(@"which %@",data);
+            NSString * endPoint = data[@"endpoint"];
+            if (endPoint == nil || endPoint.length == 0) {
                 
-        }else{
-            
-            @synchronized (self) {
-                self.connectStatus = RTMConnectFail;
-            }
-            FPNError * error = [FPNError errorWithEx:@"method whichall quest , answer endpoint is nil" code:300000];
-            if (self.connectFailBlock) {
-                self.connectFailBlock(error);
-            }
-            [self.rtmGatedClient closeConnect];
                 
-        }
-        
-    } fail:^(FPNError * _Nullable error) {
-        
-        @rtmStrongify(self);
-        @synchronized (self) {
-            self.connectStatus = RTMConnectFail;
-        }
-        if (self.connectFailBlock) {
-            self.connectFailBlock(error);
-        }
-        [self.rtmGatedClient closeConnect];
-        
-    }];
-    
-    
-    //无网络
-    if (result == NO) {
-        @synchronized (self) {
-            self.connectStatus = RTMConnectFail;
-        }
-        FPNError * error = [FPNError errorWithEx:@"method whichall network error" code:300003];
-        if (self.connectFailBlock) {
-            self.connectFailBlock(error);
-        }
-        [_authClient closeConnect];
-    }
-}
-
--(void)_rtmGatedQuestHandle{
-    @synchronized (self) {
-        self.rtmGatedClient = [FPNNTCPClient clientWithEndpoint:_rtmGatedEndPoint];
-    }
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"which" message:_gatedQuestDic twoWay:YES];
-    @rtmWeakify(self);
-    BOOL result = [self.rtmGatedClient sendQuest:quest timeout:self.sendQuestTimeout success:^(NSDictionary * _Nullable data) {
-        @rtmStrongify(self);
-//        NSLog(@"%@",data);
-        NSString * endPoint = data[@"endpoint"];
-        if (RTMNullString(endPoint) == NO) {
-            
-            [self.rtmGatedClient closeConnect];
-            @synchronized (self) {
-                self.authEndPoint = endPoint;
-                self.rtmGatedClient = nil;
-            }
-            
-            [self _authQuestHandle];
-            
-        }else{
-            
-            [self _rtmGatedAllQuestHandle];
-            
-        }
-    } fail:^(FPNError * _Nullable error) {
-        
-        @rtmStrongify(self);
-        @synchronized (self) {
-            self.connectStatus = RTMConnectFail;
-        }
-        if (self.connectFailBlock) {
-            self.connectFailBlock(error);
-        }
-        [self.rtmGatedClient closeConnect];
-        
-    }];
-    
-    
-    //无网络
-    if (result == NO) {
-        @synchronized (self) {
-            self.connectStatus = RTMConnectFail;
-        }
-        FPNError * error = [FPNError errorWithEx:@"method which network error" code:300002];
-        if (self.connectFailBlock) {
-            self.connectFailBlock(error);
-        }
-        [_authClient closeConnect];
-    }
-}
--(void)_authQuestHandle{
-    
-    NSMutableDictionary * questDic = [NSMutableDictionary dictionary];
-    [questDic setValue:@(_pid) forKey:@"pid"];
-    [questDic setValue:@(_uid) forKey:@"uid"];
-    [questDic setValue:_token forKey:@"token"];
-    [questDic setValue:_sdkVersion forKey:@"version"];
-    [questDic setValue:_lang forKey:@"lang"];
-    [questDic setValue:_attrs forKey:@"attrs"];
-    [questDic setValue:_os forKey:@"os"];
-    
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"auth" message:questDic twoWay:YES];
-    @rtmWeakify(self);
-    BOOL result = [self.authClient sendQuest:quest timeout:self.sendQuestTimeout success:^(NSDictionary * _Nullable data) {
-        @rtmStrongify(self);
-        
-            if ([data[@"ok"] boolValue]) {
-                @synchronized (self) {
-                    self.connectStatus = RTMConnected;
-                    self.authFinish = YES;
-                    self.usingClient = self.authClient;
-                }
-                self.usingClient.connectionSuccessCallBack();
-                if (self.connectSuccessBlock) {
-                    self.connectSuccessBlock(data);
+                self.connectStatus = RTMClientConnectStatusConnectClosed;
+                if (self.loginFail) {
+                    self.loginFail([FPNError errorWithEx:@"" code:1]);
                 }
                 
             }else{
                 
+                [self.whichClient closeConnect];
+                @synchronized (self) {
+                    self.whichClient = nil;
+                }
+                if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
+                    endPoint = [[RTMIPv6Adapter getInstance] handleIpv4Address:endPoint];
+                }
+                
+                @synchronized (self) {
+                    
+                    self.authEndPoint = endPoint;
+                    
+                }
+                [self _authRequest];
+                
+            }
+            
+        } fail:^(FPNError * _Nullable error) {
+            
+            @rtmStrongify(self);
+            
+            self.connectStatus = RTMClientConnectStatusConnectClosed;
+            [self.whichClient closeConnect];
+            if (self.loginFail) {
+                self.loginFail(error);
+            }
+            
+        }];
+        
+        //无网络
+        if (result == NO) {
+            
+            self.connectStatus = RTMClientConnectStatusConnectClosed;
+            [self.whichClient closeConnect];
+            
+            if (self.loginFail) {
+                self.loginFail([FPNError errorWithEx:@"FPNN_EC_CORE_INVALID_CONNECTION" code:20012]);
+            }
+            
+        }
+}
+- (void)_authRequest{
+    
+    NSMutableDictionary * authQuestDic = [NSMutableDictionary dictionary];
+    [authQuestDic setValue:@(_projectId) forKey:@"pid"];
+    [authQuestDic setValue:@(_userId) forKey:@"uid"];
+    [authQuestDic setValue:_token forKey:@"token"];
+    [authQuestDic setValue:_language forKey:@"lang"];
+    [authQuestDic setValue:_attribute forKey:@"attrs"];
+    
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"auth"
+                                           message:authQuestDic
+                                            twoWay:YES];
+    @rtmWeakify(self);
+    BOOL result = [self.authClient sendQuest:quest
+                                     timeout:self.loginTimeout
+                                     success:^(NSDictionary * _Nullable data) {
+//        NSLog(@"auth %@",data);
+        @rtmStrongify(self);
+        
+            if ([data[@"ok"] boolValue]) {
+                
+                self.connectStatus = RTMClientConnectStatusConnected;
+                
+                
+                if (self.authFinish) {//重连
+//                    NSLog(@"重连登录成功");
+                    //重连成功回调
+                    [self _reloginComplete:nil];
+                    @synchronized (self) {
+                        self.lastPingTime = [NSDate date];
+                        self.authFinish = YES;
+                        self.usingClient = self.authClient;
+                    }
+                    
+                }else{//登录
+//                    NSLog(@"常规登录成功");
+                    @synchronized (self) {
+                        self.authFinish = YES;
+                        self.usingClient = self.authClient;
+                    }
+                    
+                    if (self.loginSuccess) {
+//                        NSLog(@" loginSuccessloginSuccessloginSuccess %@",self.usingClient);
+                        self.loginSuccess();
+                    }
+                }
+                @synchronized (self) {
+                    self.reloginNum = 0;
+                }
+                
+        
+            }else{//多点登录
                 NSString * endPoint = data[@"gate"];
-                if (RTMNullString(endPoint) == NO) {
-                    @synchronized (self) {
-                        self.authFinish = NO;
-                        self.authEndPoint = endPoint;
-                        [self.authClient closeConnect];
-                        self.authClient = nil;
+                if (endPoint == nil || endPoint.length == 0) {//token invalid
+                   
+                    self.connectStatus = RTMClientConnectStatusConnectClosed;
+//                    [self.authClient closeConnect];
+//                    self.authClient = nil;
+//                    self.usingClient = nil;
+//                    NSLog(@"token invalidtoken invalidtoken invalid");
+                    if (self.authFinish) {//重连
+                        
+                        @synchronized (self) {
+                            self.authFinish = NO;
+                        }
+                        
+                        [self _closeConnectHandle:NO];
+                        
+                        //重连失败回调
+                        [self _reloginComplete:[FPNError errorWithEx:@"RTM_EC_INVALID_AUTH_TOEKN" code:200027]];
+                        //关闭回调
+                        [self _byeCloseConnect];
+                        
+                    }else{
+                        //登录
+                        [self _closeConnectHandle:NO];
+                        if (self.loginFail) {
+                            self.loginFail([FPNError errorWithEx:@"RTM_EC_INVALID_AUTH_TOEKN" code:200027]);
+                        }
                     }
-                    [self _authQuestHandle];
+                                  
+                    
                 }else{
+                    
+                    if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
+                        endPoint = [[RTMIPv6Adapter getInstance] handleIpv4Address:endPoint];
+                    }
+                    
                     @synchronized (self) {
-                        self.connectStatus = RTMConnectFail;
+                        @synchronized (self) {
+                            self.authEndPoint = endPoint;
+                            [self.authClient closeConnect];
+                            self.authClient = nil;
+                            self.usingClient = nil;
+                        }
+                        
+                        
                     }
-                    FPNError * error = [FPNError errorWithEx:@"method auth quest , answer gate is nil" code:300001];
-                    if (self.connectFailBlock) {
-                        self.connectFailBlock(error);
-                    }
-                    [self.authClient closeConnect];
-
+                    
+                    [self _authRequest];
+                    
                 }
                 
             }
         
     } fail:^(FPNError * _Nullable error) {
+        
         @rtmStrongify(self);
-        @synchronized (self) {
-            self.connectStatus = RTMConnectFail;
+        self.connectStatus = RTMClientConnectStatusConnectClosed;
+        [self.authClient closeConnect];//没有网络
+        
+        if (self.authFinish) {//重连
+            //重连失败回调
+            [self _reloginComplete:error];
+            [self _reLogin];
+            
+        }else{
+            if (self.loginFail) {
+                self.loginFail(error);
+            }
         }
-        if (self.connectFailBlock) {
-            self.connectFailBlock(error);
-        }
-        [self.authClient closeConnect];
+        
+        
     }];
     
     //无网络
     if (result == NO) {
-        @synchronized (self) {
-            self.connectStatus = RTMConnectFail;
-        }
-        FPNError * error = [FPNError errorWithEx:@"method auth network error" code:300004];
-        if (self.connectFailBlock) {
-            self.connectFailBlock(error);
-        }
-        [_authClient closeConnect];
-    }
-}
-- (void)closeConnect{
-    
-    if (self.connectStatus == RTMConnected) {
-        [self offLineWithTimeout:_sendQuestTimeout tag:nil success:^(NSDictionary * _Nullable data, id  _Nullable tag) {
         
-        } fail:^(FPNError * _Nullable error, id  _Nullable tag) {
-            
-        }];
-        sleep(1);
-        [self.usingClient closeConnect];
-        [self _cancelPingTimer];
-    }
-    
-}
-- (void)reconnect{
-    
-//    if (self.clientStatus == RTMConnectFail || self.clientStatus == RTMConnectClose) {
+        self.connectStatus = RTMClientConnectStatusConnectClosed;
+        [self.authClient closeConnect];
         
-//        [_usingClient closeConnect];
-    
-        [self closeConnect];
-        
-        @synchronized (self) {
-            self.authFinish = NO;
-            self.connectStatus = RTMConnectClose;
-            [self.rtmGatedClient closeConnect];
-            [self.authClient closeConnect];
-            self.rtmGatedClient = nil;
-            self.authClient = nil;
-            self.usingClient = nil;
-        }
-        
-        [self _cancelPingTimer];
-        [self _rtmGatedQuestHandle];
-        
-//    }
-}
-#pragma mark get set
-
-//-(FPNNTCPClient*)rtmGatedClient{
-//
-//    @synchronized (self) {
-//        _rtmGatedClient = [FPNNTCPClient clientWithEndpoint:_rtmGatedEndPoint];
-//    }
-//    return _rtmGatedClient;
-//}
--(FPNNTCPClient*)authClient{
-    @synchronized (self) {
-        
-        if (self.authFinish == NO && _authClient == nil) {
-                _authClient = [FPNNTCPClient clientWithEndpoint:self.authEndPoint];
-                @rtmWeakify(self);
-                _authClient.connectionSuccessCallBack = ^{
-                    @rtmStrongify(self);
-                    
-                    if (self.authFinish) {
-                        
-        //                if (self.connectStateSuccessBlock) {
-        //                    self.connectStateSuccessBlock();
-        //                }
-                        
-                        if ([self.delegate respondsToSelector:@selector(rtmConnectStateSuccess:)]) {
-                            [self.delegate rtmConnectStateSuccess:self];
-                        }
-                        @synchronized (self) {
-                            self.lastPingTime = [NSDate date];
-                        }
-                        if (self.pingTimer == nil) {
-                            [self _startKeepTime];
-                        }
-                        
-                    }
-                };
-                _authClient.connectionCloseCallBack = ^{
-                    @rtmStrongify(self);
-                    
-                    if (self.authFinish) {
-                        
-        //                if (self.connectstateCloseBlock) {
-        //                    self.connectstateCloseBlock();
-        //                }
-                        
-                        @synchronized (self) {
-                            self.connectStatus = RTMConnectClose;
-                        }
-                        [self _cancelPingTimer];
-                        
-                        if ([self.delegate respondsToSelector:@selector(rtmConnectstateClose:)]) {
-                            [self.delegate rtmConnectstateClose:self];
-                        }
-                        
-                    }
-                };
-                _authClient.listenAndReplyCallBack = ^FPNNAnswer * _Nullable(NSDictionary * _Nullable data, NSString * _Nullable method) {
-                    @rtmStrongify(self);
-//                    NSLog(@"listenAndReplyCallBack   %@",method);
-                    if ([method isEqualToString:@"ping"]) {
-                        @synchronized (self) {
-                            self.lastPingTime = [NSDate date];
-                        }
-//                        if (self.pingTimer == nil) {
-//                            [self _startKeepTime];
-//                        }
-                        return [RTMAnswer emptyAnswer];
-                    }
-                    
-                    
-                    
-                    if ([method isEqualToString:@"pushmsg"]) {
-                        
-                        if ([self _duplicatedPushMsgFilter:method data:data] == NO) {
-                            
-                            int mtype = [[data objectForKey:@"mtype"] intValue];
-                            if (mtype == 30) {
-                                //chat 文字
-                                if ([self.delegate respondsToSelector:@selector(rtmReceiveP2PMessageChat:data:)]) {
-                                    [self.delegate rtmReceiveP2PMessageChat:self data:data];
-                                }
-                                
-                            }else if(mtype == 31){
-                                //chat 语音
-                                if (data == nil) {
-                                    return [RTMAnswer emptyAnswer];
-                                }
-                                NSMutableDictionary * dic = [NSMutableDictionary dictionaryWithDictionary:data];
-                                NSData * resultData = [RTMAudioTools audioDataRemoveHeader:[data objectForKey:@"msg"]];//去掉头的 音频数据
-                                if (resultData == nil) {
-                                    return [RTMAnswer emptyAnswer];
-                                }else{
-                                    [dic setValue:resultData forKey:@"msg"];
-                                    if ([self.delegate respondsToSelector:@selector(rtmReceiveP2PAudioChat:data:)]) {
-                                        [self.delegate rtmReceiveP2PAudioChat:self data:dic];
-                                    }
-                                }
-                                
-                                
-                            }else if(mtype == 32){
-                                //chat cmd
-                                if ([self.delegate respondsToSelector:@selector(rtmReceiveP2PCmdChat:data:)]) {
-                                    [self.delegate rtmReceiveP2PCmdChat:self data:data];
-                                }
-                                
-                            }else if(mtype == 40 || mtype == 41 || mtype == 42 || mtype == 50){
-                                //文件
-                                if ([self.delegate respondsToSelector:@selector(rtmReceiveP2PFileData:data:)]) {
-                                    [self.delegate rtmReceiveP2PFileData:self data:data];
-                                }
-                                
-                            }else{
-                                //normal message
-                                if ([self.delegate respondsToSelector:@selector(rtmReceiveP2PData:data:)] && [[data objectForKey:@"msg"] isKindOfClass:[NSString class]]) {
-                                    
-                                    [self.delegate rtmReceiveP2PData:self data:data];
-                                    
-                                }else if([self.delegate respondsToSelector:@selector(rtmReceiveP2PBinaryData:data:)] && [[data objectForKey:@"msg"] isKindOfClass:[NSData class]]){
-                                    
-                                    [self.delegate rtmReceiveP2PBinaryData:self data:data];
-                                    
-                                }
-                                
-                            }
-                            
-                        }
-                            
-                           
-                        return [RTMAnswer emptyAnswer];
-                            
-                        
-                    }
-                    
-                    
-                    
-                    if ([method isEqualToString:@"pushgroupmsg"]) {
-                        
-                        if ([self _duplicatedPushGroupMsgFilter:method data:data] == NO) {
-                            int mtype = [[data objectForKey:@"mtype"] intValue];
-                            if (mtype == 30) {
-                                //chat 文字
-                                if ([self.delegate respondsToSelector:@selector(rtmReceiveGroupMessageChat:data:)]) {
-                                    [self.delegate rtmReceiveGroupMessageChat:self data:data];
-                                }
-                                
-                            }else if(mtype == 31){
-                                //chat 语音
-                                
-                                if (data == nil) {
-                                    return [RTMAnswer emptyAnswer];
-                                }
-                                NSMutableDictionary * dic = [NSMutableDictionary dictionaryWithDictionary:data];
-                                NSData * resultData = [RTMAudioTools audioDataRemoveHeader:[data objectForKey:@"msg"]];//去掉头的 音频数据
-                                if (resultData == nil) {
-                                    
-                                    return [RTMAnswer emptyAnswer];
-                                    
-                                }else{
-                                    
-                                    [dic setValue:resultData forKey:@"msg"];
-                                    if ([self.delegate respondsToSelector:@selector(rtmReceiveGroupAudioChat:data:)]) {
-                                        [self.delegate rtmReceiveGroupAudioChat:self data:dic];
-                                    }
-                                }
-                                
-                            }else if(mtype == 32){
-                                //chat cmd
-                                if ([self.delegate respondsToSelector:@selector(rtmReceiveGroupCmdChat:data:)]) {
-                                    [self.delegate rtmReceiveGroupCmdChat:self data:data];
-                                }
-                                
-                            }else if(mtype == 40 || mtype == 41 || mtype == 42 || mtype == 50){
-                                //file
-                                if ([self.delegate respondsToSelector:@selector(rtmReceiveGroupFileData:data:)]) {
-                                    [self.delegate rtmReceiveGroupFileData:self data:data];
-                                }
-                                
-                            }else{
-                                //normal
-                                
-                                if ([self.delegate respondsToSelector:@selector(rtmReceiveGroupData:data:)] && [[data objectForKey:@"msg"] isKindOfClass:[NSString class]]) {
-                                    
-                                    [self.delegate rtmReceiveGroupData:self data:data];
-                                    
-                                }else if([self.delegate respondsToSelector:@selector(rtmReceiveGroupBinaryData:data:)] && [[data objectForKey:@"msg"] isKindOfClass:[NSData class]]){
-                                    
-                                    [self.delegate rtmReceiveGroupBinaryData:self data:data];
-                                    
-                                }
-                                
-                            }
-                            
-                        }
-                        
-                        return [RTMAnswer emptyAnswer];;
-                        
-                    }
-                    
-                    if ([method isEqualToString:@"pushroommsg"]) {
-                        
-                        if ([self _duplicatedPushRoomMsgFilter:method data:data] == NO) {
-                            
-                            int mtype = [[data objectForKey:@"mtype"] intValue];
-                            if (mtype == 30) {
-                                //chat 文字
-                                if ([self.delegate respondsToSelector:@selector(rtmReceiveRoomMessageChat:data:)]) {
-                                    [self.delegate rtmReceiveRoomMessageChat:self data:data];
-                                }
-                                
-                            }else if(mtype == 31){
-                                //chat 语音
-                                if (data == nil) {
-                                    return [RTMAnswer emptyAnswer];
-                                }
-                                NSMutableDictionary * dic = [NSMutableDictionary dictionaryWithDictionary:data];
-                                NSData * resultData = [RTMAudioTools audioDataRemoveHeader:[data objectForKey:@"msg"]];//去掉头的 音频数据
-                                if (resultData == nil) {
-                                    
-                                    return [RTMAnswer emptyAnswer];
-                                    
-                                }else{
-                                    
-                                    [dic setValue:resultData forKey:@"msg"];
-                                    if ([self.delegate respondsToSelector:@selector(rtmReceiveRoomAudioChat:data:)]) {
-                                        [self.delegate rtmReceiveRoomAudioChat:self data:dic];
-                                    }
-                                    
-                                }
-                                
-                                
-                            }else if(mtype == 32){
-                                //chat cmd
-                                if ([self.delegate respondsToSelector:@selector(rtmReceiveRoomCmdChat:data:)]) {
-                                    [self.delegate rtmReceiveRoomCmdChat:self data:data];
-                                }
-                                
-                            }else if(mtype == 40 || mtype == 41 || mtype == 42 || mtype == 50){
-                                //file
-                                if ([self.delegate respondsToSelector:@selector(rtmReceiveRoomFileData:data:)]) {
-                                    [self.delegate rtmReceiveRoomFileData:self data:data];
-                                }
-                                
-                            }else{
-                                //normal
-                                
-                    
-                                if ([self.delegate respondsToSelector:@selector(rtmReceiveRoomData:data:)] && [[data objectForKey:@"msg"] isKindOfClass:[NSString class]]) {
-                                    
-                                    [self.delegate rtmReceiveRoomData:self data:data];
-                                    
-                                }else if([self.delegate respondsToSelector:@selector(rtmReceiveRoomBinaryData:data:)] && [[data objectForKey:@"msg"] isKindOfClass:[NSData class]]){
-                                    
-                                    [self.delegate rtmReceiveRoomBinaryData:self data:data];
-                                    
-                                }
-                                
-                                
-                            }
-                            
-                        }
-                            
-                           
-                        return [RTMAnswer emptyAnswer];;
-                            
-                        
-                    }
-                    
-                    if ([method isEqualToString:@"pushbroadcastmsg"]) {
-                        
-                        if ([self _duplicatedPushBroadcastMsgFilter:method data:data] == NO) {
-                            
-                            int mtype = [[data objectForKey:@"mtype"] intValue];
-                            if (mtype == 30) {
-                                //chat 文字
-                                if ([self.delegate respondsToSelector:@selector(rtmReceiveBroadcastMessageChat:data:)]) {
-                                    [self.delegate rtmReceiveBroadcastMessageChat:self data:data];
-                                }
-                                
-                            }else if(mtype == 31){
-                                //chat 语音
-                                if (data == nil) {
-                                    return [RTMAnswer emptyAnswer];
-                                }
-                                NSMutableDictionary * dic = [NSMutableDictionary dictionaryWithDictionary:data];
-                                NSData * resultData = [RTMAudioTools audioDataRemoveHeader:[data objectForKey:@"msg"]];//去掉头的 音频数据
-                                if (resultData == nil) {
-                                    
-                                    return [RTMAnswer emptyAnswer];
-                                    
-                                }else{
-                                    
-                                    [dic setValue:resultData forKey:@"msg"];
-                                    if ([self.delegate respondsToSelector:@selector(rtmReceiveBroadcastAudioChat:data:)]) {
-                                        [self.delegate rtmReceiveBroadcastAudioChat:self data:dic];
-                                    }
-                                    
-                                }
-                                
-                                
-                            }else if(mtype == 32){
-                                //chat cmd
-                                if ([self.delegate respondsToSelector:@selector(rtmReceiveBroadcastCmdChat:data:)]) {
-                                    [self.delegate rtmReceiveBroadcastCmdChat:self data:data];
-                                }
-                                
-                            }else if(mtype == 40 || mtype == 41 || mtype == 42 || mtype == 50){
-                                //file
-                                if ([self.delegate respondsToSelector:@selector(rtmReceiveBroadcastFileData:data:)]) {
-                                    [self.delegate rtmReceiveBroadcastFileData:self data:data];
-                                }
-                                
-                            }else{
-                                //normal
-                                
-                                if ([self.delegate respondsToSelector:@selector(rtmReceiveBroadcastData:data:)] && [[data objectForKey:@"msg"] isKindOfClass:[NSString class]]) {
-                                    
-                                    [self.delegate rtmReceiveBroadcastData:self data:data];
-                                    
-                                }else if([self.delegate respondsToSelector:@selector(rtmReceiveBroadcastBinaryData:data:)] && [[data objectForKey:@"msg"] isKindOfClass:[NSData class]]){
-                                    
-                                    [self.delegate rtmReceiveBroadcastBinaryData:self data:data];
-                                    
-                                }
-                                
-                            }
-                            
-                        }
-                            
-                        return [RTMAnswer emptyAnswer];;
-                        
-                    }
-                    
-                    if ([method isEqualToString:@"kickoutroom"]) {
-                        if ([self.delegate respondsToSelector:@selector(rtmRoomKickoutData:data:)]) {
-                            [self.delegate rtmRoomKickoutData:self data:data];
-                        }
-                        return [RTMAnswer emptyAnswer];
-                    }
-                    
-                    if ([method isEqualToString:@"kickout"]) {
-                        [self.usingClient closeConnect];
-                        if ([self.delegate respondsToSelector:@selector(rtmKickout:)]) {
-                            [self.delegate rtmKickout:self];
-                        }
-                        return nil;//one way
-                    }
-
-
-
-        //            if (self.listenAndReplyMessageCallBack) {
-        //                return self.listenAndReplyMessageCallBack(data, method);
-        //            }
-        //
-        //            if ([self.delegate respondsToSelector:@selector(rtmListenAndReplyMessage:data:method:)]) {
-        //                return [self.delegate rtmListenAndReplyMessage:self data:data method:method];
-        //            }
-                    
-                    
-                    return nil;
-                };
-            }
-    }
-    
-    return _authClient;
-}
--(BOOL)_duplicatedPushMsgFilter:(NSString*)method data:(NSDictionary*)data {
-    if ([data objectForKey:@"mid"] == nil) {
-        return NO;
-    }
-    NSString * msgCacheKey = [NSString stringWithFormat:@"%d-%lld-%@-%@-%@",self.pid,self.uid,method,[data objectForKey:@"mid"],[data objectForKey:@"from"]];
-    return [self _isExistMessage:msgCacheKey];
-    
-}
--(BOOL)_duplicatedPushGroupMsgFilter:(NSString*)method data:(NSDictionary*)data {
-    if ([data objectForKey:@"mid"] == nil) {
-        return NO;
-    }
-    NSString * msgCacheKey = [NSString stringWithFormat:@"%d-%lld-%@-%@-%@-%@",self.pid,self.uid,method,[data objectForKey:@"mid"],[data objectForKey:@"gid"],[data objectForKey:@"from"]];
-    return [self _isExistMessage:msgCacheKey];
-    
-}
--(BOOL)_duplicatedPushRoomMsgFilter:(NSString*)method data:(NSDictionary*)data {
-    if ([data objectForKey:@"mid"] == nil) {
-        return NO;
-    }
-    NSString * msgCacheKey = [NSString stringWithFormat:@"%d-%lld-%@-%@-%@-%@",self.pid,self.uid,method,[data objectForKey:@"mid"],[data objectForKey:@"rid"],[data objectForKey:@"from"]];
-    return [self _isExistMessage:msgCacheKey];
-    
-}
--(BOOL)_duplicatedPushBroadcastMsgFilter:(NSString*)method data:(NSDictionary*)data {
-    if ([data objectForKey:@"mid"] == nil) {
-        return NO;
-    }
-    NSString * msgCacheKey = [NSString stringWithFormat:@"%d-%lld-%@-%@-%@",self.pid,self.uid,method,[data objectForKey:@"mid"],[data objectForKey:@"from"]];
-    return [self _isExistMessage:msgCacheKey];
-    
-}
--(BOOL)_isExistMessage:(NSString*)msgCacheKey{
-    
-    @synchronized (self) {
-        
-        if ([self.messageDuplicatedCache objectForKey:msgCacheKey] == nil) {
-            [self.messageDuplicatedCache setObject:@(YES) forKey:msgCacheKey];
-            return NO;
+        if (self.authFinish) {
+            //重连失败回调
+            [self _reloginComplete:[FPNError errorWithEx:@"FPNN_EC_CORE_INVALID_CONNECTION" code:20012]];
+            [self _reLogin];
         }else{
-            return YES;
+            if (self.loginFail) {
+                self.loginFail([FPNError errorWithEx:@"FPNN_EC_CORE_INVALID_CONNECTION" code:20012]);
+            }
         }
+          
         
     }
     
 }
--(void)_startKeepTime{
+-(void)_checkLoginIsFinish{
     
-   
-    [self _cancelPingTimer];
-//    FPNSLog(@"启动计时器");
+        if (self.authFinish == NO && self.connectStatus == RTMClientConnectStatusConnecting) {
+            @synchronized (self) {
+           
+                [self.whichClient closeConnect];
+                [self.authClient closeConnect];
+                self.authClient = nil;
+                self.usingClient = nil;
+                self.whichClient = nil;
+                
+            }
+            if (self.loginFail) {
+                //超时
+                self.loginFail([FPNError errorWithEx:@"FPNN_EC_CORE_TIMEOUT" code:20003]);
+            }
         
+        
+    }
+    
+}
+#pragma mark relogin
+-(void)_reLogin{
+    if (self.autoRelogin && self.authFinish) {
+        //将要重连
+//        NSLog(@"_reLogin_reLogin_reLogin  %@",[NSThread currentThread]);
+//        [[NSRunLoop currentRunLoop] run];
+//        [self performSelector:@selector(_getDelegateToRelogin) withObject:nil afterDelay:0];
+        [self _getDelegateToRelogin];
+    }
+}
+-(void)_getDelegateToRelogin{
+//    NSLog(@"_getDelegateToRelogin:@selector(rtmReloginWillStart  %ld  %ld",(long)self.netStatus,(long)self.connectStatus);
+    if ([self.delegate respondsToSelector:@selector(rtmReloginWillStart:reloginCount:)] && (self.netStatus == RTMClientNetStatusReachableWifi || self.netStatus == RTMClientNetStatusReachableViaWWAN) && self.connectStatus == RTMClientConnectStatusConnectClosed) {
+        
+        @synchronized (self) {
+            self.reloginNum = self.reloginNum + 1;
+        }
+        
+        BOOL result = [self.delegate rtmReloginWillStart:self reloginCount:self.reloginNum];
+        if (result) {
+//            NSLog(@"开始重连");
+            [self _toLogin:NO];
+        }else{
+            [self closeConnect];
+        }
+    }else{
+        [self closeConnect];
+    }
+}
+-(void)_reloginComplete:(FPNError*)error{
+    if ([self.delegate respondsToSelector:@selector(rtmReloginCompleted:reloginCount:reloginResult:error:)]) {
+        [self.delegate rtmReloginCompleted:self
+                              reloginCount:self.reloginNum
+                             reloginResult:(error == nil ? YES : NO)
+                                     error:error];
+    }
+}
+
+#pragma mark close
+-(void)_closeConnectHandle:(BOOL)needNotification{
+    
+//    NSLog(@"开始断开");
+    dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+    
+    [self offLineWithTimeout:5 success:^{
+        
+//        NSLog(@"offLineWithTimeoutsuccesssuccess");
+        dispatch_semaphore_signal(sema);
+        
+    } fail:^(FPNError * _Nullable error) {
+
+//        NSLog(@"offLineWithTimeoutFPNErrorFPNErrorFPNError  %@",error);
+        dispatch_semaphore_signal(sema);
+        
+    }];
+    
+    dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
+    [self _notificationClose : needNotification];
+    
+    
+}
+-(void)_notificationClose:(BOOL)needNotification{
+    @synchronized (self) {
+        [self.whichClient closeConnect];
+        [self.authClient closeConnect];
+        [self.usingClient closeConnect];
+        self.whichClient = nil;
+        self.authClient = nil;
+        self.usingClient = nil;
+    }
+    
+    //offline
+    @synchronized (self) {
+        self.connectStatus = RTMClientConnectStatusConnectClosed;
+    }
+    [self _cancelPingTimer];
+    if ([self.delegate respondsToSelector:@selector(rtmConnectClose:)] && needNotification) {
+        [self.delegate rtmConnectClose:self];
+    }
+        
+}
+-(void)closeConnect{
     
     @synchronized (self) {
+        self.isOverlookFpnnCloseCallBack = YES;
+    }
+    
+    [self _closeConnectHandle:NO];
+    
+}
+-(void)_byeCloseConnect{
+    @synchronized (self) {
+        self.authFinish = NO;
+    }
+    if ([self.delegate respondsToSelector:@selector(rtmConnectClose:)]) {
+        [self.delegate rtmConnectClose:self];
+    }
+}
+#pragma mark net check
+-(void)_startNetMonitor{
+    
+    FPNetworkReachabilityManager *manager = [FPNetworkReachabilityManager sharedManager];
+    [manager setReachabilityStatusChangeBlock:^(FPNetworkReachabilityStatus status) {
         
-        if (self.connectStatus == RTMConnected) {
-            
-            uint64_t interval = 10 * NSEC_PER_SEC;
+        switch(status) {
+                
+         case FPNetworkReachabilityStatusUnknown:
+//                NSLog(@"未知网络");
+                self.netStatus = RTMClientNetStatusNone;
+                break;
+         case FPNetworkReachabilityStatusNotReachable:
+//                NSLog(@"没有网络");
+                self.netStatus = RTMClientNetStatusNone;
+                break;
+         case FPNetworkReachabilityStatusReachableViaWWAN:
+//                NSLog(@"蜂窝网络");
+                self.netStatus = RTMClientNetStatusReachableViaWWAN;
+                break;
+         case FPNetworkReachabilityStatusReachableViaWiFi:
+//                NSLog(@"WIFI网络");
+                self.netStatus = RTMClientNetStatusReachableWifi;
+                break;
+        }
+        
+    }];
+    
+    [manager startMonitoring];
+        
+}
+-(void)_stopNetMonitor{
+    FPNetworkReachabilityManager *manager = [FPNetworkReachabilityManager sharedManager];
+    [manager stopMonitoring];
+}
+-(BOOL)_getIsValidNet{
+    if (self.netStatus == RTMClientNetStatusReachableWifi || self.netStatus == RTMClientNetStatusReachableViaWWAN) {
+        return YES;
+    }else{
+        return NO;
+    }
+}
+#pragma mark ping
+-(void)_startPingMonitor{
+    
+    
+//        NSLog(@"_startPingMonitor");
+        [self _cancelPingTimer];
+        if (self.connectStatus == RTMClientConnectStatusConnected) {
+//            NSLog(@"初始化ping");
+            uint64_t interval = 2 * NSEC_PER_SEC;
             dispatch_queue_t pingTimerQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
             if (self.pingTimer == nil) {
-                self.pingTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, pingTimerQueue);
-                dispatch_source_set_timer(self.pingTimer, dispatch_time(DISPATCH_TIME_NOW, 0), interval, 0);
-                __weak RTMClient *blockSelf = self;
-                dispatch_source_set_event_handler(self.pingTimer, ^(){
-                    [blockSelf _isTimeoutPing];
-                });
-                dispatch_resume(self.pingTimer);
+                @synchronized (self) {
+                
+                    self.pingTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, pingTimerQueue);
+                    dispatch_source_set_timer(self.pingTimer, dispatch_time(DISPATCH_TIME_NOW, 0), interval, 0);
+                    __weak RTMClient *blockSelf = self;
+                    dispatch_source_set_event_handler(self.pingTimer, ^(){
+                        [blockSelf _isTimeoutPing];
+                    });
+                    dispatch_resume(self.pingTimer);
+                    
+                }
             }
-            
         }
-        
-    }
+    
     
 }
 -(void)_isTimeoutPing{
     
-    if (self.connectStatus == RTMConnected) {
-        
-//        int interval = [self _numberOfDaysWithFromDate:self.lastPingTime];
+    if (self.connectStatus == RTMClientConnectStatusConnected) {
         float f = self.lastPingTime.timeIntervalSinceNow;
 //        FPNSLog(@"距离上次收到 ping 间隔 %f",-ceil(f));
-        if (-ceil(f) < 19) {
-            
+        if (-ceil(f) < 120) {
+
         }else{
+            
 //            NSLog(@"断开");
-            [self _cancelPingTimer];
-            [self closeConnect];
-//            [_usingClient closeConnect];
+            if (self.autoRelogin) {
+                [self _closeConnectHandle:NO];
+                [self _reLogin];
+            }else{
+                [self _closeConnectHandle:YES];
+            }
+
         }
-        
+
     }
         
 }
-//- (int)_numberOfDaysWithFromDate:(NSDate *)fromDate{
-//    return fromDate.timeIntervalSinceNow;
-//}
 -(void)_cancelPingTimer{
-    @synchronized (self) {
-        
-        if (self.pingTimer) {
+    if (self.pingTimer) {
+        @synchronized (self) {
             dispatch_cancel(self.pingTimer);
             self.pingTimer = nil;
         }
@@ -850,109 +671,248 @@
     }
 }
 -(long long)_getMessageId{
-    long long _resultId = _messageId;
     @synchronized (self) {
+        long long _resultId = _messageId;
         _resultId = _messageId++;
+        return _resultId;
     }
-    return _resultId;
-}
--(RTMClientStatus)clientStatus{
-    return _connectStatus;
-}
--(BOOL)isDisconnected{
-    return _usingClient.isDisconnected;
-}
--(BOOL)isConnected{
-    return _usingClient.isConnected;
-}
--(NSString *)connectedHost{
-    return _usingClient.connectedHost;
-}
--(int)connectedPort{
-    return _usingClient.connectedPort;
-}
--(void)setNilValueForKey:(NSString *)key{
-    //不重写 kvc 设置常量为nil 会return
-}
--(void)dealloc{
-    [self.usingClient closeConnect];
-    self.usingClient = nil;
-    [self _cancelPingTimer];
-//    FPNSLog(@"client dealloc");
 }
 
-//+ (BOOL)isIpv6{
-//    NSArray *searchArray =
-//    @[ IOS_VPN @"/" IP_ADDR_IPv6,
-//       IOS_VPN @"/" IP_ADDR_IPv4,
-//       IOS_WIFI @"/" IP_ADDR_IPv6,
-//       IOS_WIFI @"/" IP_ADDR_IPv4,
-//       IOS_CELLULAR @"/" IP_ADDR_IPv6,
-//       IOS_CELLULAR @"/" IP_ADDR_IPv4 ] ;
+#pragma mark get set
+-(void)setUsingClient:(FPNNTCPClient *)usingClient{
+//    NSLog(@"usingClientusingClientusingClient  = %@",usingClient);
+    _usingClient = usingClient;
+}
+-(void)setAuthFinish:(BOOL)authFinish{
+    @synchronized (self) {
+        _authFinish = authFinish;
+    }
+     
+//    NSLog(@"setAuthFinish  %d",authFinish);
+    if (_authFinish == YES) {
+        @synchronized (self) {
+            
+            self.lastPingTime = [NSDate date];
+          
+        }
+        if (self.pingTimer == nil) {
+            [self _startPingMonitor];
+        }
+    }else{
+        @synchronized (self) {
+            
+            self.connectStatus = RTMClientConnectStatusConnectClosed;
+          
+        }
+    }
+        
+    
+    
+}
+-(void)setNetStatus:(RTMClientNetStatus)netStatus{
+    
+//    NSLog(@"原网络%ld  现在网络%ld",(long)_netStatus,(long)netStatus);
+        
+    if (_netStatus == RTMClientNetStatusNoDetection && netStatus != RTMClientNetStatusNoDetection) {
+//        NSLog(@"检测到网络");
+        @synchronized (self) {
+            _netStatus = netStatus;
+        }
+        return;
+    }
+    
+    if (netStatus == RTMClientNetStatusNone) {
+//        NSLog(@"setNetStatus  无网络");
+        if (self.connectStatus != RTMClientConnectStatusConnectClosed) {
+            @synchronized (self) {
+                self.isOverlookFpnnCloseCallBack = YES;
+            }
+            [self _closeConnectHandle:YES];
+        }
+    }
+    
+    if ([self _getIsValidNet] && _netStatus != netStatus && netStatus != RTMClientNetStatusNone) {//4G <=> WIFI
+//        NSLog(@"4G <=> WIFI");
+        if (self.authFinish) {
+            @synchronized (self) {
+                self.isOverlookFpnnCloseCallBack = YES;
+            }
+            [self _closeConnectHandle:NO];
+//            NSLog(@"不管是否开启自动重连  都进行闪断重连");
+            [self _getDelegateToRelogin];
+            
+//            [self _reLogin];
+        }
+       
+    }
+    
+    if (_netStatus == RTMClientNetStatusNone && (netStatus == RTMClientNetStatusReachableWifi || netStatus == RTMClientNetStatusReachableViaWWAN)) {
+//        NSLog(@"无网络 -》 有网络");
+        @synchronized (self) {
+            
+            _netStatus = netStatus;
+                     
+        }
+        [self _reLogin];
+    }
+    @synchronized (self) {
+                      
+        _netStatus = netStatus;
+                 
+    }
+//        if (_netStatus != netStatus) {
 //
-//    NSDictionary *addresses = [self getIPAddresses];
-//    NSLog(@"addresses: %@", addresses);
+//            //无网络->有网络
+//            if (_netStatus == RTMClientNetStatusNone && (netStatus == RTMClientNetStatusReachableWifi || netStatus == RTMClientNetStatusReachableViaWWAN) && self.connectStatus == RTMClientConnectStatusConnectClosed) {
+//                NSLog(@"无网络->有网络");
+//                @synchronized (self) {
+//                    _netStatus = netStatus;
 //
-//    __block BOOL isIpv6 = NO;
-//    [searchArray enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop)
-//     {
-//
-//         NSLog(@"---%@---%@---",key, addresses[key] );
-//
-//         if ([key rangeOfString:@"ipv6"].length > 0  && ![[NSString stringWithFormat:@"%@",addresses[key]] hasPrefix:@"(null)"] ) {
-//             NSLog(@"====");
-//             if ( ![addresses[key] hasPrefix:@"fe80"]) {
-//                 isIpv6 = YES;
-//             }
-//         }
-//
-//      } ];
-//
-//    return isIpv6;
-//}
-//
-//
-//+ (NSDictionary *)getIPAddresses
-//{
-//    NSMutableDictionary *addresses = [NSMutableDictionary dictionaryWithCapacity:8];
-//    // retrieve the current interfaces - returns 0 on success
-//    struct ifaddrs *interfaces;
-//    if(!getifaddrs(&interfaces)) {
-//        // Loop through linked list of interfaces
-//        struct ifaddrs *interface;
-//        for(interface=interfaces; interface; interface=interface->ifa_next) {
-//            if(!(interface->ifa_flags & IFF_UP) /* || (interface->ifa_flags & IFF_LOOPBACK) */ ) {
-//                continue; // deeply nested code harder to read
-//            }
-//            const struct sockaddr_in *addr = (const struct sockaddr_in*)interface->ifa_addr;
-//            char addrBuf[ MAX(INET_ADDRSTRLEN, INET6_ADDRSTRLEN) ];
-//            if(addr && (addr->sin_family==AF_INET || addr->sin_family==AF_INET6)) {
-//                NSString *name = [NSString stringWithUTF8String:interface->ifa_name];
-//                NSString *type;
-//                if(addr->sin_family == AF_INET) {
-//                    if(inet_ntop(AF_INET, &addr->sin_addr, addrBuf, INET_ADDRSTRLEN)) {
-//                        type = IP_ADDR_IPv4;
-//
-//                        NSLog(@"ipv4 %@",name);
-//                    }
-//                } else {
-//                    const struct sockaddr_in6 *addr6 = (const struct sockaddr_in6*)interface->ifa_addr;
-//                    if(inet_ntop(AF_INET6, &addr6->sin6_addr, addrBuf, INET6_ADDRSTRLEN)) {
-//                        type = IP_ADDR_IPv6;
-//                        NSLog(@"ipv6 %@",name);
-//
-//                    }
 //                }
-//                if(type) {
-//                    NSString *key = [NSString stringWithFormat:@"%@/%@", name, type];
-//                    addresses[key] = [NSString stringWithUTF8String:addrBuf];
-//                }
+//                [self _reLogin];
 //            }
+//
+//            //有网络->无网络
+//            if ((_netStatus == RTMClientNetStatusReachableWifi || _netStatus == RTMClientNetStatusReachableViaWWAN) && netStatus == RTMClientNetStatusNone) {
+//                NSLog(@"有网络->无网络");
+//
+//                if (self.connectStatus != RTMClientConnectStatusConnectClosed) {
+//                    [self _closeConnectHandle:YES];
+//                }
+//
+//            }
+//
+//            @synchronized (self) {
+//                _netStatus = netStatus;
+//
+//            }
+//
 //        }
-//        // Free memory
-//        freeifaddrs(interfaces);
-//    }
-//    return [addresses count] ? addresses : nil;
-//}
+        
+    
+    
+    
+}
+-(RTMClientConnectStatus)currentConnectStatus{
+    return self.connectStatus;
+}
+-(void)setConnectStatus:(RTMClientConnectStatus)connectStatus{
+//    NSLog(@"当前状态  %ld",(long)connectStatus);
+    @synchronized (self) {
+        _connectStatus = connectStatus;
+    }
+}
 
+-(FPNNTCPClient*)whichClient{
+    
+        
+        if (_whichClient == nil && self.whichEndpoint != nil) {
+            @synchronized (self) {
+                
+                _whichClient = [FPNNTCPClient clientWithEndpoint:self.whichEndpoint];
+               
+            }
+        }
+        return _whichClient;
+        
+    
+    
+}
+-(FPNNTCPClient*)authClient{
+    
+    
+        
+        if (_authClient == nil && self.authEndPoint != nil) {
+            @synchronized (self) {
+            _authClient = [FPNNTCPClient clientWithEndpoint:self.authEndPoint];
+            @rtmWeakify(self);
+            _authClient.connectionSuccessCallBack = ^{
+//                @rtmStrongify(self);
+//                NSLog(@"connectionSuccessCallBack");
+                
+            };
+            
+            _authClient.connectionCloseCallBack = ^{
+                @rtmStrongify(self);
+//                NSLog(@"connectionCloseCallBackconnectionCloseCall == %d ",self.isOverlookFpnnCloseCallBack);
+                if (self.isOverlookFpnnCloseCallBack) {
+                    @synchronized (self) {
+                        self.isOverlookFpnnCloseCallBack = NO;
+                    }
+                }else{
+                    if (self.authFinish && self.autoRelogin && self.connectStatus != RTMClientConnectStatusConnectClosed) {
+                        [self _notificationClose:NO];
+                        [self _getDelegateToRelogin];
+                    }else{
+                        [self _byeCloseConnect];
+                    }
+                }
+//                if(self.connectStatus != RTMClientConnectStatusConnectClosed){
+//                    [self _closeConnectHandle:YES];
+//                }
+                
+                
+            };
+            
+            _authClient.listenAndReplyCallBack = ^FPNNAnswer * _Nullable(NSDictionary * _Nullable data, NSString * _Nullable method) {
+                
+//                NSLog(@"listenAndReplyCallBack %@ %@",method,data);
+                @rtmStrongify(self);
+                
+                if ([method isEqualToString:@"ping"]) {
+                    if (self.authFinish && self.connectStatus == RTMClientConnectStatusConnected) {
+                        self.lastPingTime = [NSDate date];
+                    }
+                    return [RTMAnswer emptyAnswer];
+                }
+                            
+                if ([method isEqualToString:@"kickoutroom"]) {
+                    if ([self.delegate respondsToSelector:@selector(rtmRoomKickoutData:data:)]) {
+                        [self.delegate rtmRoomKickoutData:self data:data];
+                    }
+                    return [RTMAnswer emptyAnswer];
+                }
+                
+                if ([method isEqualToString:@"kickout"]) {
+                    
+                    @synchronized (self) {
+                        self.isOverlookFpnnCloseCallBack = YES;
+                    }
+                    
+                    if ([self.delegate respondsToSelector:@selector(rtmKickout:)]) {
+                        [self.delegate rtmKickout:self];
+                    }
+                    
+                    @synchronized (self) {
+                        self.authFinish = NO;
+                        self.connectStatus = RTMClientConnectStatusConnectClosed;
+                    }
+                    [self _byeCloseConnect];
+                    
+                    return nil;//one way
+                }
+                
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    
+                    [self messageShareCenter:data method:method];
+                    
+                });
+                
+                
+                return [RTMAnswer emptyAnswer];
+                
+                
+                
+                
+            };
+                
+                }
+            
+        }
+        return _authClient;
+        
+    
+    
+}
 @end
+

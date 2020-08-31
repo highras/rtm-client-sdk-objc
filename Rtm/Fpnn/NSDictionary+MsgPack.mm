@@ -33,16 +33,21 @@
 
 @implementation FPNNMessageDecoder
 -(void)dealloc{
-    //FPNSLog(@"FPNNMessageDecoder dealloc");
+//    FPNSLog(@"FPNNMessageDecoder dealloc");
 }
 
 - (instancetype)initWithAnswer:(fpnn::FPAnswerPtr)cppAnswer errorCode:(int)errorCode{
     self = [super init];
     if (self) {
-        
+        //FPNN_EC_CORE_TIMEOUT                = 20003,
         if (cppAnswer == nil || cppAnswer == nullptr) {
             
-            _error = [FPNError errorWithEx:@"fpnn decoder error. server return answer is nil. " code:errorCode];
+            if (errorCode == 20003) {
+                _error = [FPNError errorWithEx:@"FPNN_EC_CORE_TIMEOUT " code:errorCode];
+            }else{
+                _error = [FPNError errorWithEx:@"" code:errorCode];
+            }
+            
             
         }else{
 
@@ -62,7 +67,7 @@
         
         if (cppAnswer == nil || cppAnswer == nullptr) {
             
-            _error = [FPNError errorWithEx:@"fpnn decoder error. server return answer is nil. " code:fpnn::FPNN_EC_CORE_UNKNOWN_ERROR];
+            _error = [FPNError errorWithEx:@"fpnn decoder error.  return answer is nil. " code:fpnn::FPNN_EC_CORE_UNKNOWN_ERROR];
             
         }else{
             
@@ -81,7 +86,7 @@
         int code = (int)ar.getInt("code", fpnn::FPNN_EC_CORE_UNKNOWN_ERROR);
         std::string ex = ar.getString("ex");
 
-        _error = [FPNError errorWithEx:[NSString stringWithFormat:@"fpnn decoder answer status != 0. %@",[NSString stringWithUTF8String:ex.c_str()]] code:code];
+        _error = [FPNError errorWithEx:[NSString stringWithFormat:@"%@",[NSString stringWithUTF8String:ex.c_str()]] code:code];
     }
     
     std::string cppData = cppAnswer->payload();
@@ -93,6 +98,7 @@
         _decodeResult = resultDic;
     }else{
         FPNSLog(@"fpnn decoderAnswer MPMessagePackWriter error.");
+        _error = [FPNError errorWithEx:@"fpnn decoder answer error. convert answer message to oc failed." code:fpnn::FPNN_EC_CORE_DECODING];
     }
 //    const std::string& cppPayload = cppAnswer->payload();
 //    PayloadDictionaryBuilder* ocBuilder = [[PayloadDictionaryBuilder alloc] init];
@@ -130,7 +136,7 @@
         
         if (cppQuest == nil || cppQuest == nullptr) {
             
-            _error = [FPNError errorWithEx:@"fpnn decoder quest error. server return quest is nil." code:fpnn::FPNN_EC_CORE_UNKNOWN_ERROR];
+            _error = [FPNError errorWithEx:@"fpnn decoder quest error.  return quest is nil." code:fpnn::FPNN_EC_CORE_UNKNOWN_ERROR];
             
         }else{
             
@@ -154,6 +160,7 @@
         _decodeResult = resultDic;
     }else{
         FPNSLog(@"fpnn _decoderQuest MPMessagePackWriter error.");
+        _error = [FPNError errorWithEx:@"fpnn decoder quest Error. convert quest message to oc failed." code:fpnn::FPNN_EC_CORE_DECODING];
     }
     
 //    const std::string& cppPayload = cppQuest->payload();
@@ -202,7 +209,7 @@
 @implementation FPNNMessageEncoder
 -(void)dealloc{
 //    delete _packer;
-    //FPNSLog(@"FPNNMessageEncoder dealloc");
+//    FPNSLog(@"FPNNMessageEncoder dealloc");
 }
 - (instancetype)initWithMessage:(NSDictionary*)message{
     if (message == nil) {
@@ -236,37 +243,37 @@
 //{
 //    if ([obj isKindOfClass:[NSString class]])
 //        return [self packNSString:(NSString*)obj];
-//    
+//
 //    if ([obj isKindOfClass:[NSNumber class]])
 //        return [self packNSNumber:(NSNumber*)obj];
-//    
+//
 //    if ([obj isKindOfClass:[NSData class]])
 //        return [self packNSData:(NSData*)obj];
-//    
+//
 //    if ([obj isKindOfClass:[NSArray class]])
 //        return [self packNSArray:(NSArray*)obj];
-//    
+//
 //    if ([obj isKindOfClass:[NSDictionary class]])
 //        return [self packNSDictionary:(NSDictionary*)obj];
-//    
+//
 //    if ([obj isKindOfClass:[NSNull class]])
 //        return [self packNSNull];
-//    
+//
 //    if ([obj isKindOfClass:[NSSet class]])
 //        return [self packNSSet:(NSSet*)obj];
-//    
+//
 //    if ([obj isKindOfClass:[NSIndexSet class]])
 //        return [self packNSIndexSet:(NSIndexSet*)obj];
-//    
+//
 //    if ([obj isKindOfClass:[NSOrderedSet class]])
 //        return [self packNSOrderedSet:(NSOrderedSet*)obj];
-//    
+//
 //    if ([obj isKindOfClass:[NSHashTable class]])
 //        return [self packNSHashTable:(NSHashTable*)obj];
-//    
+//
 //    if ([obj isKindOfClass:[NSMapTable class]])
 //        return [self packNSMapTable:(NSMapTable*)obj];
-//    
+//
 //    return NO;
 //}
 //
@@ -288,7 +295,7 @@
 //        _packer->pack((bool)[number boolValue]);
 //        return YES;
 //    }
-//    
+//
 //    char type = number.objCType[0];
 //    switch (type)
 //    {
@@ -296,17 +303,17 @@
 //        case 'F':
 //            _packer->pack([number floatValue]);
 //            break;
-//            
+//
 //        case 'd':
 //        case 'D':
 //            _packer->pack([number doubleValue]);
 //            break;
-//            
+//
 //        default:
 //            _packer->pack([number longLongValue]);
 //            break;
 //    }
-//    
+//
 //    return YES;
 //}
 //
@@ -319,7 +326,7 @@
 //- (BOOL)packNSArray:(NSArray*)array{
 //    int size = (int)[array count];
 //    _packer->pack_array(size);
-//    
+//
 //    for (NSObject* obj in array)
 //    {
 //        if (![self packObject:obj])
@@ -331,7 +338,7 @@
 //- (BOOL)packNSSet:(NSSet*)set{
 //    int size = (int)[set count];
 //    _packer->pack_array(size);
-//    
+//
 //    for (NSObject* obj in set)
 //    {
 //        if (![self packObject:obj])
@@ -343,7 +350,7 @@
 //- (BOOL)packNSIndexSet:(NSIndexSet*)set{
 //    int size = (int)[set count];
 //    _packer->pack_array(size);
-//    
+//
 //    [set enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL*){
 //        _packer->pack((uint64_t)idx);
 //    }];
@@ -353,7 +360,7 @@
 //- (BOOL)packNSOrderedSet:(NSOrderedSet*)set{
 //    int size = (int)[set count];
 //    _packer->pack_array(size);
-//    
+//
 //    for (NSObject* obj in set)
 //    {
 //        if (![self packObject:obj])
@@ -370,13 +377,13 @@
 //- (BOOL)packNSMapTable:(NSMapTable*)table{
 //    int size = (int)[table count];
 //    _packer->pack_map(size);
-//    
+//
 //    for (NSObject* key in table) {
 //        NSObject* value = [table objectForKey:key];
-//        
+//
 //        if (![self packObject:key])
 //            return NO;
-//        
+//
 //        if (![self packObject:value])
 //            return NO;
 //    }
@@ -386,17 +393,17 @@
 //- (BOOL)packNSDictionary:(NSDictionary*)dict{
 //    int size = (int)[dict count];
 //    _packer->pack_map(size);
-//    
+//
 //    for (NSObject* key in dict) {
 //        NSObject* value = [dict objectForKey:key];
-//        
+//
 //        if (![self packObject:key])
 //            return NO;
-//        
+//
 //        if (![self packObject:value])
 //            return NO;
 //    }
-//    
+//
 //    return YES;
 //}
 //
@@ -405,8 +412,9 @@
 //    if ([self packNSDictionary:payload]) {
 //        result = _ss.str();
 //    }
-//    
+//
 //    return result;
 //}
 @end
+
 

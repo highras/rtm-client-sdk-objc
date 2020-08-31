@@ -1,10 +1,5 @@
-//
-//  RtmPrefixHeader.pch
-//  Rtm
-//
-//  Created by zsl on 2019/12/12.
-//  Copyright © 2019 FunPlus. All rights reserved.
-//
+
+
 
 #ifndef RtmPrefixHeader_pch
 #define RtmPrefixHeader_pch
@@ -17,24 +12,32 @@
 
 #define mainClient  ((FPNNTCPClient *)[self valueForKey:@"usingClient"])
 
-#define messageTypeCallFilter(messageType)  if (messageType < 51 || messageType > 127) { NSLog(@"rtm messageType invalid"); return;}
-#define messageTypeFilter(messageType)  if (messageType < 51 || messageType > 127) { NSLog(@"rtm messageType invalid"); return nil;}
+#define _successCallback(data)    if (successCallback) { successCallback(data);}
+#define _failCallback(error)       if (failCallback) { failCallback(error);}
 
-#define _successCallback(data,tag)    if (successCallback) { successCallback(data,tag);}
-#define _failCallback(error,tag)       if (failCallback) { failCallback(error,tag);}
-
-//#define handlerCallResult(quest,timeout,tag)  [mainClient sendQuest:quest timeout:timeout success:^(NSDictionary * _Nullable data) {_successCallback(data,tag);if([self.delegate respondsToSelector:@selector(rtmReceiveDataSuccess:data:tag:)]) {[self.delegate rtmReceiveDataSuccess:self data:data tag:tag];}}fail:^(FPNError * _Nullable error) {_failCallback(error,tag);if ([self.delegate respondsToSelector:@selector(rtmReceiveDataError:error:tag:)]) {[self.delegate rtmReceiveDataError:self error:error tag:tag];}}];
-
-#define clientCallStatueVerify  if (self.clientStatus != RTMConnected) {FPNError * error = [FPNError errorWithEx:@"rtm clientStatus is not RTMConnected" code:300006];_failCallback(error,tag); return;}
-
-#define clientStatueVerify  if (self.clientStatus != RTMConnected) {FPNError * error = [FPNError errorWithEx:@"rtm clientStatus is not RTMConnected" code:300006];return [RTMAnswer answerWithError:error];}
+#define RTMClientSendQuestTimeout  (timeout <= 0 ? self.clientConfig.sendQuestTimeout : timeout)
+#define RTMClientFileQuestTimeout (timeout <= 0 ? self.clientConfig.fileQuestTimeout : timeout)
+#define RTMClientTranslateQuestTimeout (timeout <= 0 ? self.clientConfig.translateTimeout : timeout)
 
 
-#define handlerCallResult(quest,timeout,tag)   [mainClient sendQuest:quest timeout:(timeout <= 0 ? self.sendQuestTimeout : timeout) success:^(NSDictionary * _Nullable data) {_successCallback(data,tag);}fail:^(FPNError * _Nullable error) {_failCallback(error,tag);}];
+#define clientConnectStatueVerify  if (self.currentConnectStatus != RTMClientConnectStatusConnected) {FPNError * error = [FPNError errorWithEx:@"FPNN_EC_CORE_CONNECTION_CLOSED" code:20002];_failCallback(error); return;}
 
-#define handlerResultFail  if (result == NO) {if (failCallback) {FPNError * error = [FPNError errorWithEx:@"network error" code:300007];failCallback(error,tag);}}
+#define clientConnectStatueVerifySync if (self.currentConnectStatus != RTMClientConnectStatusConnected) {model.error = [FPNError errorWithEx:@"FPNN_EC_CORE_CONNECTION_CLOSED" code:20002];return model;}
 
-#define handlerResult(quest,timeout)     (RTMAnswer*)[mainClient sendQuest:quest timeout:(timeout <= 0 ? self.sendQuestTimeout : timeout)];
+#define handlerNetworkError  if (result == NO) {if (failCallback) {FPNError * error = [FPNError errorWithEx:@"FPNN_EC_CORE_INVALID_CONNECTION" code:20012];failCallback(error);}}
+
+// need messageType >= 51 && messageType <= 127
+#define messageTypeFilter(messageType)  if (messageType < 51 || messageType > 127) {FPNError * error = [FPNError errorWithEx:@"RTM_EC_INVALID_MTYPE" code:200005];_failCallback(error);return;}
+
+#define messageTypeFilterSync(messageType) if (messageType < 51 || messageType > 127) {FPNError * error = [FPNError errorWithEx:@"RTM_EC_INVALID_MTYPE" code:200005];model.error = error;return model;}
+
+
+#define messageTypeGetHistoryFilter for (NSNumber * messageType in mtypes) {if (messageType.intValue < 51 || messageType.intValue > 127) {FPNError * error = [FPNError errorWithEx:@"RTM_EC_INVALID_MTYPE" code:200005];_failCallback(error);return;}}
+
+#define messageTypeGetHistoryFilterSync for (NSNumber * messageType in mtypes) {if (messageType.intValue < 51 || messageType.intValue > 127) {FPNError * error = [FPNError errorWithEx:@"RTM_EC_INVALID_MTYPE" code:200005];model.error = error;return model;}}
+
+
+
 
 
 #define mid  Int64Number(  (long long)((long long* (*)(id, SEL))[self methodForSelector:NSSelectorFromString(@"_getMessageId")])(self, NSSelectorFromString(@"_getMessageId"))  )

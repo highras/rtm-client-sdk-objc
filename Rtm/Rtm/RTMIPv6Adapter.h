@@ -62,8 +62,6 @@
  */
 
 
-//#ifndef AlicloudIPv6Adapter_h
-//#define AlicloudIPv6Adapter_h
 #import <Foundation/Foundation.h>
 
 @interface RTMIPv6Adapter : NSObject

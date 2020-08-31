@@ -147,26 +147,31 @@
         fail:(FPNNAnswerFailCallBack)failCallback
      timeout:(int)timeout{
     
-    if (quest == nil) {
-        return NO;
-    }
     
-    fpnn::TCPClientPtr client = Client;
-    [self _setConnectionStatusAndReplyListen:client];
-    fpnn::FPQuestPtr cppQuest = Quest(quest);
-    FPNNCppAnswerCallback * call = new FPNNCppAnswerCallback(successCallback,failCallback,self,quest);
+       
+        if (quest == nil) {
+            return NO;
+        }
+        
+        fpnn::TCPClientPtr client = Client;
+        [self _setConnectionStatusAndReplyListen:client];
+        fpnn::FPQuestPtr cppQuest = Quest(quest);
+        FPNNCppAnswerCallback * call = new FPNNCppAnswerCallback(successCallback,failCallback,self,quest);
+        
+        if (client == nil || cppQuest  == nil) {
+            FPNSLog(@"fpnn FPNNTCPClient send callback error. getCpp client or quest is nil");
+            return NO;
+        }
+        
+        bool status;
+        if (timeout <= 0) {
+            status = client->sendQuest(cppQuest,call);
+        }else{
+            status = client->sendQuest(cppQuest,call,timeout);
+        }
+        return status == true ? YES : NO;
+        
     
-    if (client == nil || cppQuest  == nil) {
-        FPNSLog(@"fpnn FPNNTCPClient send callback error. getCpp client or quest is nil");
-        return NO;
-    }
     
-    bool status;
-    if (timeout <= 0) {
-        status = client->sendQuest(cppQuest,call);
-    }else{
-        status = client->sendQuest(cppQuest,call,timeout);
-    }
-    return status == true ? YES : NO;
 }
 @end

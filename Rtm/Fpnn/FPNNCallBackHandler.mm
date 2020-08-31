@@ -63,7 +63,7 @@ void FPNNCppAnswerCallback::onException(fpnn::FPAnswerPtr answer, int errorCode)
 }
 
 FPNNCppAnswerCallback::~FPNNCppAnswerCallback(){
-    //NSAllLog(@"FPNNCppAnswerCallback dealloc");
+//    NSLog(@"FPNNCppAnswerCallback dealloc");
     
 }
 
@@ -148,7 +148,7 @@ fpnn::FPAnswerPtr FPNNCppConnectionListen::processQuest(const fpnn::FPReaderPtr 
     
     //NSLog(@"\n接收 quest response == %@\nmethod == %@  ",decoder.decodeResult,method);
     //block
-    if (_listenAndReplyCallBack) {
+    if (_listenAndReplyCallBack && decoder.error == nil) {
 
         
         FPNNAnswer * answer = _listenAndReplyCallBack(decoder.decodeResult,method);
@@ -171,16 +171,14 @@ fpnn::FPAnswerPtr FPNNCppConnectionListen::processQuest(const fpnn::FPReaderPtr 
             return handleAnswer(answer.responseData.msgPack, quest);
 
         }
-    
         return nullptr;
-    
     }
     
 
 
     //delegate 指定方法
     SEL selector = NSSelectorFromString([NSString stringWithFormat:@"%@:method:client:", method]);
-    if([_client.delegate respondsToSelector:selector]){
+    if([_client.delegate respondsToSelector:selector] && decoder.error == nil){
         
         FPNNAnswer * answer = ((FPNNAnswer* (*)(id, SEL,NSDictionary* ,NSString*,FPNNTCPClient*))[(id)_client.delegate methodForSelector:selector])((id)_client.delegate, selector,decoder.decodeResult,method,_client);
         
@@ -208,7 +206,7 @@ fpnn::FPAnswerPtr FPNNCppConnectionListen::processQuest(const fpnn::FPReaderPtr 
 
 
     //delegate 通用方法
-    if ([_client.delegate respondsToSelector:@selector(fpnnListenAndReplyMessage:method:client:)]) {
+    if ([_client.delegate respondsToSelector:@selector(fpnnListenAndReplyMessage:method:client:)] && decoder.error == nil ) {
         
         FPNNAnswer * answer = [_client.delegate fpnnListenAndReplyMessage:decoder.decodeResult
                                                                    method:method
@@ -257,3 +255,4 @@ fpnn::IAsyncAnswerPtr FPNNCppConnectionListen::genAsyncAnswer()
 {
     return fpnn::IQuestProcessor::genAsyncAnswer();
 }
+
