@@ -120,7 +120,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
         _userId = userId;
         _config = config;
         _autoRelogin = autoRelogin;
-        _sdkVersion = @"2.0.3";
+        _sdkVersion = @"2.0.4";
         _apiVersion = @"2.2.1";
         _reloginNum = 0;
         _connectStatus = RTMClientConnectStatusConnectClosed;
