@@ -88,7 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param successCallback 成功回调
 /// @param failCallback 失败回调
 -(void)speechRecognition:(NSString * _Nonnull)audioFilePath
-                    lang:(NSString * _Nullable)lang
+                    lang:(NSString * _Nonnull)lang
                 duration:(long long)duration
          profanityFilter:(BOOL)profanityFilter
                  timeout:(int)timeout

@@ -241,7 +241,7 @@
                                                       srate:16000];
     
     if (resultData) {
-        [dic setValue:audioData forKey:@"audio"];
+        [dic setValue:resultData forKey:@"audio"];
         [dic setValue:@(profanityFilter) forKey:@"profanityFilter"];
     }else{
         FPNSLog(@"rtm speechRecognition audioDataAddHeader is error");

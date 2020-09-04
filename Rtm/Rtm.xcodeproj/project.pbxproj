@@ -881,10 +881,11 @@
 		568F8ED42408AA6100FE2D8A /* RTMIPv6PrefixResolver.mm in Sources */ = {isa = PBXBuildFile; fileRef = 568F8ED02408AA6100FE2D8A /* RTMIPv6PrefixResolver.mm */; };
 		568F8ED52408AA6100FE2D8A /* RTMIPv6PrefixResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 568F8ED12408AA6100FE2D8A /* RTMIPv6PrefixResolver.h */; };
 		568F8ED62408AA6100FE2D8A /* RTMIPv6Adapter.h in Headers */ = {isa = PBXBuildFile; fileRef = 568F8ED22408AA6100FE2D8A /* RTMIPv6Adapter.h */; };
+		5693C7DD24FE541D00747643 /* RTMLanguageCode.h in Headers */ = {isa = PBXBuildFile; fileRef = 5693C7DC24FE541D00747643 /* RTMLanguageCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		56AE55B723BAF0B3001BB069 /* FPNError.h in Headers */ = {isa = PBXBuildFile; fileRef = 56AE55B523BAF0B3001BB069 /* FPNError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		56AE55B823BAF0B3001BB069 /* FPNError.m in Sources */ = {isa = PBXBuildFile; fileRef = 56AE55B623BAF0B3001BB069 /* FPNError.m */; };
 		56AE55EE23BB25B9001BB069 /* RTMErrorCode.h in Headers */ = {isa = PBXBuildFile; fileRef = 56AE55EC23BB25B9001BB069 /* RTMErrorCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		56AED87223D40E7F00A7D904 /* RTMClientManger.h in Headers */ = {isa = PBXBuildFile; fileRef = 56AED87023D40E7F00A7D904 /* RTMClientManger.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		56AED87223D40E7F00A7D904 /* RTMClientManger.h in Headers */ = {isa = PBXBuildFile; fileRef = 56AED87023D40E7F00A7D904 /* RTMClientManger.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		56AED87323D40E7F00A7D904 /* RTMClientManger.m in Sources */ = {isa = PBXBuildFile; fileRef = 56AED87123D40E7F00A7D904 /* RTMClientManger.m */; };
 		56C7A41924C8463900077C44 /* FPNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C7A41724C8463900077C44 /* FPNetworkReachabilityManager.m */; };
 		56C7A41A24C8463900077C44 /* FPNetworkReachabilityManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 56C7A41824C8463900077C44 /* FPNetworkReachabilityManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1827,6 +1828,7 @@
 		568F8ED02408AA6100FE2D8A /* RTMIPv6PrefixResolver.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RTMIPv6PrefixResolver.mm; sourceTree = "<group>"; };
 		568F8ED12408AA6100FE2D8A /* RTMIPv6PrefixResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTMIPv6PrefixResolver.h; sourceTree = "<group>"; };
 		568F8ED22408AA6100FE2D8A /* RTMIPv6Adapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTMIPv6Adapter.h; sourceTree = "<group>"; };
+		5693C7DC24FE541D00747643 /* RTMLanguageCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTMLanguageCode.h; sourceTree = "<group>"; };
 		56AE55B523BAF0B3001BB069 /* FPNError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPNError.h; sourceTree = "<group>"; };
 		56AE55B623BAF0B3001BB069 /* FPNError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FPNError.m; sourceTree = "<group>"; };
 		56AE55EC23BB25B9001BB069 /* RTMErrorCode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMErrorCode.h; sourceTree = "<group>"; };
@@ -3496,6 +3498,7 @@
 				566F0E5323A33DD600D1D949 /* RTMCallBackDefinition.h */,
 				5627135923A7AEF1009EF54E /* RTMProtocol.h */,
 				56AE55EC23BB25B9001BB069 /* RTMErrorCode.h */,
+				5693C7DC24FE541D00747643 /* RTMLanguageCode.h */,
 				56AED87023D40E7F00A7D904 /* RTMClientManger.h */,
 				56AED87123D40E7F00A7D904 /* RTMClientManger.m */,
 				56FD25A224C6955600D0A754 /* RTMClientConfig.h */,
@@ -3651,6 +3654,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5693C7DD24FE541D00747643 /* RTMLanguageCode.h in Headers */,
 				56E6B61F24E675390099C675 /* RTMSpeechRecognitionAnswer.h in Headers */,
 				56E6B61B24E6751B0099C675 /* RTMTextProfanityAnswer.h in Headers */,
 				56E6B61724E6727D0099C675 /* RTMTranslatedInfoAnswer.h in Headers */,
@@ -3694,6 +3698,7 @@
 				563BD1B5243DAE4C00C6AC11 /* windows_phone.h in Headers */,
 				563BD124243DAE4B00C6AC11 /* unpack.hpp in Headers */,
 				563BD0E7243DAE4B00C6AC11 /* cpp11_define_map.hpp in Headers */,
+				56AED87223D40E7F00A7D904 /* RTMClientManger.h in Headers */,
 				563BD16F243DAE4C00C6AC11 /* fbuffer_decl.hpp in Headers */,
 				563BD15F243DAE4C00C6AC11 /* fixint.hpp in Headers */,
 				563BD0F2243DAE4B00C6AC11 /* msgpack_tuple.hpp in Headers */,
@@ -3916,7 +3921,6 @@
 				563BD15C243DAE4C00C6AC11 /* int.hpp in Headers */,
 				563BD32B243DAE4C00C6AC11 /* expr_if.hpp in Headers */,
 				563BD114243DAE4B00C6AC11 /* cpp_config.hpp in Headers */,
-				56AED87223D40E7F00A7D904 /* RTMClientManger.h in Headers */,
 				563BD1F9243DAE4C00C6AC11 /* qnxnto.h in Headers */,
 				563BD0DE243DAE4B00C6AC11 /* float.hpp in Headers */,
 				563BD311243DAE4C00C6AC11 /* slot3.hpp in Headers */,

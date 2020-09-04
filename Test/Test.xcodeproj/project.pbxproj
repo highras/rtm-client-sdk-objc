@@ -23,7 +23,7 @@
 		5677C59323F28B60005815DA /* 16 16 1 wav.wav in Resources */ = {isa = PBXBuildFile; fileRef = 5677C59123F28B60005815DA /* 16 16 1 wav.wav */; };
 		5691BA9623B34C00008FE64F /* text.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5691BA9523B34C00008FE64F /* text.mp3 */; };
 		5691BA9823B34F43008FE64F /* text2.caf in Resources */ = {isa = PBXBuildFile; fileRef = 5691BA9723B34F43008FE64F /* text2.caf */; };
-		5693C08A24FCF7E900747643 /* Rtm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5693C08924FCF7E800747643 /* Rtm.framework */; };
+		5693C7E224FE720900747643 /* Rtm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5693C7E124FE720800747643 /* Rtm.framework */; };
 		56AED87723D4545E00A7D904 /* MainViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 56AED87623D4545E00A7D904 /* MainViewController.mm */; };
 		56B9EF33246E900000CB9766 /* wavwriter.c in Sources */ = {isa = PBXBuildFile; fileRef = 56B9EF20246E900000CB9766 /* wavwriter.c */; };
 		56B9EF35246E900000CB9766 /* wavreader.c in Sources */ = {isa = PBXBuildFile; fileRef = 56B9EF27246E900000CB9766 /* wavreader.c */; };
@@ -95,7 +95,7 @@
 		5677C59123F28B60005815DA /* 16 16 1 wav.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "16 16 1 wav.wav"; sourceTree = "<group>"; };
 		5691BA9523B34C00008FE64F /* text.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = text.mp3; sourceTree = "<group>"; };
 		5691BA9723B34F43008FE64F /* text2.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = text2.caf; sourceTree = "<group>"; };
-		5693C08924FCF7E800747643 /* Rtm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Rtm.framework; sourceTree = "<group>"; };
+		5693C7E124FE720800747643 /* Rtm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Rtm.framework; path = ../Rtm/Products/Rtm.framework; sourceTree = "<group>"; };
 		56AED87523D4545E00A7D904 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		56AED87623D4545E00A7D904 /* MainViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MainViewController.mm; sourceTree = "<group>"; };
 		56B9EF1B246E900000CB9766 /* if_rom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = if_rom.h; sourceTree = "<group>"; };
@@ -131,7 +131,7 @@
 			files = (
 				56E664CA23FD377200C680BC /* libresolv.9.tbd in Frameworks */,
 				5649316524EA622F00E6A06B /* libvo-amrwbenc.a in Frameworks */,
-				5693C08A24FCF7E900747643 /* Rtm.framework in Frameworks */,
+				5693C7E224FE720900747643 /* Rtm.framework in Frameworks */,
 				5649316424EA622F00E6A06B /* libopencore-amrwb.a in Frameworks */,
 				5649316324EA622F00E6A06B /* libopencore-amrnb.a in Frameworks */,
 				56E664CB23FD377C00C680BC /* libresolv.tbd in Frameworks */,
@@ -158,7 +158,7 @@
 		566F06D623A090D800D1D949 = {
 			isa = PBXGroup;
 			children = (
-				5693C08924FCF7E800747643 /* Rtm.framework */,
+				5693C7E124FE720800747643 /* Rtm.framework */,
 				56B9EF19246E900000CB9766 /* RTMAudioManager */,
 				566F06E123A090D800D1D949 /* Test */,
 				566F06FD23A090D900D1D949 /* TestTests */,
