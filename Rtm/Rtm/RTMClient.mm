@@ -6,7 +6,6 @@
 //  Copyright © 2019 FunPlus. All rights reserved.
 //
 
-#import "RTMClientManger.h"
 #import "RTMClient.h"
 #import "RTMIPv6Adapter.h"
 #import "Fpnn.h"
@@ -120,7 +119,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
         _userId = userId;
         _config = config;
         _autoRelogin = autoRelogin;
-        _sdkVersion = @"2.0.4";
+        _sdkVersion = @"2.0.5";
         _apiVersion = @"2.2.1";
         _reloginNum = 0;
         _connectStatus = RTMClientConnectStatusConnectClosed;
@@ -197,19 +196,22 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
         return;
     }
     
-    if (self.connectStatus == RTMClientConnectStatusConnectClosed && self.authFinish == NO) {
-        
-        self.token = token;
-        self.language = language;
-        self.loginSuccess = loginSuccess;
-        self.loginFail = loginFail;
-        self.loginTimeout = timeout;
-        if (self.loginTimeout <= 0) {
-            self.loginTimeout = 30;
-        }
-        [self _toLogin:YES];
-        
+    
+    self.token = token;
+    self.language = language;
+    self.loginSuccess = loginSuccess;
+    self.loginFail = loginFail;
+    self.loginTimeout = timeout;
+    self.attribute = attribute;
+    
+    if (self.loginTimeout <= 0) {
+        self.loginTimeout = 30;
     }
+        
+
+    [self _toLogin:YES];
+
+    
         
 }
 -(void)_toLogin:(BOOL)isLogin{
@@ -856,7 +858,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
             
             _authClient.listenAndReplyCallBack = ^FPNNAnswer * _Nullable(NSDictionary * _Nullable data, NSString * _Nullable method) {
                 
-//                NSLog(@"listenAndReplyCallBack %@ %@",method,data);
+                NSLog(@"listenAndReplyCallBack %@ %@",method,data);
                 @rtmStrongify(self);
                 
                 if ([method isEqualToString:@"ping"]) {
@@ -915,4 +917,6 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
     
 }
 @end
+
+
 

@@ -21,7 +21,7 @@
                       message:(NSString * _Nonnull)message
                         attrs:(NSString * _Nonnull)attrs
                       timeout:(int)timeout
-                      success:(void(^)(int64_t mtime))successCallback
+                      success:(void(^)(RTMSendAnswer * sendAnswer))successCallback
                          fail:(RTMAnswerFailCallBack)failCallback{
 
     
@@ -42,7 +42,10 @@
                                     success:^(NSDictionary * _Nullable data) {
             
             if (successCallback) {
-                successCallback([[data objectForKey:@"mtime"] longLongValue]);
+                RTMSendAnswer* sendAnswer  = [RTMSendAnswer new];
+                sendAnswer.mtime = [[data objectForKey:@"mtime"] longLongValue];
+                sendAnswer.messageId = [[dic objectForKey:@"mid"] longLongValue];
+                successCallback(sendAnswer);
             }
         
         }fail:^(FPNError * _Nullable error) {
@@ -80,6 +83,7 @@
     
     if (answer.error == nil) {
         model.mtime = [[answer.responseData objectForKey:@"mtime"] longLongValue];
+        model.messageId = [[dic objectForKey:@"mid"] longLongValue];
     }else{
         model.error = answer.error;
     }
@@ -93,7 +97,7 @@
                          data:(NSData * _Nonnull)data
                         attrs:(NSString * _Nonnull)attrs
                       timeout:(int)timeout
-                      success:(void(^)(int64_t mtime))successCallback
+                      success:(void(^)(RTMSendAnswer * sendAnswer))successCallback
                          fail:(RTMAnswerFailCallBack)failCallback{
     
     messageTypeFilter(messageType.intValue)
@@ -112,7 +116,10 @@
                                 success:^(NSDictionary * _Nullable data) {
         
         if (successCallback) {
-            successCallback([[data objectForKey:@"mtime"] longLongValue]);
+            RTMSendAnswer* sendAnswer  = [RTMSendAnswer new];
+            sendAnswer.mtime = [[data objectForKey:@"mtime"] longLongValue];
+            sendAnswer.messageId = [[dic objectForKey:@"mid"] longLongValue];
+            successCallback(sendAnswer);
         }
     
     }fail:^(FPNError * _Nullable error) {
@@ -147,6 +154,7 @@
     
     if (answer.error == nil) {
         model.mtime = [[answer.responseData objectForKey:@"mtime"] longLongValue];
+        model.messageId = [[dic objectForKey:@"mid"] longLongValue];
     }else{
         model.error = answer.error;
     }
@@ -238,7 +246,7 @@
     [dic setValue:lastid forKey:@"lastid"];
     [dic setValue:mtypes forKey:@"mtypes"];
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendmsg" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getp2pmsg" message:dic twoWay:YES];
     
     FPNNAnswer * answer = [mainClient sendQuest:quest
                                        timeout:RTMClientSendQuestTimeout];

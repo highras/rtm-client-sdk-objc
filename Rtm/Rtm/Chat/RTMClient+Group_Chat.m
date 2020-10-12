@@ -17,7 +17,7 @@
                            message:(NSString * _Nonnull)message
                              attrs:(NSString * _Nonnull)attrs
                            timeout:(int)timeout
-                          success:(void(^)(int64_t mtime))successCallback
+                          success:(void(^)(RTMSendAnswer* sendAnswer))successCallback
                              fail:(RTMAnswerFailCallBack)failCallback{
     
     
@@ -36,7 +36,10 @@
                                 success:^(NSDictionary * _Nullable data) {
         
         if (successCallback) {
-            successCallback([[data objectForKey:@"mtime"] longLongValue]);
+            RTMSendAnswer* sendAnswer  = [RTMSendAnswer new];
+            sendAnswer.mtime = [[data objectForKey:@"mtime"] longLongValue];
+            sendAnswer.messageId = [[dic objectForKey:@"mid"] longLongValue];
+            successCallback(sendAnswer);
         }
     
     }fail:^(FPNError * _Nullable error) {
@@ -69,6 +72,7 @@
     
     if (answer.error == nil) {
         model.mtime = [[answer.responseData objectForKey:@"mtime"] longLongValue];
+        model.messageId = [[dic objectForKey:@"mid"] longLongValue];
     }else{
         model.error = answer.error;
     }
@@ -87,7 +91,7 @@
                                   lang:(NSString * _Nonnull)lang
                               duration:(long long)duration
                                timeout:(int)timeout
-                               success:(void(^)(int64_t mtime))successCallback
+                               success:(void(^)(RTMSendAnswer* sendAnswer))successCallback
                                   fail:(RTMAnswerFailCallBack)failCallback{
     
     
@@ -130,7 +134,10 @@
                                 success:^(NSDictionary * _Nullable data) {
         
         if (successCallback) {
-            successCallback([[data objectForKey:@"mtime"] longLongValue]);
+            RTMSendAnswer* sendAnswer  = [RTMSendAnswer new];
+            sendAnswer.mtime = [[data objectForKey:@"mtime"] longLongValue];
+            sendAnswer.messageId = [[dic objectForKey:@"mid"] longLongValue];
+            successCallback(sendAnswer);
         }
     
     }fail:^(FPNError * _Nullable error) {
@@ -193,6 +200,7 @@
         
         if (answer.error == nil) {
             model.mtime = [[answer.responseData objectForKey:@"mtime"] longLongValue];
+            model.messageId = [[dic objectForKey:@"mid"] longLongValue];
         }else{
             model.error = answer.error;
         }
@@ -307,7 +315,7 @@
                            message:(NSString * _Nonnull)message
                              attrs:(NSString * _Nonnull)attrs
                            timeout:(int)timeout
-                             success:(void(^)(int64_t mtime))successCallback
+                             success:(void(^)(RTMSendAnswer* sendAnswer))successCallback
                                 fail:(RTMAnswerFailCallBack)failCallback{
     
     
@@ -325,7 +333,10 @@
                                 success:^(NSDictionary * _Nullable data) {
         
         if (successCallback) {
-            successCallback([[data objectForKey:@"mtime"] longLongValue]);
+            RTMSendAnswer* sendAnswer  = [RTMSendAnswer new];
+            sendAnswer.mtime = [[data objectForKey:@"mtime"] longLongValue];
+            sendAnswer.messageId = [[dic objectForKey:@"mid"] longLongValue];
+            successCallback(sendAnswer);
         }
     
     }fail:^(FPNError * _Nullable error) {
@@ -357,6 +368,7 @@
     
     if (answer.error == nil) {
         model.mtime = [[answer.responseData objectForKey:@"mtime"] longLongValue];
+        model.messageId = [[dic objectForKey:@"mid"] longLongValue];
     }else{
         model.error = answer.error;
     }

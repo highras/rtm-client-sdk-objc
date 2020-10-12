@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
                           message:(NSString * _Nonnull)message
                             attrs:(NSString * _Nonnull)attrs
                           timeout:(int)timeout
-                          success:(void(^)(int64_t mtime))successCallback
+                          success:(void(^)(RTMSendAnswer * sendAnswer))successCallback
                              fail:(RTMAnswerFailCallBack)failCallback;
 -(RTMSendAnswer*)sendGroupMessageChatWithId:(NSNumber * _Nonnull)groupId
                                     message:(NSString * _Nonnull)message
@@ -57,7 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
                                   lang:(NSString * _Nonnull)lang
                               duration:(long long)duration
                                timeout:(int)timeout
-                               success:(void(^)(int64_t mtime))successCallback
+                               success:(void(^)(RTMSendAnswer * sendAnswer))successCallback
                                   fail:(RTMAnswerFailCallBack)failCallback;
 -(RTMSendAnswer*)sendGroupAudioMessageChatWithId:(NSNumber * _Nonnull)groupId
                                    audioFilePath:(NSString * _Nonnull)audioFilePath
@@ -83,7 +83,7 @@ NS_ASSUME_NONNULL_BEGIN
                              message:(NSString * _Nonnull)message
                                attrs:(NSString * _Nonnull)attrs
                              timeout:(int)timeout
-                             success:(void(^)(int64_t mtime))successCallback
+                             success:(void(^)(RTMSendAnswer * sendAnswer))successCallback
                               fail:(RTMAnswerFailCallBack)failCallback;
 -(RTMBaseAnswer*)sendGroupCmdMessageChatWithId:(NSNumber * _Nonnull)groupId
                                       message:(NSString * _Nonnull)message

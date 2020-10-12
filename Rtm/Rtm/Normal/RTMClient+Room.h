@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
                      message:(NSString * _Nonnull)message
                        attrs:(NSString * _Nonnull)attrs
                      timeout:(int)timeout
-                     success:(void(^)(int64_t mtime))successCallback
+                     success:(void(^)(RTMSendAnswer * sendAnswer))successCallback
                         fail:(RTMAnswerFailCallBack)failCallback;
 -(RTMSendAnswer*)sendRoomMessageWithId:(NSNumber * _Nonnull)roomId
                            messageType:(NSNumber * _Nonnull)messageType
@@ -59,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
                               data:(NSData * _Nonnull)data
                              attrs:(NSString * _Nonnull)attrs
                            timeout:(int)timeout
-                           success:(void(^)(int64_t mtime))successCallback
+                           success:(void(^)(RTMSendAnswer * sendAnswer))successCallback
                               fail:(RTMAnswerFailCallBack)failCallback;
 -(RTMSendAnswer*)sendRoomMessageWithId:(NSNumber * _Nonnull)roomId
                            messageType:(NSNumber * _Nonnull)messageType

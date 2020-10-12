@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface RTMSendAnswer : RTMBaseAnswer
 @property(nonatomic,assign)int64_t mtime;
+@property(nonatomic,assign)int64_t messageId;
 @end
 
 NS_ASSUME_NONNULL_END

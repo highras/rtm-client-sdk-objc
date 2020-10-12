@@ -34,7 +34,7 @@ typedef NS_ENUM(NSInteger, RTMFileType)
               fileSuffix:(NSString * _Nonnull)fileSuffix
                 fileType:(RTMFileType)fileType
                  timeout:(int)timeout
-                 success:(void(^)(int64_t mtime))successCallback
+                 success:(void(^)(RTMSendAnswer * sendAnswer))successCallback
                     fail:(RTMAnswerFailCallBack)failCallback;
 
 /// group 发送文件 mtype=40图片  mtype=41语音  mtype=42视频
@@ -52,7 +52,7 @@ typedef NS_ENUM(NSInteger, RTMFileType)
                  fileSuffix:(NSString * _Nonnull)fileSuffix
                    fileType:(RTMFileType)fileType
                     timeout:(int)timeout
-                    success:(void(^)(int64_t mtime))successCallback
+                    success:(void(^)(RTMSendAnswer * sendAnswer))successCallback
                        fail:(RTMAnswerFailCallBack)failCallback;
 
 /// room 发送文件  mtype=40图片  mtype=41语音  mtype=42视频
@@ -70,7 +70,7 @@ typedef NS_ENUM(NSInteger, RTMFileType)
                fileSuffix:(NSString * _Nonnull)fileSuffix
                  fileType:(RTMFileType)fileType
                   timeout:(int)timeout
-                  success:(void(^)(int64_t mtime))successCallback
+                  success:(void(^)(RTMSendAnswer * sendAnswer))successCallback
                      fail:(RTMAnswerFailCallBack)failCallback;
 
 @end

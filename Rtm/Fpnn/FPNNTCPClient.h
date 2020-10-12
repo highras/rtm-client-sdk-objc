@@ -15,6 +15,7 @@
 NS_ASSUME_NONNULL_BEGIN
 @interface FPNNTCPClient : NSObject
 
+@property (nonatomic,strong) NSString * sdkVersion;
 @property (nonatomic,assign) int questTimeout;
 @property (nonatomic,assign) BOOL autoReconnect;//默认YES 发送操作时 如果为未连接 会自动连接后发送  非断开后自动重新连接
 

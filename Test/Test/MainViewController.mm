@@ -14,12 +14,25 @@
 #import "NSObject+Description.h"
 #define NSAllLog(FORMAT, ...) fprintf(stderr, "%s:%zd\t%s\n", [[[NSString stringWithUTF8String: __FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat: FORMAT, ## __VA_ARGS__] UTF8String]);
 
-@interface MainViewController ()<UITableViewDelegate,UITableViewDataSource,RTMProtocol>
-
+@interface MainViewController ()<UITableViewDelegate,UITableViewDataSource,RTMProtocol>{
+    
+    
+    
+    int a,b,c,d,e,dd,ee;
+    
+    
+}
 @property(nonatomic,strong)UITableView * listView;
 @property(nonatomic,strong)NSArray * array;
 
 @property(nonatomic,strong)RTMClient * client;
+@property(nonatomic,strong)RTMClient * client2;
+@property(nonatomic,strong)RTMClient * client3;
+@property(nonatomic,strong)RTMClient * client4;
+@property(nonatomic,strong)RTMClient * client5;
+@property(nonatomic,strong)RTMClient * client6;
+@property(nonatomic,strong)RTMClient * client7;
+@property(nonatomic,strong)RTMClient * client8;
 
 @property(nonatomic,strong)RTMRecordManager * recordManager;
 @property(nonatomic,strong)NSString * recordAmrAudioPath;
@@ -43,7 +56,7 @@
 //被踢下线
 -(void)rtmKickout:(RTMClient *)client
 {
-    
+    NSLog(@"rtmKickout");
 }
 //房间踢出
 -(void)rtmRoomKickoutData:(RTMClient *)client data:(NSDictionary * _Nullable)data
@@ -164,17 +177,17 @@
         if (indexPath.row == 0) {//@[@"验证登录"]
         
 //            [self test];
-            self.client = [RTMClient clientWithEndpoint:@""
-                                              projectId:0
-                                                 userId:0
+            self.client = [RTMClient clientWithEndpoint:@"161.189.171.91:13325"
+                                              projectId:90000014
+                                                 userId:666
                                                delegate:self
                                                  config:nil
                                             autoRelogin:YES];
             
             if (self.client) {
-                [self.client loginWithToken:@""
+                [self.client loginWithToken:@"5B29E4874E1F7FA2216CE65FD10FAAB3"
                                    language:@"en"
-                                  attribute:nil
+                                  attribute:@{@"aaa":@"bbb"}
                                     timeout:30
                                     success:^{
                     
@@ -204,9 +217,9 @@
                                         message:@"message"
                                           attrs:@"attrs"
                                         timeout:10
-                                        success:^(int64_t mtime) {
+                                        success:^(RTMSendAnswer * sendAnswer) {
 
-                NSLog(@"sendP2PMessageToUserId %lld",mtime);
+                NSLog(@"sendP2PMessageToUserId %lld %lld",sendAnswer.mtime,sendAnswer.messageId);
 
             }fail:^(FPNError * _Nullable error) {
 
@@ -336,9 +349,9 @@
                                             message:@"group message123"
                                               attrs:@"attrs"
                                             timeout:10
-                                            success:^(int64_t mtime) {
+                                            success:^(RTMSendAnswer * sendAnswer) {
                     
-                    NSLog(@"%lld",mtime);
+                    NSLog(@"%lld %lld",sendAnswer.mtime,sendAnswer.messageId);
                     
                 } fail:^(FPNError * _Nullable error) {
                     
@@ -538,9 +551,9 @@
                                                message:@"room message"
                                                  attrs:@"attrs"
                                                timeout:10
-                                               success:^(int64_t mtime) {
+                                               success:^(RTMSendAnswer * sendAnswer) {
                         
-                        NSLog(@"%lld",mtime);
+                        NSLog(@"%lld %lld",sendAnswer.mtime,sendAnswer.messageId);
                         
                     } fail:^(FPNError * _Nullable error) {
                         
@@ -607,7 +620,7 @@
                        
                 }else if (indexPath.row == 4){//进入某个房间或者频道
                 
-                            [self.client enterRoomWithId:[NSNumber numberWithLongLong:666]
+                            [self.client enterRoomWithId:[NSNumber numberWithLongLong:66677]
                                                  timeout:10
                                                  success:^{
                                 
@@ -755,9 +768,9 @@
                                             fileSuffix:@"jpeg"
                                               fileType:RTMImage
                                                timeout:60
-                                               success:^(int64_t mtime) {
+                                               success:^(RTMSendAnswer * sendAnswer) {
                             
-                            NSLog(@"File%lld",mtime);
+                            NSLog(@"File%lld",sendAnswer.mtime);
                             
                         } fail:^(FPNError * _Nullable error) {
                             
@@ -775,9 +788,9 @@
                                                fileSuffix:@"mp3"
                                                  fileType:RTMVoice
                                                   timeout:60
-                                                 success:^(int64_t mtime) {
+                                                 success:^(RTMSendAnswer * sendAnswer) {
                             
-                            NSLog(@"File%lld",mtime);
+                            NSLog(@"File%lld",sendAnswer.mtime);
                             
                         } fail:^(FPNError * _Nullable error) {
                             
@@ -795,9 +808,9 @@
                                                fileSuffix:@"mp4"
                                                  fileType:RTMVideo
                                                   timeout:60
-                                                success:^(int64_t mtime) {
+                                                success:^(RTMSendAnswer * sendAnswer) {
                             
-                            NSLog(@"File%lld",mtime);
+                            NSLog(@"File%lld",sendAnswer.mtime);
                             
                         } fail:^(FPNError * _Nullable error) {
                             
@@ -1168,9 +1181,9 @@
                                                       message:@"chat message"
                                                         attrs:@"attrs"
                                                       timeout:10
-                                                      success:^(int64_t mtime) {
+                                                      success:^(RTMSendAnswer * sendAnswer) {
                             
-                            NSLog(@"%lld",mtime);
+                            NSLog(@"%lld",sendAnswer.mtime);
                             
                         } fail:^(FPNError * _Nullable error) {
                             
@@ -1197,9 +1210,9 @@
                                                                lang:@"zh-cn"
                                                            duration:durationTime * 1000
                                                             timeout:20
-                                                            success:^(int64_t mtime) {
+                                                            success:^(RTMSendAnswer * sendAnswer) {
                                                                               
-                                                    NSLog(@"%lld",mtime);
+                                                    NSLog(@"%lld %lld",sendAnswer.mtime,sendAnswer.messageId);
                                                                               
                                 } fail:^(FPNError * _Nullable error) {
                                                                                 
@@ -1218,9 +1231,9 @@
                                                       message:@"cmd message"
                                                         attrs:@"attrs"
                                                       timeout:20
-                                                      success:^(int64_t mtime) {
+                                                      success:^(RTMSendAnswer * sendAnswer) {
                                   
-                                    NSLog(@"%lld",mtime);
+                                    NSLog(@"%lld %lld",sendAnswer.mtime,sendAnswer.messageId);
                         
                                 } fail:^(FPNError * _Nullable error) {
                                
@@ -1262,9 +1275,9 @@
                                                         message:@"chat group message"
                                                           attrs:@"attrs"
                                                         timeout:10
-                                                        success:^(int64_t mtime) {
+                                                        success:^(RTMSendAnswer * sendAnswer) {
                             
-                            NSLog(@"%lld",mtime);
+                            NSLog(@"%lld",sendAnswer.mtime);
                             
                         } fail:^(FPNError * _Nullable error) {
                             
@@ -1290,8 +1303,8 @@
                                                                        lang:@"zh-cn"
                                                                    duration:durationTime * 1000
                                                                     timeout:20
-                                                                         success:^(int64_t mtime) {
-                                        NSLog(@"%lld",mtime);
+                                                                         success:^(RTMSendAnswer * sendAnswer) {
+                                        NSLog(@"%lld",sendAnswer.mtime);
                                     } fail:^(FPNError * _Nullable error) {
                                         NSLog(@"%@",error);
                                     }];
@@ -1305,9 +1318,9 @@
                                                                            message:@"cmd message"
                                                                              attrs:@"attrs"
                                                                            timeout:10
-                                                                           success:^(int64_t mtime) {
+                                                                           success:^(RTMSendAnswer * sendAnswer) {
                                             
-                                            NSLog(@"%lld",mtime);
+                                            NSLog(@"%lld",sendAnswer.mtime);
                                             
                                         } fail:^(FPNError * _Nullable error) {
                                             
@@ -1349,9 +1362,9 @@
                                                         message:@"chat room message"
                                                           attrs:@"attrs"
                                                         timeout:10
-                                                        success:^(int64_t mtime) {
+                                                        success:^(RTMSendAnswer * sendAnswer) {
                             
-                            NSLog(@"%lld",mtime);
+                            NSLog(@"%lld",sendAnswer.mtime);
                             
                         } fail:^(FPNError * _Nullable error) {
                             
@@ -1376,8 +1389,8 @@
                                                                            lang:@"cn"
                                                                        duration:durationTime * 1000
                                                                         timeout:20
-                                                                        success:^(int64_t mtime) {
-                                        NSLog(@"%lld",mtime);
+                                                                        success:^(RTMSendAnswer * sendAnswer) {
+                                        NSLog(@"%lld",sendAnswer.mtime);
                                     } fail:^(FPNError * _Nullable error) {
                                         NSLog(@"%@",error);
                                     }];
@@ -1390,9 +1403,9 @@
                                                                   message:@"cmd message"
                                                                     attrs:@"attrs"
                                                                   timeout:10
-                                                                  success:^(int64_t mtime) {
+                                                                  success:^(RTMSendAnswer * sendAnswer) {
                                                                   
-                                    NSLog(@"%lld",mtime);
+                                    NSLog(@"%lld %lld",sendAnswer.mtime,sendAnswer.messageId);
                                                                  
                                 } fail:^(FPNError * _Nullable error) {
                                                                     
@@ -1762,10 +1775,185 @@
 
 //点击一下  登录验证
     [self tableView:self.listView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-
+//    [self test];
 
 }
+-(void)test2{
+    
+    
+//    self.client7 = [RTMClient clientWithEndpoint:@"52.82.27.68:13325"
+//                                                        pid:90000014
+//                                                        uid:18
+//                                                      token:@"4297E324D29B7F0FB8B6CD55838CCAA0"];//server 获取
+//    [self.client7 verifyConnectSuccess:^(NSDictionary * _Nullable data) {
+//         NSLog(@"验证成功 verifyConnectSuccess  ");
+//
+//        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//            int a = 0;
+//            while (1) {
+//                sleep(1.2);
+//                a = a + 1;
+//                [self.client7 sendGroupMessageChatWithId:@(13) message:[NSString stringWithFormat:@"client7  group message %d",a] attrs:@"" timeout:10];
+//            }
+//        });
+//
+//
+//
+//    } connectFali:nil];
+    
+    
+}
+-(void)test{
+    
+    self.client2 = [RTMClient clientWithEndpoint:@"161.189.171.91:13325"
+                                      projectId:90000014
+                                         userId:002
+                                       delegate:self
+                                         config:nil
+                                    autoRelogin:YES];
+    self.client3 = [RTMClient clientWithEndpoint:@"161.189.171.91:13325"
+                                       projectId:90000014
+                                          userId:003
+                                        delegate:self
+                                          config:nil
+                                     autoRelogin:YES];
+    self.client4 = [RTMClient clientWithEndpoint:@"161.189.171.91:13325"
+                                       projectId:90000014
+                                          userId:004
+                                        delegate:self
+                                          config:nil
+                                     autoRelogin:YES];
+    self.client5 = [RTMClient clientWithEndpoint:@"161.189.171.91:13325"
+                                       projectId:90000014
+                                          userId:005
+                                        delegate:self
+                                          config:nil
+                                     autoRelogin:YES];
+    self.client6 = [RTMClient clientWithEndpoint:@"161.189.171.91:13325"
+                                       projectId:90000014
+                                          userId:006
+                                        delegate:self
+                                          config:nil
+                                     autoRelogin:YES];
+    
+    
+    [self.client2 loginWithToken:@"6770DD93E43DBC2FC6628AA69338A208"
+                        language:@"en"
+                       attribute:nil
+                         timeout:30
+                         success:^{
+        NSLog(@"client2 successsuccesssuccesssuccess");
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+                    
+            int a = 0;
+            while (a < 5000) {
+                [NSThread sleepForTimeInterval:0];
+                a = a + 1;
+                NSLog(@"client2%d",a);
+                [self.client2 sendP2PMessageChatWithId:@(666) message:@"client2 msg" attrs:@"" timeout:10];
+            }
+                
+        });
+        
+    } connectFail:^(FPNError * _Nullable error) {
+        
+    }];
+    
+    
+    [self.client3 loginWithToken:@"1AF84BAB1E0D1639E9683F24329D03EA"
+                        language:@"en"
+                       attribute:nil
+                         timeout:30
+                         success:^{
+        NSLog(@"client3 successsuccesssuccesssuccess");
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
 
+            int a = 0;
+            while (a < 5000) {
+                [NSThread sleepForTimeInterval:0];
+                a = a + 1;
+                NSLog(@"client3%d",a);
+                [self.client3 sendP2PMessageChatWithId:@(666) message:@"client3 msg" attrs:@"" timeout:10];
+            }
+
+        });
+    } connectFail:^(FPNError * _Nullable error) {
+        NSLog(@"errorerrorerrorerrorerrorerror %@",error);
+    }];
+
+    [self.client4 loginWithToken:@"8EB8874C0274447DF5A8E40484D6D770"
+                        language:@"en"
+                       attribute:nil
+                         timeout:30
+                         success:^{
+        NSLog(@"client4 successsuccesssuccesssuccess");
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+
+            int a = 0;
+            while (a < 5000) {
+                [NSThread sleepForTimeInterval:0];
+                a = a + 1;
+                NSLog(@"client4%d",a);
+                [self.client4 sendP2PMessageChatWithId:@(666) message:@"client4 msg" attrs:@"" timeout:10];
+            }
+
+        });
+    } connectFail:^(FPNError * _Nullable error) {
+
+        NSLog(@"errorerrorerrorerrorerrorerror %@",error);
+
+    }];
+
+    [self.client5 loginWithToken:@"9380B8E8F72A4E85C552525AFE2F2F34"
+                        language:@"en"
+                       attribute:nil
+                         timeout:30
+                         success:^{
+        NSLog(@"client5 successsuccesssuccesssuccess");
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+
+            int a = 0;
+            while (a < 5000) {
+                [NSThread sleepForTimeInterval:0];
+                a = a + 1;
+                NSLog(@"client5%d",a);
+                [self.client5 sendP2PMessageChatWithId:@(666) message:@"client5 msg" attrs:@"" timeout:10];
+            }
+
+        });
+    } connectFail:^(FPNError * _Nullable error) {
+
+        NSLog(@"errorerrorerrorerrorerrorerror %@",error);
+
+    }];
+
+    [self.client6 loginWithToken:@"6634AC72245BFC3D42663604D5E9299A"
+                        language:@"en"
+                       attribute:nil
+                         timeout:30
+                         success:^{
+        NSLog(@"client6 successsuccesssuccesssuccess");
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+
+            int a = 0;
+            while (a < 5000) {
+                [NSThread sleepForTimeInterval:0];
+                a = a + 1;
+                NSLog(@"client6%d",a);
+                [self.client6 sendP2PMessageChatWithId:@(666) message:@"client6 msg" attrs:@"" timeout:10];
+            }
+
+        });
+
+    } connectFail:^(FPNError * _Nullable error) {
+
+        NSLog(@"errorerrorerrorerrorerrorerror %@",error);
+
+    }];
+    
+    
+                    
+}
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 77;
 }

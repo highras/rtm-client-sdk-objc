@@ -155,7 +155,7 @@
               fileSuffix:(NSString * _Nonnull)fileSuffix
                 fileType:(RTMFileType)fileType
                  timeout:(int)timeout
-                 success:(void(^)(int64_t mtime))successCallback
+                 success:(void(^)(RTMSendAnswer * sendAnswer))successCallback
                     fail:(RTMAnswerFailCallBack)failCallback{
     
     
@@ -184,7 +184,11 @@
                       success:^(NSDictionary * _Nullable data) {
 
             if (successCallback) {
-                successCallback([[data objectForKey:@"mtime"] longLongValue]);
+                
+                RTMSendAnswer* sendAnswer  = [RTMSendAnswer new];
+                sendAnswer.mtime = [[data objectForKey:@"mtime"] longLongValue];
+                sendAnswer.messageId = [[resultBody objectForKey:@"mid"] longLongValue];
+                successCallback(sendAnswer);
             }
 
         } fail:^(FPNError * _Nullable error) {
@@ -214,7 +218,7 @@
                 fileSuffix:(NSString * _Nonnull)fileSuffix
                   fileType:(RTMFileType)fileType
                    timeout:(int)timeout
-                   success:(void(^)(int64_t mtime))successCallback
+                   success:(void(^)(RTMSendAnswer * sendAnswer))successCallback
                       fail:(RTMAnswerFailCallBack)failCallback{
     
     clientConnectStatueVerify
@@ -249,7 +253,10 @@
                       success:^(NSDictionary * _Nullable data) {
             
             if (successCallback) {
-                successCallback([[data objectForKey:@"mtime"] longLongValue]);
+                RTMSendAnswer* sendAnswer  = [RTMSendAnswer new];
+                sendAnswer.mtime = [[data objectForKey:@"mtime"] longLongValue];
+                sendAnswer.messageId = [[resultBody objectForKey:@"mid"] longLongValue];
+                successCallback(sendAnswer);
             }
             
         } fail:^(FPNError * _Nullable error) {
@@ -276,7 +283,7 @@
                fileSuffix:(NSString * _Nonnull)fileSuffix
                  fileType:(RTMFileType)fileType
                   timeout:(int)timeout
-                  success:(void(^)(int64_t mtime))successCallback
+                  success:(void(^)(RTMSendAnswer * sendAnswer))successCallback
                      fail:(RTMAnswerFailCallBack)failCallback{
     
     
@@ -311,7 +318,10 @@
                       success:^(NSDictionary * _Nullable data) {
             
             if (successCallback) {
-                successCallback([[data objectForKey:@"mtime"] longLongValue]);
+                RTMSendAnswer* sendAnswer  = [RTMSendAnswer new];
+                sendAnswer.mtime = [[data objectForKey:@"mtime"] longLongValue];
+                sendAnswer.messageId = [[resultBody objectForKey:@"mid"] longLongValue];
+                successCallback(sendAnswer);
             }
             
         } fail:^(FPNError * _Nullable error) {

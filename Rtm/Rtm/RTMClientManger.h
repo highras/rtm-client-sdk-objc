@@ -7,12 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-//#import "RTMClient.h"
+#import "RTMClient.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RTMClientManger : NSObject
-//+ (instancetype)shareInstance;
-//- (void)applicationDidEnterBackground:(UIApplication *)application;// 断开所有 client
++ (instancetype)shareInstance;
+- (void)applicationDidEnterBackground:(UIApplication *)application;// 断开所有 client
 @end
 
 NS_ASSUME_NONNULL_END

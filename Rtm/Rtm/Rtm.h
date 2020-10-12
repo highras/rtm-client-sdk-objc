@@ -16,7 +16,6 @@
 // 4.Info.plist 添加麦克风权限 Privacy - Microphone Usage Description
 
 #import <Rtm/RTMClient.h>
-#import <Rtm/RTMClientManger.h>
 #import <Rtm/RTMAnswer.h>
 #import <Rtm/RTMClient+User.h>
 #import <Rtm/RTMClient+Friend.h>

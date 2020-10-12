@@ -885,8 +885,6 @@
 		56AE55B723BAF0B3001BB069 /* FPNError.h in Headers */ = {isa = PBXBuildFile; fileRef = 56AE55B523BAF0B3001BB069 /* FPNError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		56AE55B823BAF0B3001BB069 /* FPNError.m in Sources */ = {isa = PBXBuildFile; fileRef = 56AE55B623BAF0B3001BB069 /* FPNError.m */; };
 		56AE55EE23BB25B9001BB069 /* RTMErrorCode.h in Headers */ = {isa = PBXBuildFile; fileRef = 56AE55EC23BB25B9001BB069 /* RTMErrorCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		56AED87223D40E7F00A7D904 /* RTMClientManger.h in Headers */ = {isa = PBXBuildFile; fileRef = 56AED87023D40E7F00A7D904 /* RTMClientManger.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		56AED87323D40E7F00A7D904 /* RTMClientManger.m in Sources */ = {isa = PBXBuildFile; fileRef = 56AED87123D40E7F00A7D904 /* RTMClientManger.m */; };
 		56C7A41924C8463900077C44 /* FPNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C7A41724C8463900077C44 /* FPNetworkReachabilityManager.m */; };
 		56C7A41A24C8463900077C44 /* FPNetworkReachabilityManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 56C7A41824C8463900077C44 /* FPNetworkReachabilityManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		56C7A41D24C8483C00077C44 /* RTMClient+MessagesManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 56C7A41B24C8483C00077C44 /* RTMClient+MessagesManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1832,8 +1830,6 @@
 		56AE55B523BAF0B3001BB069 /* FPNError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPNError.h; sourceTree = "<group>"; };
 		56AE55B623BAF0B3001BB069 /* FPNError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FPNError.m; sourceTree = "<group>"; };
 		56AE55EC23BB25B9001BB069 /* RTMErrorCode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMErrorCode.h; sourceTree = "<group>"; };
-		56AED87023D40E7F00A7D904 /* RTMClientManger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMClientManger.h; sourceTree = "<group>"; };
-		56AED87123D40E7F00A7D904 /* RTMClientManger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMClientManger.m; sourceTree = "<group>"; };
 		56C7A41724C8463900077C44 /* FPNetworkReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FPNetworkReachabilityManager.m; sourceTree = "<group>"; };
 		56C7A41824C8463900077C44 /* FPNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPNetworkReachabilityManager.h; sourceTree = "<group>"; };
 		56C7A41B24C8483C00077C44 /* RTMClient+MessagesManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTMClient+MessagesManager.h"; sourceTree = "<group>"; };
@@ -3499,8 +3495,6 @@
 				5627135923A7AEF1009EF54E /* RTMProtocol.h */,
 				56AE55EC23BB25B9001BB069 /* RTMErrorCode.h */,
 				5693C7DC24FE541D00747643 /* RTMLanguageCode.h */,
-				56AED87023D40E7F00A7D904 /* RTMClientManger.h */,
-				56AED87123D40E7F00A7D904 /* RTMClientManger.m */,
 				56FD25A224C6955600D0A754 /* RTMClientConfig.h */,
 				56FD25A324C6955600D0A754 /* RTMClientConfig.m */,
 				566F0E1523A0936300D1D949 /* RTMClient.h */,
@@ -3698,7 +3692,6 @@
 				563BD1B5243DAE4C00C6AC11 /* windows_phone.h in Headers */,
 				563BD124243DAE4B00C6AC11 /* unpack.hpp in Headers */,
 				563BD0E7243DAE4B00C6AC11 /* cpp11_define_map.hpp in Headers */,
-				56AED87223D40E7F00A7D904 /* RTMClientManger.h in Headers */,
 				563BD16F243DAE4C00C6AC11 /* fbuffer_decl.hpp in Headers */,
 				563BD15F243DAE4C00C6AC11 /* fixint.hpp in Headers */,
 				563BD0F2243DAE4B00C6AC11 /* msgpack_tuple.hpp in Headers */,
@@ -4609,7 +4602,6 @@
 				568F8ED32408AA6100FE2D8A /* RTMIPv6Adapter.m in Sources */,
 				56EA005C23B239D4002B5B77 /* RTMClient+Group_Chat.m in Sources */,
 				563BD38A243DAE4C00C6AC11 /* sha256.c in Sources */,
-				56AED87323D40E7F00A7D904 /* RTMClientManger.m in Sources */,
 				56D2B09823B9A19100491DF7 /* MPMessagePackWriter.m in Sources */,
 				566F0E3423A098E800D1D949 /* RTMClient+Room.m in Sources */,
 				563BD095243DAE4B00C6AC11 /* ClientIOWorker.cpp in Sources */,
@@ -4860,12 +4852,13 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EXCLUDED_ARCHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Rtm/RtmPrefixHeader.pch";
 				HEADER_SEARCH_PATHS = proto/msgpack;
 				INFOPLIST_FILE = Rtm/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -4904,12 +4897,13 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EXCLUDED_ARCHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Rtm/RtmPrefixHeader.pch";
 				HEADER_SEARCH_PATHS = proto/msgpack;
 				INFOPLIST_FILE = Rtm/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

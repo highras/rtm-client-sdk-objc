@@ -65,7 +65,7 @@
             if ([self.delegate respondsToSelector:@selector(rtmPushP2PFile:message:)]) {
                 [self.delegate rtmPushP2PFile:self message:msgModel];
             }
-        }else if(mtype >= 51 && mtype <= 127){
+        }else {
             
             //normal message
             RTMMessage * msgModel = [RTMMessageModelConvert messageModelConvert:data chatType:RTMP2p];
@@ -79,7 +79,6 @@
                 [self.delegate rtmPushP2PMessage:self message:msgModel];
                                                     
             }
-            
         }
     }
                                               
