@@ -452,12 +452,12 @@
     BOOL result = [mainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
-    
+//        NSLog(@"%@",data);
         NSArray * array = [data objectForKey:@"msgs"];
         NSMutableArray * resultArray = [NSMutableArray array];
         [array enumerateObjectsUsingBlock:^(NSArray *  _Nonnull itemArray, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            RTMHistoryMessage * msgOb = [RTMMessageModelConvert p2pHistoryMessageModelConvert:itemArray];
+            RTMHistoryMessage * msgOb = [RTMMessageModelConvert p2pHistoryMessageModelConvert:itemArray toUserId:userId.longLongValue myUserId:self.userId];
             [resultArray addObject:msgOb];
             
         }];
@@ -510,12 +510,12 @@
     
     if (answer.error == nil) {
         
-//        NSLog(@"%@",answer.responseData);
+//        NSLog(@"----%@",answer.responseData);
         NSArray * array = [answer.responseData objectForKey:@"msgs"];
         NSMutableArray * resultArray = [NSMutableArray array];
         [array enumerateObjectsUsingBlock:^(NSArray *  _Nonnull itemArray, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            RTMHistoryMessage * msgOb = [RTMMessageModelConvert p2pHistoryMessageModelConvert:itemArray];
+            RTMHistoryMessage * msgOb = [RTMMessageModelConvert p2pHistoryMessageModelConvert:itemArray toUserId:userId.longLongValue myUserId:self.userId];
             [resultArray addObject:msgOb];
             
         }];

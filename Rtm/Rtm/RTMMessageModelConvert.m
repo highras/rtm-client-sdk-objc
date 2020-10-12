@@ -195,9 +195,16 @@
     
 }
 
-+(RTMHistoryMessage*)p2pHistoryMessageModelConvert:(NSArray*)itemArray{
++(RTMHistoryMessage*)p2pHistoryMessageModelConvert:(NSArray*)itemArray toUserId:(int64_t)toUserId myUserId:(int64_t)myUserId{
     
     RTMHistoryMessage * msgOb = [RTMHistoryMessage new];
+    if ([[itemArray objectAtIndex:1] boolValue] == YES) {
+        msgOb.fromUid = myUserId;
+        msgOb.toId = toUserId;
+    }else{
+        msgOb.fromUid = toUserId;
+        msgOb.toId = myUserId;
+    }
     msgOb.cursorId = [[itemArray objectAtIndex:0] longLongValue];
     msgOb.messageType = [[itemArray objectAtIndex:2] intValue];
     msgOb.messageId = [[itemArray objectAtIndex:3] longLongValue];

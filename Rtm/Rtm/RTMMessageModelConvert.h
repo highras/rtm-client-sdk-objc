@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 +(RTMMessage*)fileModelConvert:(NSDictionary*)data chatType:(RTMChatType)chatType;
 
 
-+(RTMHistoryMessage*)p2pHistoryMessageModelConvert:(NSArray*)itemArray;
++(RTMHistoryMessage*)p2pHistoryMessageModelConvert:(NSArray*)itemArray toUserId:(int64_t)toUserId myUserId:(int64_t)myUserId;
 +(RTMHistoryMessage*)groupHistoryMessageModelConvert:(NSArray*)itemArray;
 +(RTMHistoryMessage*)roomHistoryMessageModelConvert:(NSArray*)itemArray;
 +(RTMHistoryMessage*)broadcastHistoryMessageModelConvert:(NSArray*)itemArray;

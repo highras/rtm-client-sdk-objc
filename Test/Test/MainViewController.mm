@@ -11,6 +11,7 @@
 #import "RTMRecordManager.h"
 #import "RTMAudioplayer.h"
 #import <Rtm/Rtm.h>
+#import <Rtm/Rtm.h>
 #import "NSObject+Description.h"
 #define NSAllLog(FORMAT, ...) fprintf(stderr, "%s:%zd\t%s\n", [[[NSString stringWithUTF8String: __FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat: FORMAT, ## __VA_ARGS__] UTF8String]);
 
@@ -185,7 +186,7 @@
                                             autoRelogin:YES];
             
             if (self.client) {
-                [self.client loginWithToken:@"5B29E4874E1F7FA2216CE65FD10FAAB3"
+                [self.client loginWithToken:@"285684F3B18F10166A8CF13BCAD31E34"
                                    language:@"en"
                                   attribute:@{@"aaa":@"bbb"}
                                     timeout:30
@@ -255,7 +256,7 @@
                                               success:^(RTMHistory * _Nullable history) {
                 
                 NSLog(@"getP2PHistoryMessageWithUserId %@",history.messageArray);
-                NSLog(@"getP2PHistoryMessageWithUserId %@",history.messageArray.lastObject.rtm_autoDescription);
+                NSLog(@"getP2PHistoryMessageWithUserId %lld %lld",history.messageArray.firstObject.fromUid,history.messageArray.firstObject.toId);
 //                NSLog(@"getP2PHistoryMessageWithUserId %@",history.messageArray.firstObject.audioInfo.rtm_autoDescription);
                 
             } fail:^(FPNError * _Nullable error) {
@@ -372,7 +373,7 @@
                                                        timeout:10
                                                        success:^(RTMHistory * _Nullable history) {
                                                
-                    NSLog(@"%@",history.messageArray);
+                    NSLog(@"%lld",history.messageArray.firstObject.fromUid);
                     
                    
                 } fail:^(FPNError * _Nullable error) {
@@ -574,7 +575,7 @@
                                                              timeout:10
                                                              success:^(RTMHistory * _Nullable history) {
                                 
-                                NSLog(@"%@",history.messageArray.firstObject.translatedInfo.rtm_autoDescription);
+                                NSLog(@"----%lld",history.messageArray.firstObject.fromUid);
                                 
                             } fail:^(FPNError * _Nullable error) {
                                 
@@ -620,7 +621,7 @@
                        
                 }else if (indexPath.row == 4){//进入某个房间或者频道
                 
-                            [self.client enterRoomWithId:[NSNumber numberWithLongLong:66677]
+                            [self.client enterRoomWithId:[NSNumber numberWithLongLong:666]
                                                  timeout:10
                                                  success:^{
                                 
@@ -1243,7 +1244,7 @@
                                 }];
                         
                             
-                    }else if (indexPath.row == 3){//获取历史P2P消息 对 getP2PHistoryMessageWithUserId 的封装 mtypes = [30,31,32]
+                    }else if (indexPath.row == 3){//获取历史P2P消息 对 getP2PHistoryMessageWithUserId 的封装
                     
                                 [self.client getP2PHistoryMessageChatWithUserId:[NSNumber numberWithLongLong:777]
                                                                            desc:YES
@@ -1254,7 +1255,7 @@
                                                                         timeout:10
                                                                         success:^(RTMHistory * _Nullable history) {
                                                                         
-                                    NSLog(@"%@",history.messageArray.firstObject.rtm_autoDescription);
+                                    NSLog(@"getP2PHistoryMessageChatWithUserId %lld %lld",history.messageArray.firstObject.fromUid,history.messageArray.firstObject.toId);
                                     
                                 } fail:^(FPNError * _Nullable error) {
                                     
@@ -1329,7 +1330,7 @@
                                         }];
                             
                                    
-                            } else if (indexPath.row == 3){// 获取历史group消息 对 getGroupMessageWithId 的封装 mtypes = [30,31,32]
+                            } else if (indexPath.row == 3){// 获取历史group消息 对 getGroupMessageWithId 的封装
                             
                             
                                         [self.client getGroupHistoryMessageChatWithGroupId:[NSNumber numberWithLongLong:666]
@@ -1341,7 +1342,7 @@
                                                                                    timeout:10
                                                                                     success:^(RTMHistory * _Nullable history) {
                                                                                    
-                                            NSLog(@"%@",history.messageArray.firstObject.rtm_autoDescription);
+                                            NSLog(@"getGroupHistoryMessageChatWithGroupId %lld %lld",history.messageArray.firstObject.fromUid,history.messageArray.firstObject.toId);
                                             
                                         } fail:^(FPNError * _Nullable error) {
                                             
@@ -1413,7 +1414,7 @@
                                                                  
                                 }];
                     
-                            }else if (indexPath.row == 3){//获取历史Room消息 对 getRoomMessageWithId 的封装 mtypes = [30,31,32]
+                            }else if (indexPath.row == 3){//获取历史Room消息 对 getRoomMessageWithId 的封装 mtypes
                                         
                                 [self.client getRoomHistoryMessageChatWithRoomId:[NSNumber numberWithLongLong:666]
                                                                              desc:YES
@@ -1424,7 +1425,7 @@
                                                                           timeout:10
                                                                             success:^(RTMHistory * _Nullable history) {
                                                                         
-                                    NSLog(@"%@",history.messageArray.firstObject.rtm_autoDescription);
+                                    NSLog(@"getRoomHistoryMessageChatWithRoomId %lld %lld",history.messageArray.firstObject.fromUid,history.messageArray.firstObject.toId);
                                     
                                 } fail:^(FPNError * _Nullable error) {
                                     
@@ -1438,7 +1439,7 @@
 #pragma mark chat广播接口
             }else if (indexPath.section == 12){
                    
-                    if (indexPath.row == 0) {//获取广播历史消息  对 getBroadCastHistoryMessageWithNum 的封装 mtypes = [30,31,32]
+                    if (indexPath.row == 0) {//获取广播历史消息  对 getBroadCastHistoryMessageWithNum 的封装 mtypes 
             
                         [self.client getBroadCastHistoryMessageChatWithNum:[NSNumber numberWithLongLong:10]
                                                                       desc:YES
@@ -1694,7 +1695,7 @@
                     @"发送P2P消息 对 sendP2pMessageWithId 的封装 mtype=30",
                     @"发送音频消息 对 sendP2PMessageWithId 的封装 mtype=31",
                     @"发送系统命令 对 sendP2PMessageWithId 的封装 mtype=32",
-                    @"获取历史P2P消息 对 getP2PHistoryMessageWithUserId 的封装 mtypes = [30,31,32]",
+                    @"获取历史P2P消息 对 getP2PHistoryMessageWithUserId 的封装 ",
                       
                        
                        
@@ -1705,7 +1706,7 @@
             @"names":@[@"发送Group消息 对 sendGroupMessageWithId 的封装 mtype=30",
                        @"发送音频消息 对 sendGroupMessageWithId 的封装 mtype=31",
                        @"发送系统命令 对 sendGroupMessageWithId 的封装 mtype=32",
-                       @"获取历史group消息 对 getGroupMessageWithId 的封装 mtypes = [30,31,32] ",
+                       @"获取历史group消息 对 getGroupMessageWithId 的封装  ",
                        
                        
                        
@@ -1716,7 +1717,7 @@
             @"names":@[@"发送Room消息 对 sendRoomMessageWithId 的封装 mtype=30",
                        @"发送音频消息 对 sendRoomMessageWithId 的封装 mtype=31",
                        @"发送系统命令 对 sendRoomMessageWithId 的封装 mtype=32",
-                       @"获取历史Room消息 对 getRoomMessageWithId 的封装 mtypes = [30,31,32] ",
+                       @"获取历史Room消息 对 getRoomMessageWithId 的封装 mtypes  ",
                        
                        
                        
@@ -1726,7 +1727,7 @@
         @{
             @"typeName":@"chat广播接口",
             @"names":@[
-                    @"获取广播历史消息  对 getBroadCastHistoryMessageWithNum 的封装 mtypes = [30,31,32]",
+                    @"获取广播历史消息  对 getBroadCastHistoryMessageWithNum 的封装 mtypes ",
                        
                        
             ]

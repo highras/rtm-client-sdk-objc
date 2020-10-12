@@ -12,7 +12,6 @@
 		5649316424EA622F00E6A06B /* libopencore-amrwb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5649316124EA622F00E6A06B /* libopencore-amrwb.a */; };
 		5649316524EA622F00E6A06B /* libvo-amrwbenc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5649316224EA622F00E6A06B /* libvo-amrwbenc.a */; };
 		5649316824EA625C00E6A06B /* VoiceConverter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5649316724EA625C00E6A06B /* VoiceConverter.mm */; };
-		564AA0922533FD0A00436466 /* Rtm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 564AA0912533FD0A00436466 /* Rtm.framework */; };
 		566F06E423A090D800D1D949 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 566F06E323A090D800D1D949 /* AppDelegate.mm */; };
 		566F06ED23A090D800D1D949 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 566F06EB23A090D800D1D949 /* Main.storyboard */; };
 		566F06EF23A090D900D1D949 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 566F06EE23A090D900D1D949 /* Assets.xcassets */; };
@@ -56,19 +55,6 @@
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		5617177A24EAA9970044D7D7 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		561717BB24EBA8360044D7D7 /* NSObject+Description.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Description.m"; sourceTree = "<group>"; };
 		561717BC24EBA8370044D7D7 /* NSObject+Description.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Description.h"; sourceTree = "<group>"; };
@@ -77,7 +63,6 @@
 		5649316224EA622F00E6A06B /* libvo-amrwbenc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libvo-amrwbenc.a"; sourceTree = "<group>"; };
 		5649316624EA625C00E6A06B /* VoiceConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoiceConverter.h; sourceTree = "<group>"; };
 		5649316724EA625C00E6A06B /* VoiceConverter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VoiceConverter.mm; sourceTree = "<group>"; };
-		564AA0912533FD0A00436466 /* Rtm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Rtm.framework; path = ../Rtm/Products/Rtm.framework; sourceTree = "<group>"; };
 		566F06DF23A090D800D1D949 /* Test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		566F06E223A090D800D1D949 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		566F06E323A090D800D1D949 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
@@ -131,7 +116,6 @@
 			files = (
 				56E664CA23FD377200C680BC /* libresolv.9.tbd in Frameworks */,
 				5649316524EA622F00E6A06B /* libvo-amrwbenc.a in Frameworks */,
-				564AA0922533FD0A00436466 /* Rtm.framework in Frameworks */,
 				5649316424EA622F00E6A06B /* libopencore-amrwb.a in Frameworks */,
 				5649316324EA622F00E6A06B /* libopencore-amrnb.a in Frameworks */,
 				56E664CB23FD377C00C680BC /* libresolv.tbd in Frameworks */,
@@ -158,7 +142,6 @@
 		566F06D623A090D800D1D949 = {
 			isa = PBXGroup;
 			children = (
-				564AA0912533FD0A00436466 /* Rtm.framework */,
 				56B9EF19246E900000CB9766 /* RTMAudioManager */,
 				566F06E123A090D800D1D949 /* Test */,
 				566F06FD23A090D900D1D949 /* TestTests */,
@@ -311,7 +294,6 @@
 				566F06DB23A090D800D1D949 /* Sources */,
 				566F06DC23A090D800D1D949 /* Frameworks */,
 				566F06DD23A090D800D1D949 /* Resources */,
-				5617177A24EAA9970044D7D7 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -364,7 +346,7 @@
 		566F06D723A090D800D1D949 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1120;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = FunPlus;
 				TargetAttributes = {
 					566F06DE23A090D800D1D949 = {
@@ -531,6 +513,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -589,6 +572,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -619,6 +603,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 85Q2285229;
 				EXCLUDED_ARCHS = arm64;
@@ -638,6 +623,7 @@
 					"$(PROJECT_DIR)/Test/Opencore-AMR/lib",
 					"$(PROJECT_DIR)/Opencore-AMR/lib",
 					"$(PROJECT_DIR)/RTMAudioManager/lib",
+					"$(PROJECT_DIR)",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
@@ -651,6 +637,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 85Q2285229;
 				EXCLUDED_ARCHS = arm64;
@@ -670,6 +657,7 @@
 					"$(PROJECT_DIR)/Test/Opencore-AMR/lib",
 					"$(PROJECT_DIR)/Opencore-AMR/lib",
 					"$(PROJECT_DIR)/RTMAudioManager/lib",
+					"$(PROJECT_DIR)",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";

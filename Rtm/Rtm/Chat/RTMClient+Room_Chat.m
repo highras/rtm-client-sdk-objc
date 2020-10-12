@@ -181,7 +181,7 @@
                 if (resultData) {
                     [dic setValue:resultData forKey:@"msg"];
                 }else{
-                    FPNSLog(@"rtm P2P audioDataAddHeader error");
+                    FPNSLog(@"rtm room audioDataAddHeader error");
     //                return ;
                 }
                 
@@ -441,7 +441,7 @@
     BOOL result = [mainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
-    
+//        NSLog(@"%@",data);
         NSArray * array = [data objectForKey:@"msgs"];
         NSMutableArray * resultArray = [NSMutableArray array];
         [array enumerateObjectsUsingBlock:^(NSArray *  _Nonnull itemArray, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -503,7 +503,7 @@
         NSMutableArray * resultArray = [NSMutableArray array];
         [array enumerateObjectsUsingBlock:^(NSArray *  _Nonnull itemArray, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            RTMHistoryMessage * msgOb = [RTMMessageModelConvert p2pHistoryMessageModelConvert:itemArray];
+            RTMHistoryMessage * msgOb = [RTMMessageModelConvert roomHistoryMessageModelConvert:itemArray ];
             [resultArray addObject:msgOb];
             
         }];

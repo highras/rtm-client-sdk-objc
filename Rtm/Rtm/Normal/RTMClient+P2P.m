@@ -198,7 +198,7 @@
         NSMutableArray * resultArray = [NSMutableArray array];
         [array enumerateObjectsUsingBlock:^(NSArray *  _Nonnull itemArray, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            RTMHistoryMessage * msgOb = [RTMMessageModelConvert p2pHistoryMessageModelConvert:itemArray];
+            RTMHistoryMessage * msgOb = [RTMMessageModelConvert p2pHistoryMessageModelConvert:itemArray toUserId:userId.longLongValue myUserId:self.userId];
             [resultArray addObject:msgOb];
             
         }];
@@ -258,7 +258,7 @@
         NSMutableArray * resultArray = [NSMutableArray array];
         [array enumerateObjectsUsingBlock:^(NSArray *  _Nonnull itemArray, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            RTMHistoryMessage * msgOb = [RTMMessageModelConvert p2pHistoryMessageModelConvert:itemArray];
+            RTMHistoryMessage * msgOb = [RTMMessageModelConvert p2pHistoryMessageModelConvert:itemArray toUserId:userId.longLongValue myUserId:self.userId];
             [resultArray addObject:msgOb];
             
         }];
