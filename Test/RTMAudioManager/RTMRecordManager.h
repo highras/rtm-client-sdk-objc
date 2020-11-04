@@ -7,13 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import <Rtm/Rtm.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RTMRecordManager : NSObject
 
--(void)startRecord;
--(void)stopRecord:(void(^)(NSString * _Nullable amrAudioPath,NSString * _Nullable wavAudioPath,double durationTime))recorderFinish;
+-(void)startRecordWithLang:(NSString * _Nonnull)lang;
+-(void)stopRecord:(void(^)(RTMAudioModel * audioModel))recorderFinish;
 
 
 @end

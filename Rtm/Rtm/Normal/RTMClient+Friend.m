@@ -136,7 +136,7 @@
     }fail:^(FPNError * _Nullable error) {
         
           _failCallback(error);
-
+        
     }];
         
     handlerNetworkError;

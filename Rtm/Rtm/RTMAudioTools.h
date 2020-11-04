@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface RTMAudioTools : NSObject
 + (NSData*)audioDataAddHeader:(NSData*)audioData lang:(NSString*)lang time:(long long)time srate:(int)srate;
 + (NSData*)audioDataRemoveHeader:(NSData*)audioData;
++ (BOOL)isAmrVerify:(NSData*)audioData;
 @end
 
 NS_ASSUME_NONNULL_END

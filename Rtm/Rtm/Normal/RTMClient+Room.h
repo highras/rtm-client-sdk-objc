@@ -16,6 +16,7 @@
 #import "RTMMemberAnswer.h"
 #import "RTMInfoAnswer.h"
 #import "RTMSpeechRecognitionAnswer.h"
+#import "RTMAttriAnswer.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RTMClient (Room)
@@ -61,11 +62,11 @@ NS_ASSUME_NONNULL_BEGIN
                            timeout:(int)timeout
                            success:(void(^)(RTMSendAnswer * sendAnswer))successCallback
                               fail:(RTMAnswerFailCallBack)failCallback;
--(RTMSendAnswer*)sendRoomMessageWithId:(NSNumber * _Nonnull)roomId
-                           messageType:(NSNumber * _Nonnull)messageType
-                                  data:(NSData * _Nonnull)data
-                                 attrs:(NSString * _Nonnull)attrs
-                               timeout:(int)timeout;
+-(RTMSendAnswer*)sendRoomBinaryMessageWithId:(NSNumber * _Nonnull)roomId
+                                 messageType:(NSNumber * _Nonnull)messageType
+                                        data:(NSData * _Nonnull)data
+                                       attrs:(NSString * _Nonnull)attrs
+                                     timeout:(int)timeout;
 
 
 
@@ -75,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param num int16 条数
 /// @param begin int64 开始时间戳，精确到 毫秒
 /// @param end int64 结束时间戳，精确到 毫秒
-/// @param lastid int64 最后一条消息的id
+/// @param lastid int64 最后一条消息的id 对应RTMGetMessage RTMHistoryMessage 的 cursorId字段
 /// @param mtypes [int8] 消息类型
 /// @param timeout 请求超时时间 秒
 /// @param successCallback 成功回调
@@ -232,29 +233,41 @@ NS_ASSUME_NONNULL_BEGIN
                                timeout:(int)timeout;
 
 
-
-
-/// 语音识别 （调用此接口需在管理系统启用语音识别系统）调用这个接口的超时时间得加大到120s，此接口只支持通过rtm发送的语音消息，无需把原始语音再一次发送，节省流量
-/// @param messageId int64 消息ID
-/// @param fromUserId int64 发送者ID
-/// @param toRoomId int64 房间ID
-/// @param profanityFilter 敏感词过滤
+/// 获取房间的公开信息
+/// @param roomIds int64 房间频道id
 /// @param timeout 请求超时时间 秒
 /// @param successCallback 成功回调
 /// @param failCallback 失败回调
--(void)stranscribeRoomWithId:(NSNumber * _Nonnull)messageId
-                  fromUserId:(NSNumber * _Nonnull)fromUserId
-                    toRoomId:(NSNumber * _Nonnull)toRoomId
-             profanityFilter:(BOOL)profanityFilter
-                     timeout:(int)timeout
-                     success:(void(^)(RTMSpeechRecognitionAnswer * _Nullable recognition))successCallback
-                        fail:(RTMAnswerFailCallBack)failCallback;
+-(void)getRoomsOpenInfoWithId:(NSArray <NSNumber* > * _Nullable)roomIds
+                        timeout:(int)timeout
+                        success:(void(^)(RTMAttriAnswer * _Nullable info))successCallback
+                            fail:(RTMAnswerFailCallBack)failCallback;
+-(RTMAttriAnswer*)getRoomsOpenInfoWithId:(NSArray <NSNumber* > * _Nullable)roomIds
+                                  timeout:(int)timeout;
 
--(RTMSpeechRecognitionAnswer*)stranscribeRoomWithId:(NSNumber * _Nonnull)messageId
-                                         fromUserId:(NSNumber * _Nonnull)fromUserId
-                                           toRoomId:(NSNumber * _Nonnull)toRoomId
-                                    profanityFilter:(BOOL)profanityFilter
-                                            timeout:(int)timeout;
+
+
+///// 语音识别 （调用此接口需在管理系统启用语音识别系统）调用这个接口的超时时间得加大到120s，此接口只支持通过rtm发送的语音消息，无需把原始语音再一次发送，节省流量
+///// @param messageId int64 消息ID
+///// @param fromUserId int64 发送者ID
+///// @param toRoomId int64 房间ID
+///// @param profanityFilter 敏感词过滤
+///// @param timeout 请求超时时间 秒
+///// @param successCallback 成功回调
+///// @param failCallback 失败回调
+//-(void)stranscribeRoomWithId:(NSNumber * _Nonnull)messageId
+//                  fromUserId:(NSNumber * _Nonnull)fromUserId
+//                    toRoomId:(NSNumber * _Nonnull)toRoomId
+//             profanityFilter:(BOOL)profanityFilter
+//                     timeout:(int)timeout
+//                     success:(void(^)(RTMSpeechRecognitionAnswer * _Nullable recognition))successCallback
+//                        fail:(RTMAnswerFailCallBack)failCallback;
+//
+//-(RTMSpeechRecognitionAnswer*)stranscribeRoomWithId:(NSNumber * _Nonnull)messageId
+//                                         fromUserId:(NSNumber * _Nonnull)fromUserId
+//                                           toRoomId:(NSNumber * _Nonnull)toRoomId
+//                                    profanityFilter:(BOOL)profanityFilter
+//                                            timeout:(int)timeout;
 
 @end
 

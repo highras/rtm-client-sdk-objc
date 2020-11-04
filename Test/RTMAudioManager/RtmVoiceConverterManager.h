@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 //wav->amr
 +(NSString*)voiceConvertWavToAmrFromFilePath:(NSString *)filePath;
 //amr->wav
-+(NSString*)voiceConvertAmrToWavFromFilePath:(NSData *)voiceData;
++(NSString*)voiceConvertAmrToWavWithData:(NSData *)voiceData;
 
 + (NSTimeInterval)audioDurationFromURL:(NSString *)url;
 @end

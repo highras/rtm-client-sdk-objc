@@ -47,23 +47,19 @@
                 [self.delegate rtmPushP2PChatMessage:self message:msgModel];
             }
             
-        }else if(mtype == 31){
-            //语音
-            RTMMessage * msgModel = [RTMMessageModelConvert audioModelConvert:data chatType:RTMP2p];
-             if ([self.delegate respondsToSelector:@selector(rtmPushP2PChatAudio:message:)]) {
-                [self.delegate rtmPushP2PChatAudio:self message:msgModel];
-             }
-        }else if(mtype == 32){
+        }
+        else if(mtype == 40  || mtype == 41 || mtype == 42 || mtype == 50){
+            RTMMessage * msgModel = [RTMMessageModelConvert fileModelConvert:data chatType:RTMP2p];
+            if ([self.delegate respondsToSelector:@selector(rtmPushP2PFile:message:)]) {
+                   
+                [self.delegate rtmPushP2PFile:self message:msgModel];
+            }
+        }
+        else if(mtype == 32){
             //chat cmd
             RTMMessage * msgModel = [RTMMessageModelConvert cmdModelConvert:data chatType:RTMP2p];
             if ([self.delegate respondsToSelector:@selector(rtmPushP2PChatCmd:message:)]) {
                 [self.delegate rtmPushP2PChatCmd:self message:msgModel];
-            }
-        }else if(mtype == 40 || mtype == 41 || mtype == 42 || mtype == 50){
-            //文件
-            RTMMessage * msgModel = [RTMMessageModelConvert fileModelConvert:data chatType:RTMP2p];
-            if ([self.delegate respondsToSelector:@selector(rtmPushP2PFile:message:)]) {
-                [self.delegate rtmPushP2PFile:self message:msgModel];
             }
         }else {
             
@@ -86,38 +82,34 @@
 #pragma mark  group
 -(void)_pushgroupmsg:(NSDictionary*)data method:(NSString*)method{
     
+    
     if ([self _duplicatedPushMsgFilter:method data:data] == NO) {
         int mtype = [[data objectForKey:@"mtype"] intValue];
         
         if (mtype == 30) {
             //chat 文字
-            RTMMessage * msgModel = [RTMMessageModelConvert messageModelConvert:data chatType:RTMP2p];
+            RTMMessage * msgModel = [RTMMessageModelConvert messageModelConvert:data chatType:RTMGroup];
             if ([self.delegate respondsToSelector:@selector(rtmPushGroupChatMessage:message:)]) {
                 [self.delegate rtmPushGroupChatMessage:self message:msgModel];
             }
             
-        }else if(mtype == 31){
-            //语音
-            RTMMessage * msgModel = [RTMMessageModelConvert audioModelConvert:data chatType:RTMP2p];
-             if ([self.delegate respondsToSelector:@selector(rtmPushGroupChatAudio:message:)]) {
-                [self.delegate rtmPushGroupChatAudio:self message:msgModel];
-             }
-        }else if(mtype == 32){
-            //chat cmd
-            RTMMessage * msgModel = [RTMMessageModelConvert cmdModelConvert:data chatType:RTMP2p];
-            if ([self.delegate respondsToSelector:@selector(rtmPushGroupChatCmd:message:)]) {
-                [self.delegate rtmPushGroupChatCmd:self message:msgModel];
-            }
-        }else if(mtype == 40 || mtype == 41 || mtype == 42 || mtype == 50){
-            //文件
-            RTMMessage * msgModel = [RTMMessageModelConvert fileModelConvert:data chatType:RTMP2p];
+        }else if(mtype == 40  || mtype == 41 || mtype == 42 || mtype == 50){
+            
+            RTMMessage * msgModel = [RTMMessageModelConvert fileModelConvert:data chatType:RTMGroup];
             if ([self.delegate respondsToSelector:@selector(rtmPushGroupFile:message:)]) {
                 [self.delegate rtmPushGroupFile:self message:msgModel];
+            }
+
+        }else if(mtype == 32){
+            //chat cmd
+            RTMMessage * msgModel = [RTMMessageModelConvert cmdModelConvert:data chatType:RTMGroup];
+            if ([self.delegate respondsToSelector:@selector(rtmPushGroupChatCmd:message:)]) {
+                [self.delegate rtmPushGroupChatCmd:self message:msgModel];
             }
         }else{
             
             //normal message
-            RTMMessage * msgModel = [RTMMessageModelConvert messageModelConvert:data chatType:RTMP2p];
+            RTMMessage * msgModel = [RTMMessageModelConvert messageModelConvert:data chatType:RTMGroup];
             
             if([self.delegate respondsToSelector:@selector(rtmPushGroupBinary:message:)] && msgModel.binaryMessage != nil){
                                                     
@@ -139,33 +131,28 @@
         
         if (mtype == 30) {
             //chat 文字
-            RTMMessage * msgModel = [RTMMessageModelConvert messageModelConvert:data chatType:RTMP2p];
+            RTMMessage * msgModel = [RTMMessageModelConvert messageModelConvert:data chatType:RTMRoom];
             if ([self.delegate respondsToSelector:@selector(rtmPushRoomChatMessage:message:)]) {
                 [self.delegate rtmPushRoomChatMessage:self message:msgModel];
             }
             
-        }else if(mtype == 31){
-            //语音
-            RTMMessage * msgModel = [RTMMessageModelConvert audioModelConvert:data chatType:RTMP2p];
-             if ([self.delegate respondsToSelector:@selector(rtmPushRoomChatAudio:message:)]) {
-                [self.delegate rtmPushRoomChatAudio:self message:msgModel];
-             }
-        }else if(mtype == 32){
-            //chat cmd
-            RTMMessage * msgModel = [RTMMessageModelConvert cmdModelConvert:data chatType:RTMP2p];
-            if ([self.delegate respondsToSelector:@selector(rtmPushRoomChatCmd:message:)]) {
-                [self.delegate rtmPushRoomChatCmd:self message:msgModel];
-            }
-        }else if(mtype == 40 || mtype == 41 || mtype == 42 || mtype == 50){
-            //文件
-            RTMMessage * msgModel = [RTMMessageModelConvert fileModelConvert:data chatType:RTMP2p];
+        }else if(mtype == 40  || mtype == 41 || mtype == 42 || mtype == 50){
+            
+            RTMMessage * msgModel = [RTMMessageModelConvert fileModelConvert:data chatType:RTMRoom];
             if ([self.delegate respondsToSelector:@selector(rtmPushRoomFile:message:)]) {
                 [self.delegate rtmPushRoomFile:self message:msgModel];
+            }
+
+        }else if(mtype == 32){
+            //chat cmd
+            RTMMessage * msgModel = [RTMMessageModelConvert cmdModelConvert:data chatType:RTMRoom];
+            if ([self.delegate respondsToSelector:@selector(rtmPushRoomChatCmd:message:)]) {
+                [self.delegate rtmPushRoomChatCmd:self message:msgModel];
             }
         }else{
             
             //normal message
-            RTMMessage * msgModel = [RTMMessageModelConvert messageModelConvert:data chatType:RTMP2p];
+            RTMMessage * msgModel = [RTMMessageModelConvert messageModelConvert:data chatType:RTMRoom];
             
             if([self.delegate respondsToSelector:@selector(rtmPushRoomBinary:message:)] && msgModel.binaryMessage != nil){
                                                     
@@ -182,35 +169,74 @@
 }
 #pragma mark  broadcast
 -(void)_pushbroadcastmsg:(NSDictionary*)data method:(NSString*)method{
-   
+    if ([self _duplicatedPushMsgFilter:method data:data] == NO) {
+        int mtype = [[data objectForKey:@"mtype"] intValue];
+        
+        if (mtype == 30) {
+            //chat 文字
+            RTMMessage * msgModel = [RTMMessageModelConvert messageModelConvert:data chatType:RTMBroadcast];
+            if ([self.delegate respondsToSelector:@selector(rtmPushBroadcastChatMessage:message:)]) {
+                [self.delegate rtmPushBroadcastChatMessage:self message:msgModel];
+            }
+            
+        }else if(mtype == 40  || mtype == 41 || mtype == 42 || mtype == 50){
+            
+            RTMMessage * msgModel = [RTMMessageModelConvert fileModelConvert:data chatType:RTMBroadcast];
+            if ([self.delegate respondsToSelector:@selector(rtmPushBroadcastFile:message:)]) {
+                [self.delegate rtmPushBroadcastFile:self message:msgModel];
+            }
+
+        }else if(mtype == 32){
+            //chat cmd
+            RTMMessage * msgModel = [RTMMessageModelConvert cmdModelConvert:data chatType:RTMBroadcast];
+            if ([self.delegate respondsToSelector:@selector(rtmPushBroadcastChatCmd:message:)]) {
+                [self.delegate rtmPushBroadcastChatCmd:self message:msgModel];
+            }
+        }else{
+            
+            //normal message
+            RTMMessage * msgModel = [RTMMessageModelConvert messageModelConvert:data chatType:RTMBroadcast];
+            
+            if([self.delegate respondsToSelector:@selector(rtmPushBroadcastBinary:message:)] && msgModel.binaryMessage != nil){
+                                                    
+                [self.delegate rtmPushBroadcastBinary:self message:msgModel];
+                                                    
+            }else if ([self.delegate respondsToSelector:@selector(rtmPushBroadcastMessage:message:)] && msgModel.stringMessage != nil) {
+                
+                [self.delegate rtmPushBroadcastMessage:self message:msgModel];
+                                                    
+            }
+            
+        }
+    }
 }
 #pragma mark duplicate msg
 -(BOOL)_duplicatedPushMsgFilter:(NSString*)method data:(NSDictionary*)data {
     if ([data objectForKey:@"mid"] == nil) {
         return NO;
     }
-    NSString * msgCacheKey = [NSString stringWithFormat:@"%d-%lld-%@-%@-%@",self.projectId,self.userId,method,[data objectForKey:@"mid"],[data objectForKey:@"from"]];
+    NSString * msgCacheKey = [NSString stringWithFormat:@"%lld-%lld-%@-%@-%@",self.projectId,self.userId,method,[data objectForKey:@"mid"],[data objectForKey:@"from"]];
     return [self _isExistMessage:msgCacheKey];
 }
 -(BOOL)_duplicatedPushGroupMsgFilter:(NSString*)method data:(NSDictionary*)data {
     if ([data objectForKey:@"mid"] == nil) {
         return NO;
     }
-    NSString * msgCacheKey = [NSString stringWithFormat:@"%d-%lld-%@-%@-%@-%@",self.projectId,self.userId,method,[data objectForKey:@"mid"],[data objectForKey:@"gid"],[data objectForKey:@"from"]];
+    NSString * msgCacheKey = [NSString stringWithFormat:@"%lld-%lld-%@-%@-%@-%@",self.projectId,self.userId,method,[data objectForKey:@"mid"],[data objectForKey:@"gid"],[data objectForKey:@"from"]];
     return [self _isExistMessage:msgCacheKey];
 }
 -(BOOL)_duplicatedPushRoomMsgFilter:(NSString*)method data:(NSDictionary*)data {
     if ([data objectForKey:@"mid"] == nil) {
         return NO;
     }
-    NSString * msgCacheKey = [NSString stringWithFormat:@"%d-%lld-%@-%@-%@-%@",self.projectId,self.userId,method,[data objectForKey:@"mid"],[data objectForKey:@"rid"],[data objectForKey:@"from"]];
+    NSString * msgCacheKey = [NSString stringWithFormat:@"%lld-%lld-%@-%@-%@-%@",self.projectId,self.userId,method,[data objectForKey:@"mid"],[data objectForKey:@"rid"],[data objectForKey:@"from"]];
     return [self _isExistMessage:msgCacheKey];
 }
 -(BOOL)_duplicatedPushBroadcastMsgFilter:(NSString*)method data:(NSDictionary*)data {
     if ([data objectForKey:@"mid"] == nil) {
         return NO;
     }
-    NSString * msgCacheKey = [NSString stringWithFormat:@"%d-%lld-%@-%@-%@",self.projectId,self.userId,method,[data objectForKey:@"mid"],[data objectForKey:@"from"]];
+    NSString * msgCacheKey = [NSString stringWithFormat:@"%lld-%lld-%@-%@-%@",self.projectId,self.userId,method,[data objectForKey:@"mid"],[data objectForKey:@"from"]];
     return [self _isExistMessage:msgCacheKey];
 }
 -(BOOL)_isExistMessage:(NSString*)msgCacheKey{

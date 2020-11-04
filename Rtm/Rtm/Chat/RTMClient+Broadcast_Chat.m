@@ -30,7 +30,7 @@
     [dic setValue:begin forKey:@"begin"];
     [dic setValue:end forKey:@"end"];
     [dic setValue:lastid forKey:@"lastid"];
-    [dic setValue:@[@(30),@(31),@(32),@(40),@(41),@(42)] forKey:@"mtypes"];
+    [dic setValue:@[@(30),@(32),@(40),@(41),@(42),@(50)] forKey:@"mtypes"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getbroadcastmsg" message:dic twoWay:YES];
 //    BOOL result = [mainClient sendQuest:quest
@@ -62,7 +62,7 @@
     BOOL result = [mainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
-    
+//        NSLog(@"%@",data);
         NSArray * array = [data objectForKey:@"msgs"];
         NSMutableArray * resultArray = [NSMutableArray array];
         [array enumerateObjectsUsingBlock:^(NSArray *  _Nonnull itemArray, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -109,7 +109,7 @@
     [dic setValue:begin forKey:@"begin"];
     [dic setValue:end forKey:@"end"];
     [dic setValue:lastid forKey:@"lastid"];
-    [dic setValue:@[@(30),@(31),@(32),@(40),@(41),@(42)] forKey:@"mtypes"];
+    [dic setValue:@[@(30),@(32),@(40),@(41),@(42),@(50)] forKey:@"mtypes"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getbroadcastmsg" message:dic twoWay:YES];
     FPNNAnswer * answer = [mainClient sendQuest:quest

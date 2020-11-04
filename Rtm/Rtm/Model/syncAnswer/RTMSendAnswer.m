@@ -9,5 +9,8 @@
 #import "RTMSendAnswer.h"
 
 @implementation RTMSendAnswer
-
+//-(NSString *)description{
+//    return  [NSString stringWithFormat:@"mtime = %lld messageId = %lld",_mtime,_messageId];
+//}
 @end
+

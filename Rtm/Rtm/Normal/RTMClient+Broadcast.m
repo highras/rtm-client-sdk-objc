@@ -196,84 +196,84 @@
 }
 
 
--(void)stranscribeBroadcastWithId:(NSNumber * _Nonnull)messageId
-                       fromUserId:(NSNumber * _Nonnull)fromUserId
-                  profanityFilter:(BOOL)profanityFilter
-                          timeout:(int)timeout
-                          success:(void(^)(RTMSpeechRecognitionAnswer * _Nullable recognition))successCallback
-                             fail:(RTMAnswerFailCallBack)failCallback{
-    
-    
-    clientConnectStatueVerify
-    
-    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    [dic setValue:messageId forKey:@"mid"];
-    [dic setValue:@(0) forKey:@"xid"];
-    [dic setValue:fromUserId forKey:@"from"];
-    [dic setValue:@(4) forKey:@"type"];
-    [dic setValue:@(profanityFilter) forKey:@"profanityFilter"];
-    
-    // type: 1,p2p; 2,group; 3, room
-    
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"stranscribe" message:dic twoWay:YES];
-    
-    BOOL result = [mainClient sendQuest:quest
-                                timeout:RTMClientSendQuestTimeout
-                                success:^(NSDictionary * _Nullable data) {
-        
-        
-        if (successCallback) {
-            RTMSpeechRecognitionAnswer * model = [RTMSpeechRecognitionAnswer new];
-            model.lang = [data objectForKey:@"lang"];
-            model.text = [data objectForKey:@"text"];
-            successCallback(model);
-        }
-        
-
-    }fail:^(FPNError * _Nullable error) {
-    
-        _failCallback(error);
-
-    }];
-
-    
-    handlerNetworkError;
-    
-}
-
--(RTMSpeechRecognitionAnswer*)stranscribeBroadcastWithId:(NSNumber * _Nonnull)messageId
-                                              fromUserId:(NSNumber * _Nonnull)fromUserId
-                                         profanityFilter:(BOOL)profanityFilter
-                                                 timeout:(int)timeout{
-    
-    
-    RTMSpeechRecognitionAnswer * model = [RTMSpeechRecognitionAnswer new];
-    clientConnectStatueVerifySync
-    
-     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-     [dic setValue:messageId forKey:@"mid"];
-     [dic setValue:@(0) forKey:@"xid"];
-     [dic setValue:fromUserId forKey:@"from"];
-     [dic setValue:@(4) forKey:@"type"];
-     [dic setValue:@(profanityFilter) forKey:@"profanityFilter"];
-    
-    // type: 1,p2p; 2,group; 3, room
-    
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"stranscribe" message:dic twoWay:YES];
-    
-    FPNNAnswer * answer = [mainClient sendQuest:quest
-                                        timeout:RTMClientSendQuestTimeout];
-    
-    if (answer.error == nil) {
-        RTMSpeechRecognitionAnswer * model = [RTMSpeechRecognitionAnswer new];
-        model.lang = [answer.responseData objectForKey:@"lang"];
-        model.text = [answer.responseData objectForKey:@"text"];
-    }else{
-        model.error = answer.error;
-    }
-    
-    return model;
-    
-    
-}
+//-(void)stranscribeBroadcastWithId:(NSNumber * _Nonnull)messageId
+//                       fromUserId:(NSNumber * _Nonnull)fromUserId
+//                  profanityFilter:(BOOL)profanityFilter
+//                          timeout:(int)timeout
+//                          success:(void(^)(RTMSpeechRecognitionAnswer * _Nullable recognition))successCallback
+//                             fail:(RTMAnswerFailCallBack)failCallback{
+//    
+//    
+//    clientConnectStatueVerify
+//    
+//    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+//    [dic setValue:messageId forKey:@"mid"];
+//    [dic setValue:@(0) forKey:@"xid"];
+//    [dic setValue:fromUserId forKey:@"from"];
+//    [dic setValue:@(4) forKey:@"type"];
+//    [dic setValue:@(profanityFilter) forKey:@"profanityFilter"];
+//    
+//    // type: 1,p2p; 2,group; 3, room
+//    
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"stranscribe" message:dic twoWay:YES];
+//    
+//    BOOL result = [mainClient sendQuest:quest
+//                                timeout:RTMClientSendQuestTimeout
+//                                success:^(NSDictionary * _Nullable data) {
+//        
+//        
+//        if (successCallback) {
+//            RTMSpeechRecognitionAnswer * model = [RTMSpeechRecognitionAnswer new];
+//            model.lang = [data objectForKey:@"lang"];
+//            model.text = [data objectForKey:@"text"];
+//            successCallback(model);
+//        }
+//        
+//
+//    }fail:^(FPNError * _Nullable error) {
+//    
+//        _failCallback(error);
+//
+//    }];
+//
+//    
+//    handlerNetworkError;
+//    
+//}
+//
+//-(RTMSpeechRecognitionAnswer*)stranscribeBroadcastWithId:(NSNumber * _Nonnull)messageId
+//                                              fromUserId:(NSNumber * _Nonnull)fromUserId
+//                                         profanityFilter:(BOOL)profanityFilter
+//                                                 timeout:(int)timeout{
+//    
+//    
+//    RTMSpeechRecognitionAnswer * model = [RTMSpeechRecognitionAnswer new];
+//    clientConnectStatueVerifySync
+//    
+//     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+//     [dic setValue:messageId forKey:@"mid"];
+//     [dic setValue:@(0) forKey:@"xid"];
+//     [dic setValue:fromUserId forKey:@"from"];
+//     [dic setValue:@(4) forKey:@"type"];
+//     [dic setValue:@(profanityFilter) forKey:@"profanityFilter"];
+//    
+//    // type: 1,p2p; 2,group; 3, room
+//    
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"stranscribe" message:dic twoWay:YES];
+//    
+//    FPNNAnswer * answer = [mainClient sendQuest:quest
+//                                        timeout:RTMClientSendQuestTimeout];
+//    
+//    if (answer.error == nil) {
+//        RTMSpeechRecognitionAnswer * model = [RTMSpeechRecognitionAnswer new];
+//        model.lang = [answer.responseData objectForKey:@"lang"];
+//        model.text = [answer.responseData objectForKey:@"text"];
+//    }else{
+//        model.error = answer.error;
+//    }
+//    
+//    return model;
+//    
+//    
+//}
 @end

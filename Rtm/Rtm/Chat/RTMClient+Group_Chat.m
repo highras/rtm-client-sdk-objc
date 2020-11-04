@@ -12,6 +12,8 @@
 #import "RTMAnswer.h"
 #import "RTMAudioTools.h"
 #import "RTMMessageModelConvert.h"
+#import "RTMClient+FileToken.h"
+#import "RTMIPv6Adapter.h"
 @implementation RTMClient (Group_Chat)
 -(void)sendGroupMessageChatWithId:(NSNumber * _Nonnull)groupId
                            message:(NSString * _Nonnull)message
@@ -86,18 +88,20 @@
 
 
 -(void)sendGroupAudioMessageChatWithId:(NSNumber * _Nonnull)groupId
-                         audioFilePath:(NSString * _Nonnull)audioFilePath
-                                 attrs:(NSDictionary * )attrs
-                                  lang:(NSString * _Nonnull)lang
-                              duration:(long long)duration
+                            audioModel:(RTMAudioModel * _Nonnull)audioModel
+                                 attrs:(NSDictionary * _Nullable)attrs
                                timeout:(int)timeout
-                               success:(void(^)(RTMSendAnswer* sendAnswer))successCallback
+                               success:(void(^)(RTMSendAnswer * sendAnswer))successCallback
                                   fail:(RTMAnswerFailCallBack)failCallback{
     
-    
     clientConnectStatueVerify
+    
+    NSString * audioFilePath = audioModel.audioFilePath;
+    int duration = audioModel.duration;
+    NSString * lang = audioModel.lang;
+    
     if (duration == 0 || audioFilePath == nil) {
-        FPNSLog(@"rtm group audioMessage duration or audioFile is nil");
+        FPNSLog(@"rtm Group audioMessage duration or audioFile is nil");
         return ;
     }
     
@@ -107,105 +111,239 @@
         return ;
     }
     
-    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    [dic setValue:groupId forKey:@"gid"];
-    [dic setValue:mid forKey:@"mid"];
-    [dic setValue:@(31) forKey:@"mtype"];
-    NSData * resultData = [RTMAudioTools audioDataAddHeader:audioData lang:lang time:duration srate:16000];
-    if (resultData) {
-        [dic setValue:resultData forKey:@"msg"];
-    }else{
-        FPNSLog(@"rtm Group audioDataAddHeader error");
+    
+    if ([RTMAudioTools isAmrVerify:audioData] == NO) {
+        FPNSLog(@"rtm Group sendAudioMessageChatWithId no amr type");
         return ;
     }
     
-    NSMutableDictionary * attrsDic = [NSMutableDictionary dictionaryWithDictionary:attrs];
-    if (attrsDic == nil) {
-        attrsDic = [NSMutableDictionary dictionary];
-    }
-    [attrsDic setValue:@(duration) forKey:@"duration"];
-    [attrsDic setValue:lang forKey:@"lang"];
-    NSData * strData = [NSJSONSerialization dataWithJSONObject:attrsDic options:NSJSONWritingPrettyPrinted error:nil];
-    [dic setValue:[[NSString alloc] initWithData:strData encoding:NSUTF8StringEncoding] forKey:@"attrs"];
-    
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendgroupmsg" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
-                                timeout:RTMClientSendQuestTimeout
-                                success:^(NSDictionary * _Nullable data) {
+    [self getGroupFileTokenWithId:groupId
+                          timeout:RTMClientFileQuestTimeout
+                          success:^(NSDictionary * _Nullable data) {
         
-        if (successCallback) {
-            RTMSendAnswer* sendAnswer  = [RTMSendAnswer new];
-            sendAnswer.mtime = [[data objectForKey:@"mtime"] longLongValue];
-            sendAnswer.messageId = [[dic objectForKey:@"mid"] longLongValue];
-            successCallback(sendAnswer);
+        if (RTMNullString(data[@"endpoint"]) || RTMNullString(data[@"token"])) {
+            FPNSLog(@"rtm sendFile error. getGroupFileTokenWithId return data is nil");
+            return ;
         }
-    
-    }fail:^(FPNError * _Nullable error) {
+        NSDictionary * resultBody = [self getAudioFileQuestBody:data
+                                                         recvId:groupId
+                                                       fileData:audioData
+                                                           lang:lang
+                                                       duration:duration
+                                                          attrs:attrs];
+        [resultBody setValue:groupId forKey:@"gid"];
         
-          _failCallback(error);
+
+        NSString * endPoint = data[@"endpoint"];
+        if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
+            endPoint = [[RTMIPv6Adapter getInstance] handleIpv4Address:endPoint];
+        }
+        FPNNTCPClient * fileClient = [self getFileClient:endPoint];
+        FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendgroupfile" message:resultBody twoWay:YES];
+        BOOL result = [fileClient sendQuest:quest
+                                    timeout:RTMClientSendQuestTimeout
+                                    success:^(NSDictionary * _Nullable data) {
+
+            
+            if (successCallback) {
+
+                RTMSendAnswer* sendAnswer  = [RTMSendAnswer new];
+                sendAnswer.mtime = [[data objectForKey:@"mtime"] longLongValue];
+                sendAnswer.messageId = [[resultBody objectForKey:@"mid"] longLongValue];
+                successCallback(sendAnswer);
+            }
+
+        } fail:^(FPNError * _Nullable error) {
+        
+            _failCallback(error);
+
+        }];
+
+
+        handlerNetworkError
+
+        
+        
+        
+    } fail:^(FPNError * _Nullable error) {
+
+        
+        _failCallback(error);
 
     }];
-        
-    handlerNetworkError;
+//    clientConnectStatueVerify
+//    if (duration == 0 || audioFilePath == nil) {
+//        FPNSLog(@"rtm group audioMessage duration or audioFile is nil");
+//        return ;
+//    }
+//
+//    NSData * audioData = [NSData dataWithContentsOfFile:audioFilePath];
+//    if (audioData == nil) {
+//        FPNSLog(@"rtm Group audioMessage get audioData error");
+//        return ;
+//    }
+//
+//    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+//    [dic setValue:groupId forKey:@"gid"];
+//    [dic setValue:mid forKey:@"mid"];
+//    [dic setValue:@(31) forKey:@"mtype"];
+////    NSData * resultData = [RTMAudioTools audioDataAddHeader:audioData lang:lang time:duration srate:16000];
+////    if (resultData) {
+//        [dic setValue:audioData forKey:@"msg"];
+////    }else{
+////        FPNSLog(@"rtm Group audioDataAddHeader error");
+////        return ;
+////    }
+//
+//    NSMutableDictionary * attrsDic = [NSMutableDictionary dictionaryWithDictionary:attrs];
+//    if (attrsDic == nil) {
+//        attrsDic = [NSMutableDictionary dictionary];
+//    }
+//    [attrsDic setValue:@(duration) forKey:@"duration"];
+//    [attrsDic setValue:lang forKey:@"lang"];
+//    NSData * strData = [NSJSONSerialization dataWithJSONObject:attrsDic options:NSJSONWritingPrettyPrinted error:nil];
+//    [dic setValue:[[NSString alloc] initWithData:strData encoding:NSUTF8StringEncoding] forKey:@"attrs"];
+//
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendgroupmsg" message:dic twoWay:YES];
+//    BOOL result = [mainClient sendQuest:quest
+//                                timeout:RTMClientSendQuestTimeout
+//                                success:^(NSDictionary * _Nullable data) {
+//
+//        if (successCallback) {
+//            RTMSendAnswer* sendAnswer  = [RTMSendAnswer new];
+//            sendAnswer.mtime = [[data objectForKey:@"mtime"] longLongValue];
+//            sendAnswer.messageId = [[dic objectForKey:@"mid"] longLongValue];
+//            successCallback(sendAnswer);
+//        }
+//
+//    }fail:^(FPNError * _Nullable error) {
+//
+//          _failCallback(error);
+//
+//    }];
+//
+//    handlerNetworkError;
     
 }
 -(RTMSendAnswer*)sendGroupAudioMessageChatWithId:(NSNumber * _Nonnull)groupId
-                                   audioFilePath:(NSString * _Nonnull)audioFilePath
+                                      audioModel:(RTMAudioModel * _Nonnull)audioModel
                                            attrs:(NSDictionary * _Nullable)attrs
-                                            lang:(NSString * _Nonnull)lang
-                                        duration:(long long)duration
                                          timeout:(int)timeout{
     
     RTMSendAnswer * model = [RTMSendAnswer new];
-        clientConnectStatueVerifySync
+    clientConnectStatueVerifySync
+    
+    NSString * audioFilePath = audioModel.audioFilePath;
+    int duration = audioModel.duration;
+    NSString * lang = audioModel.lang;
+    
+    if (duration == 0 || audioFilePath == nil) {
+        FPNSLog(@"rtm Group audioMessage duration or audioFile is nil");
+        return nil;
+    }
+    
+    NSData * audioData = [NSData dataWithContentsOfFile:audioFilePath];
+    if (audioData == nil) {
+        FPNSLog(@"rtm Group audioMessage get audioData error");
+        return nil;
+    }
+    
+    if ([RTMAudioTools isAmrVerify:audioData] == NO) {
+        FPNSLog(@"rtm Group sendAudioMessageChatWithId no amr type");
+        return nil;
+    }
+    
+    FPNNAnswer * answer = [self getGroupFileTokenWithId:groupId timeout:RTMClientFileQuestTimeout];
+    if (answer.error == nil) {
         
-        
-        if (duration == 0 || audioFilePath == nil) {
-    //        FPNSLog(@"rtm P2P audioMessage duration or audioFile is nil");
-    //        return ;
+        NSDictionary * data = answer.responseData;
+        if (RTMNullString(data[@"endpoint"]) || RTMNullString(data[@"token"])) {
+            FPNSLog(@"rtm sendFile error. getGroupFileTokenWithId return data is nil");
+            return nil;
         }
+        NSDictionary * resultBody = [self getAudioFileQuestBody:data
+                                                         recvId:groupId
+                                                       fileData:audioData
+                                                           lang:lang
+                                                       duration:duration
+                                                          attrs:attrs];
+        [resultBody setValue:groupId forKey:@"gid"];
         
-        
-        NSData * audioData = [NSData dataWithContentsOfFile:audioFilePath];
-        if (audioData == nil) {
-    //        FPNSLog(@"rtm P2P audioMessage get audioData error");
-    //        return ;
+        NSString * endPoint = data[@"endpoint"];
+        if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
+            endPoint = [[RTMIPv6Adapter getInstance] handleIpv4Address:endPoint];
         }
-        
-        NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-        [dic setValue:groupId forKey:@"gid"];
-        [dic setValue:mid forKey:@"mid"];
-        [dic setValue:@(31) forKey:@"mtype"];
-        NSData * resultData = [RTMAudioTools audioDataAddHeader:audioData lang:lang time:duration srate:16000];
-        if (resultData) {
-            [dic setValue:resultData forKey:@"msg"];
-        }else{
-            FPNSLog(@"rtm group audioDataAddHeader error");
-//            return ;
-        }
-        
-        NSMutableDictionary * attrsDic = [NSMutableDictionary dictionaryWithDictionary:attrs];
-        if (attrsDic == nil) {
-            attrsDic = [NSMutableDictionary dictionary];
-        }
-        [attrsDic setValue:@(duration) forKey:@"duration"];
-        [attrsDic setValue:lang forKey:@"lang"];
-        NSData * strData = [NSJSONSerialization dataWithJSONObject:attrsDic options:NSJSONWritingPrettyPrinted error:nil];
-        [dic setValue:[[NSString alloc] initWithData:strData encoding:NSUTF8StringEncoding] forKey:@"attrs"];
-        
-        FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendgroupmsg" message:dic twoWay:YES];
-        
-        FPNNAnswer * answer = [mainClient sendQuest:quest
-                                           timeout:RTMClientSendQuestTimeout];
-        
+        FPNNTCPClient * fileClient = [self getFileClient:endPoint];
+        FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendgroupfile" message:resultBody twoWay:YES];
+        FPNNAnswer * answer = [fileClient sendQuest:quest timeout:RTMClientSendQuestTimeout];
         if (answer.error == nil) {
             model.mtime = [[answer.responseData objectForKey:@"mtime"] longLongValue];
-            model.messageId = [[dic objectForKey:@"mid"] longLongValue];
+            model.messageId = [[resultBody objectForKey:@"mid"] longLongValue];
         }else{
             model.error = answer.error;
         }
         
-        return model;
+        
+    }else{
+       
+        model.error = answer.error;
+        
+    }
+
+           
+    
+    return model;
+    
+//    RTMSendAnswer * model = [RTMSendAnswer new];
+//        clientConnectStatueVerifySync
+//
+//
+//        if (duration == 0 || audioFilePath == nil) {
+//    //        FPNSLog(@"rtm P2P audioMessage duration or audioFile is nil");
+//    //        return ;
+//        }
+//
+//
+//        NSData * audioData = [NSData dataWithContentsOfFile:audioFilePath];
+//        if (audioData == nil) {
+//    //        FPNSLog(@"rtm P2P audioMessage get audioData error");
+//    //        return ;
+//        }
+//
+//        NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+//        [dic setValue:groupId forKey:@"gid"];
+//        [dic setValue:mid forKey:@"mid"];
+//        [dic setValue:@(31) forKey:@"mtype"];
+//        NSData * resultData = [RTMAudioTools audioDataAddHeader:audioData lang:lang time:duration srate:16000];
+//        if (resultData) {
+//            [dic setValue:resultData forKey:@"msg"];
+//        }else{
+//            FPNSLog(@"rtm group audioDataAddHeader error");
+////            return ;
+//        }
+//
+//        NSMutableDictionary * attrsDic = [NSMutableDictionary dictionaryWithDictionary:attrs];
+//        if (attrsDic == nil) {
+//            attrsDic = [NSMutableDictionary dictionary];
+//        }
+//        [attrsDic setValue:@(duration) forKey:@"duration"];
+//        [attrsDic setValue:lang forKey:@"lang"];
+//        NSData * strData = [NSJSONSerialization dataWithJSONObject:attrsDic options:NSJSONWritingPrettyPrinted error:nil];
+//        [dic setValue:[[NSString alloc] initWithData:strData encoding:NSUTF8StringEncoding] forKey:@"attrs"];
+//
+//        FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendgroupmsg" message:dic twoWay:YES];
+//
+//        FPNNAnswer * answer = [mainClient sendQuest:quest
+//                                           timeout:RTMClientSendQuestTimeout];
+//
+//        if (answer.error == nil) {
+//            model.mtime = [[answer.responseData objectForKey:@"mtime"] longLongValue];
+//            model.messageId = [[dic objectForKey:@"mid"] longLongValue];
+//        }else{
+//            model.error = answer.error;
+//        }
+//
+//        return model;
     
     
 }
@@ -399,7 +537,7 @@
     [dic setValue:begin forKey:@"begin"];
     [dic setValue:end forKey:@"end"];
     [dic setValue:lastid forKey:@"lastid"];
-    [dic setValue:@[@(30),@(31),@(32),@(40),@(41),@(42)] forKey:@"mtypes"];
+    [dic setValue:@[@(30),@(32),@(40),@(41),@(42),@(50)] forKey:@"mtypes"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getgroupmsg" message:dic twoWay:YES];
 //    BOOL result = handlerCallResult(quest,timeout,tag);
@@ -483,7 +621,7 @@
     [dic setValue:begin forKey:@"begin"];
     [dic setValue:end forKey:@"end"];
     [dic setValue:lastid forKey:@"lastid"];
-    [dic setValue:@[@(30),@(31),@(32),@(40),@(41),@(42)] forKey:@"mtypes"];
+    [dic setValue:@[@(30),@(32),@(40),@(41),@(42),@(50)] forKey:@"mtypes"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getgroupmsg" message:dic twoWay:YES];
     FPNNAnswer * answer = [mainClient sendQuest:quest

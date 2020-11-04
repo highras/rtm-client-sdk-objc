@@ -812,7 +812,7 @@
 		563BD391243DAE4C00C6AC11 /* MidGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 563BD082243DAE4B00C6AC11 /* MidGenerator.cpp */; };
 		563BD392243DAE4C00C6AC11 /* MidGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 563BD083243DAE4B00C6AC11 /* MidGenerator.h */; };
 		563BD393243DAE4C00C6AC11 /* queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 563BD084243DAE4B00C6AC11 /* queue.h */; };
-		566319E22418B90000072479 /* RTMAudioTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 566319E02418B90000072479 /* RTMAudioTools.h */; };
+		566319E22418B90000072479 /* RTMAudioTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 566319E02418B90000072479 /* RTMAudioTools.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		566319E32418B90000072479 /* RTMAudioTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 566319E12418B90000072479 /* RTMAudioTools.m */; };
 		5667E4F324D9555D00C89DF8 /* RTMMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 5667E4F124D9555D00C89DF8 /* RTMMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5667E4F424D9555D00C89DF8 /* RTMMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5667E4F224D9555D00C89DF8 /* RTMMessage.m */; };
@@ -877,6 +877,10 @@
 		566F0E5523A33DD600D1D949 /* RTMCallBackDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 566F0E5323A33DD600D1D949 /* RTMCallBackDefinition.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		566F0E5D23A346E100D1D949 /* RTMAnswer.h in Headers */ = {isa = PBXBuildFile; fileRef = 566F0E5B23A346E100D1D949 /* RTMAnswer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		566F0E5E23A346E100D1D949 /* RTMAnswer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 566F0E5C23A346E100D1D949 /* RTMAnswer.mm */; };
+		56776E7E25399699007372C6 /* RTMTextReviewAnswer.h in Headers */ = {isa = PBXBuildFile; fileRef = 56776E7C25399699007372C6 /* RTMTextReviewAnswer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		56776E7F25399699007372C6 /* RTMTextReviewAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = 56776E7D25399699007372C6 /* RTMTextReviewAnswer.m */; };
+		56776E8825399E8D007372C6 /* RTMReviewAnswer.h in Headers */ = {isa = PBXBuildFile; fileRef = 56776E8625399E8D007372C6 /* RTMReviewAnswer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		56776E8925399E8D007372C6 /* RTMReviewAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = 56776E8725399E8D007372C6 /* RTMReviewAnswer.m */; };
 		568F8ED32408AA6100FE2D8A /* RTMIPv6Adapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 568F8ECF2408AA6000FE2D8A /* RTMIPv6Adapter.m */; };
 		568F8ED42408AA6100FE2D8A /* RTMIPv6PrefixResolver.mm in Sources */ = {isa = PBXBuildFile; fileRef = 568F8ED02408AA6100FE2D8A /* RTMIPv6PrefixResolver.mm */; };
 		568F8ED52408AA6100FE2D8A /* RTMIPv6PrefixResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 568F8ED12408AA6100FE2D8A /* RTMIPv6PrefixResolver.h */; };
@@ -889,6 +893,12 @@
 		56C7A41A24C8463900077C44 /* FPNetworkReachabilityManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 56C7A41824C8463900077C44 /* FPNetworkReachabilityManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		56C7A41D24C8483C00077C44 /* RTMClient+MessagesManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 56C7A41B24C8483C00077C44 /* RTMClient+MessagesManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		56C7A41E24C8483C00077C44 /* RTMClient+MessagesManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C7A41C24C8483C00077C44 /* RTMClient+MessagesManager.m */; };
+		56C9237D253D379D00839301 /* RTMClient+FileToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 56C9237B253D379D00839301 /* RTMClient+FileToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		56C9237E253D379D00839301 /* RTMClient+FileToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C9237C253D379D00839301 /* RTMClient+FileToken.m */; };
+		56C923A2253D89AA00839301 /* RTMAudioModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 56C923A0253D89AA00839301 /* RTMAudioModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		56C923A3253D89AA00839301 /* RTMAudioModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C923A1253D89AA00839301 /* RTMAudioModel.m */; };
+		56C923AF253ED2E500839301 /* RTMFileInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 56C923AD253ED2E500839301 /* RTMFileInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		56C923B0253ED2E500839301 /* RTMFileInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C923AE253ED2E500839301 /* RTMFileInfo.m */; };
 		56D2B09723B9A19100491DF7 /* NSArray+MPMessagePack.h in Headers */ = {isa = PBXBuildFile; fileRef = 56D2B08723B9A19000491DF7 /* NSArray+MPMessagePack.h */; };
 		56D2B09823B9A19100491DF7 /* MPMessagePackWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D2B08823B9A19000491DF7 /* MPMessagePackWriter.m */; };
 		56D2B09923B9A19100491DF7 /* NSData+MPMessagePack.h in Headers */ = {isa = PBXBuildFile; fileRef = 56D2B08923B9A19000491DF7 /* NSData+MPMessagePack.h */; };
@@ -1822,6 +1832,10 @@
 		566F0E5323A33DD600D1D949 /* RTMCallBackDefinition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMCallBackDefinition.h; sourceTree = "<group>"; };
 		566F0E5B23A346E100D1D949 /* RTMAnswer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMAnswer.h; sourceTree = "<group>"; };
 		566F0E5C23A346E100D1D949 /* RTMAnswer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = RTMAnswer.mm; sourceTree = "<group>"; };
+		56776E7C25399699007372C6 /* RTMTextReviewAnswer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMTextReviewAnswer.h; sourceTree = "<group>"; };
+		56776E7D25399699007372C6 /* RTMTextReviewAnswer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMTextReviewAnswer.m; sourceTree = "<group>"; };
+		56776E8625399E8D007372C6 /* RTMReviewAnswer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMReviewAnswer.h; sourceTree = "<group>"; };
+		56776E8725399E8D007372C6 /* RTMReviewAnswer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMReviewAnswer.m; sourceTree = "<group>"; };
 		568F8ECF2408AA6000FE2D8A /* RTMIPv6Adapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RTMIPv6Adapter.m; sourceTree = "<group>"; };
 		568F8ED02408AA6100FE2D8A /* RTMIPv6PrefixResolver.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RTMIPv6PrefixResolver.mm; sourceTree = "<group>"; };
 		568F8ED12408AA6100FE2D8A /* RTMIPv6PrefixResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTMIPv6PrefixResolver.h; sourceTree = "<group>"; };
@@ -1834,6 +1848,12 @@
 		56C7A41824C8463900077C44 /* FPNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPNetworkReachabilityManager.h; sourceTree = "<group>"; };
 		56C7A41B24C8483C00077C44 /* RTMClient+MessagesManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTMClient+MessagesManager.h"; sourceTree = "<group>"; };
 		56C7A41C24C8483C00077C44 /* RTMClient+MessagesManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTMClient+MessagesManager.m"; sourceTree = "<group>"; };
+		56C9237B253D379D00839301 /* RTMClient+FileToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTMClient+FileToken.h"; sourceTree = "<group>"; };
+		56C9237C253D379D00839301 /* RTMClient+FileToken.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTMClient+FileToken.m"; sourceTree = "<group>"; };
+		56C923A0253D89AA00839301 /* RTMAudioModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMAudioModel.h; sourceTree = "<group>"; };
+		56C923A1253D89AA00839301 /* RTMAudioModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMAudioModel.m; sourceTree = "<group>"; };
+		56C923AD253ED2E500839301 /* RTMFileInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMFileInfo.h; sourceTree = "<group>"; };
+		56C923AE253ED2E500839301 /* RTMFileInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMFileInfo.m; sourceTree = "<group>"; };
 		56D2B08723B9A19000491DF7 /* NSArray+MPMessagePack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+MPMessagePack.h"; sourceTree = "<group>"; };
 		56D2B08823B9A19000491DF7 /* MPMessagePackWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPMessagePackWriter.m; sourceTree = "<group>"; };
 		56D2B08923B9A19000491DF7 /* NSData+MPMessagePack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+MPMessagePack.h"; sourceTree = "<group>"; };
@@ -3414,6 +3434,8 @@
 			children = (
 				566F0E3923A0990A00D1D949 /* RTMClient+File.h */,
 				566F0E3A23A0990A00D1D949 /* RTMClient+File.m */,
+				56C9237B253D379D00839301 /* RTMClient+FileToken.h */,
+				56C9237C253D379D00839301 /* RTMClient+FileToken.m */,
 			);
 			path = File;
 			sourceTree = "<group>";
@@ -3444,18 +3466,8 @@
 		5667E4F024D9554800C89DF8 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				5667E4F124D9555D00C89DF8 /* RTMMessage.h */,
-				5667E4F224D9555D00C89DF8 /* RTMMessage.m */,
-				5667E4F524D9557200C89DF8 /* RTMHistoryMessage.h */,
-				5667E4F624D9557200C89DF8 /* RTMHistoryMessage.m */,
-				56E6B5E724E533920099C675 /* RTMHistory.h */,
-				56E6B5E824E533920099C675 /* RTMHistory.m */,
-				56E6B5DD24E4E1AB0099C675 /* RTMGetMessage.h */,
-				56E6B5DE24E4E1AB0099C675 /* RTMGetMessage.m */,
-				5667E4F924D9558A00C89DF8 /* RTMAudioInfo.h */,
-				5667E4FA24D9558A00C89DF8 /* RTMAudioInfo.m */,
-				5667E4FD24D9559A00C89DF8 /* RTMTranslatedInfo.h */,
-				5667E4FE24D9559A00C89DF8 /* RTMTranslatedInfo.m */,
+				56C9239F253D898C00839301 /* SendAudio */,
+				56C9239E253D897C00839301 /* Normal */,
 				56E6B60024E560070099C675 /* syncAnswer */,
 			);
 			path = Model;
@@ -3574,6 +3586,36 @@
 			path = Fpnn;
 			sourceTree = "<group>";
 		};
+		56C9239E253D897C00839301 /* Normal */ = {
+			isa = PBXGroup;
+			children = (
+				5667E4F124D9555D00C89DF8 /* RTMMessage.h */,
+				5667E4F224D9555D00C89DF8 /* RTMMessage.m */,
+				5667E4F524D9557200C89DF8 /* RTMHistoryMessage.h */,
+				5667E4F624D9557200C89DF8 /* RTMHistoryMessage.m */,
+				56E6B5E724E533920099C675 /* RTMHistory.h */,
+				56E6B5E824E533920099C675 /* RTMHistory.m */,
+				56E6B5DD24E4E1AB0099C675 /* RTMGetMessage.h */,
+				56E6B5DE24E4E1AB0099C675 /* RTMGetMessage.m */,
+				5667E4F924D9558A00C89DF8 /* RTMAudioInfo.h */,
+				5667E4FA24D9558A00C89DF8 /* RTMAudioInfo.m */,
+				56C923AD253ED2E500839301 /* RTMFileInfo.h */,
+				56C923AE253ED2E500839301 /* RTMFileInfo.m */,
+				5667E4FD24D9559A00C89DF8 /* RTMTranslatedInfo.h */,
+				5667E4FE24D9559A00C89DF8 /* RTMTranslatedInfo.m */,
+			);
+			path = Normal;
+			sourceTree = "<group>";
+		};
+		56C9239F253D898C00839301 /* SendAudio */ = {
+			isa = PBXGroup;
+			children = (
+				56C923A0253D89AA00839301 /* RTMAudioModel.h */,
+				56C923A1253D89AA00839301 /* RTMAudioModel.m */,
+			);
+			path = SendAudio;
+			sourceTree = "<group>";
+		};
 		56D2B08623B9A0E200491DF7 /* MpMessagePack */ = {
 			isa = PBXGroup;
 			children = (
@@ -3622,6 +3664,10 @@
 				56E6B61A24E6751B0099C675 /* RTMTextProfanityAnswer.m */,
 				56E6B61D24E675390099C675 /* RTMSpeechRecognitionAnswer.h */,
 				56E6B61E24E675390099C675 /* RTMSpeechRecognitionAnswer.m */,
+				56776E7C25399699007372C6 /* RTMTextReviewAnswer.h */,
+				56776E7D25399699007372C6 /* RTMTextReviewAnswer.m */,
+				56776E8625399E8D007372C6 /* RTMReviewAnswer.h */,
+				56776E8725399E8D007372C6 /* RTMReviewAnswer.m */,
 			);
 			path = syncAnswer;
 			sourceTree = "<group>";
@@ -3648,7 +3694,12 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56C923AF253ED2E500839301 /* RTMFileInfo.h in Headers */,
+				56C923A2253D89AA00839301 /* RTMAudioModel.h in Headers */,
+				56776E8825399E8D007372C6 /* RTMReviewAnswer.h in Headers */,
+				56776E7E25399699007372C6 /* RTMTextReviewAnswer.h in Headers */,
 				5693C7DD24FE541D00747643 /* RTMLanguageCode.h in Headers */,
+				566319E22418B90000072479 /* RTMAudioTools.h in Headers */,
 				56E6B61F24E675390099C675 /* RTMSpeechRecognitionAnswer.h in Headers */,
 				56E6B61B24E6751B0099C675 /* RTMTextProfanityAnswer.h in Headers */,
 				56E6B61724E6727D0099C675 /* RTMTranslatedInfoAnswer.h in Headers */,
@@ -3661,6 +3712,7 @@
 				56E6B5F624E546100099C675 /* RTMSendAnswer.h in Headers */,
 				56E6B5FE24E55F080099C675 /* RTMHistoryMessageAnswer.h in Headers */,
 				56E6B5DF24E4E1AB0099C675 /* RTMGetMessage.h in Headers */,
+				56C9237D253D379D00839301 /* RTMClient+FileToken.h in Headers */,
 				56E6B5E924E533920099C675 /* RTMHistory.h in Headers */,
 				5667E4F724D9557200C89DF8 /* RTMHistoryMessage.h in Headers */,
 				5667E4FF24D9559A00C89DF8 /* RTMTranslatedInfo.h in Headers */,
@@ -4228,7 +4280,6 @@
 				563BD2E4243DAE4C00C6AC11 /* min.hpp in Headers */,
 				563BD198243DAE4C00C6AC11 /* zbuffer.hpp in Headers */,
 				563BD0D2243DAE4B00C6AC11 /* msgpack_variant.hpp in Headers */,
-				566319E22418B90000072479 /* RTMAudioTools.h in Headers */,
 				563BD1C6243DAE4C00C6AC11 /* uc.h in Headers */,
 				563BD267243DAE4C00C6AC11 /* data.hpp in Headers */,
 				563BD23C243DAE4C00C6AC11 /* logical.hpp in Headers */,
@@ -4591,6 +4642,8 @@
 				563BD360243DAE4C00C6AC11 /* JSONConvert.cpp in Sources */,
 				566F0E3823A098FE00D1D949 /* RTMClient+Broadcast.m in Sources */,
 				56058E0D23AA0F2200523627 /* RTMAsyncAnswer.m in Sources */,
+				56776E8925399E8D007372C6 /* RTMReviewAnswer.m in Sources */,
+				56C923B0253ED2E500839301 /* RTMFileInfo.m in Sources */,
 				566F0E2023A0989F00D1D949 /* RTMClient+User.m in Sources */,
 				5627135823A790E1009EF54E /* NSString+RTMTools.m in Sources */,
 				563BD36C243DAE4C00C6AC11 /* jenkins.c in Sources */,
@@ -4611,12 +4664,14 @@
 				563BD089243DAE4B00C6AC11 /* EncryptedStreamReceiver.cpp in Sources */,
 				563BD33B243DAE4C00C6AC11 /* FPWriter.cpp in Sources */,
 				563BD391243DAE4C00C6AC11 /* MidGenerator.cpp in Sources */,
+				56776E7F25399699007372C6 /* RTMTextReviewAnswer.m in Sources */,
 				56E6B61024E6405E0099C675 /* RTMAttriAnswer.m in Sources */,
 				563BD383243DAE4C00C6AC11 /* obpool.c in Sources */,
 				56D2B0A323B9A19100491DF7 /* MPMessagePackReader.m in Sources */,
 				566F0B1023A0917700D1D949 /* PayloadDictionaryBuilder.m in Sources */,
 				563BD382243DAE4C00C6AC11 /* base64.c in Sources */,
 				56E6B5F724E546100099C675 /* RTMSendAnswer.m in Sources */,
+				56C9237E253D379D00839301 /* RTMClient+FileToken.m in Sources */,
 				56E6B60C24E56AEE0099C675 /* RTMInfoAnswer.m in Sources */,
 				563BD088243DAE4B00C6AC11 /* IOBuffer.cpp in Sources */,
 				56E6B62024E675390099C675 /* RTMSpeechRecognitionAnswer.m in Sources */,
@@ -4634,6 +4689,7 @@
 				563BD0A8243DAE4B00C6AC11 /* uECC.c in Sources */,
 				563BD374243DAE4C00C6AC11 /* sha1.c in Sources */,
 				56E664D123FD3F1300C680BC /* IPV4HandleTools.cpp in Sources */,
+				56C923A3253D89AA00839301 /* RTMAudioModel.m in Sources */,
 				563BD370243DAE4C00C6AC11 /* FileSystemUtil.cpp in Sources */,
 				56E6B5EA24E533920099C675 /* RTMHistory.m in Sources */,
 				56D2B0A023B9A19100491DF7 /* cmp.c in Sources */,
@@ -4867,6 +4923,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Opencore-AMR/lib",
+					"$(PROJECT_DIR)/Rtm/Model",
 				);
 				MACH_O_TYPE = staticlib;
 				MARKETING_VERSION = 2.0.0;
@@ -4912,6 +4969,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Opencore-AMR/lib",
+					"$(PROJECT_DIR)/Rtm/Model",
 				);
 				MACH_O_TYPE = staticlib;
 				MARKETING_VERSION = 2.0.0;

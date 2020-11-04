@@ -13,6 +13,7 @@
 #import "RTMGetMessageAnswer.h"
 #import "RTMMemberAnswer.h"
 #import "RTMInfoAnswer.h"
+#import "RTMAudioModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RTMClient (Room_Chat)
@@ -36,30 +37,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 
-/// 发送音频消息 对 sendRoomMessageWithId 的封装 mtype=31
-/// 对音频大小有限制
-/// @param roomId int64
-/// @param audioFilePath 音频数据路径  音频要求 16KHZ 16位 单声道 
-/// @param attrs 属性
-/// @param lang 音频语言
-/// @param duration 音频时长 毫秒 必传
-/// @param timeout 请求超时时间 秒
-/// @param successCallback 成功回调
-/// @param failCallback 失败回调
--(void)sendRoomAudioMessageChatWithId:(NSNumber * _Nonnull)roomId
-                        audioFilePath:(NSString * _Nonnull)audioFilePath
-                                attrs:(NSDictionary * _Nullable)attrs
-                                 lang:(NSString * _Nonnull)lang
-                             duration:(long long)duration
-                              timeout:(int)timeout
-                              success:(void(^)(RTMSendAnswer * sendAnswer))successCallback
-                                 fail:(RTMAnswerFailCallBack)failCallback;
--(RTMSendAnswer*)sendRoomAudioMessageChatWithId:(NSNumber * _Nonnull)roomId
-                                  audioFilePath:(NSString * _Nonnull)audioFilePath
-                                          attrs:(NSDictionary * _Nullable)attrs
-                                           lang:(NSString * _Nonnull)lang
-                                       duration:(long long)duration
-                                        timeout:(int)timeout;
+///// 发送音频消息 对 sendFile 的封装 mtype = 41
+///// @param roomId int64
+///// @param audioModel  音频数据模型
+///// @param timeout 请求超时时间 秒
+///// @param successCallback 成功回调
+///// @param failCallback 失败回调
+//-(void)sendRoomAudioMessageChatWithId:(NSNumber * _Nonnull)roomId
+//                           audioModel:(RTMAudioModel * _Nonnull)audioModel
+//                                attrs:(NSDictionary * _Nullable)attrs
+//                              timeout:(int)timeout
+//                              success:(void(^)(RTMSendAnswer * sendAnswer))successCallback
+//                                 fail:(RTMAnswerFailCallBack)failCallback;
+//-(RTMSendAnswer*)sendRoomAudioMessageChatWithId:(NSNumber * _Nonnull)roomId
+//                                     audioModel:(RTMAudioModel * _Nonnull)audioModel
+//                                          attrs:(NSDictionary * _Nullable)attrs
+//                                        timeout:(int)timeout;
 
 
 
@@ -83,13 +76,13 @@ NS_ASSUME_NONNULL_BEGIN
                                       timeout:(int)timeout;
 
 
-/// 获取历史Room消息 对 getRoomHistoryMessageWithId 的封装 mtypes = [30,31,32,40,41,42] （只包含sendRoomMessageChatWithId，sendRoomAudioMessageChatWithId，sendRoomCmdMessageChatWithId产生的历史消息）
+/// 获取历史Room消息 对 getRoomHistoryMessageWithId 的封装 mtypes = [30,32,40,41,42,50] 
 /// @param roomId int64
 /// @param desc 是否降序排列
 /// @param num int16 条数
 /// @param begin int64 开始时间戳，精确到 毫秒
 /// @param end int64 结束时间戳，精确到 毫秒
-/// @param lastid int64 最后一条消息的id
+/// @param lastid int64 最后一条消息的id 对应RTMGetMessage RTMHistoryMessage 的 cursorId字段
 /// @param timeout 请求超时时间 秒
 /// @param successCallback 成功回调
 /// @param failCallback 失败回调

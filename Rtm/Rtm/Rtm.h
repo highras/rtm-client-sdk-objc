@@ -31,15 +31,10 @@
 #import <Rtm/RTMClient+Room_Chat.h>
 #import <Rtm/RTMClient+Broadcast_Chat.h>
 #import <Rtm/RTMMessage.h>
-#import <Rtm/RTMAudioInfo.h>
 #import <Rtm/RTMTranslatedInfo.h>
+#import <Rtm/RTMAudioTools.h>
+#import <Rtm/RTMAudioModel.h>
 
-//! Project version number for Rtm.
-FOUNDATION_EXPORT double RtmVersionNumber;
 
-//! Project version string for Rtm.
-FOUNDATION_EXPORT const unsigned char RtmVersionString[];
-
-// In this header, you should import all the public headers of your framework using statements like #import <Rtm/PublicHeader.h>
 
 

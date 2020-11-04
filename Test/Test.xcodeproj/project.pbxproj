@@ -30,11 +30,13 @@
 		56B9EF37246E900000CB9766 /* WidthBandWavToAmr.mm in Sources */ = {isa = PBXBuildFile; fileRef = 56B9EF29246E900000CB9766 /* WidthBandWavToAmr.mm */; };
 		56B9EF3B246E900000CB9766 /* RtmVoiceConverterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B9EF32246E900000CB9766 /* RtmVoiceConverterManager.m */; };
 		56C5C7B123ED1269004CCF71 /* 16HZ 16BIT 1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 56C5C7B023ED1269004CCF71 /* 16HZ 16BIT 1.wav */; };
+		56C9240925405A4400839301 /* 1603281517793586.wav in Resources */ = {isa = PBXBuildFile; fileRef = 56C9240825405A4400839301 /* 1603281517793586.wav */; };
 		56E013E1245814800097E98F /* head2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 56E013E0245814800097E98F /* head2.jpg */; };
 		56E664CA23FD377200C680BC /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 56E664C923FD376100C680BC /* libresolv.9.tbd */; };
 		56E664CB23FD377C00C680BC /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 56E664C823FD376100C680BC /* libresolv.tbd */; };
 		56E6B5E324E4F57B0099C675 /* RTMRecordManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 56E6B5E224E4F57B0099C675 /* RTMRecordManager.m */; };
 		56E6B5E624E4F7BD0099C675 /* RTMAudioplayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 56E6B5E524E4F7BD0099C675 /* RTMAudioplayer.m */; };
+		56E89D6C255281160023E664 /* Rtm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56E89D6B255281160023E664 /* Rtm.framework */; };
 		56EA004E23B1F9CB002B5B77 /* mp4Test.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 56EA004C23B1F9CB002B5B77 /* mp4Test.mp4 */; };
 /* End PBXBuildFile section */
 
@@ -99,6 +101,7 @@
 		56B9EF31246E900000CB9766 /* interf_enc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = interf_enc.h; sourceTree = "<group>"; };
 		56B9EF32246E900000CB9766 /* RtmVoiceConverterManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RtmVoiceConverterManager.m; sourceTree = "<group>"; };
 		56C5C7B023ED1269004CCF71 /* 16HZ 16BIT 1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "16HZ 16BIT 1.wav"; sourceTree = "<group>"; };
+		56C9240825405A4400839301 /* 1603281517793586.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 1603281517793586.wav; sourceTree = "<group>"; };
 		56E013E0245814800097E98F /* head2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = head2.jpg; sourceTree = "<group>"; };
 		56E664C823FD376100C680BC /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		56E664C923FD376100C680BC /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = usr/lib/libresolv.9.tbd; sourceTree = SDKROOT; };
@@ -106,6 +109,7 @@
 		56E6B5E224E4F57B0099C675 /* RTMRecordManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMRecordManager.m; sourceTree = "<group>"; };
 		56E6B5E424E4F7BD0099C675 /* RTMAudioplayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMAudioplayer.h; sourceTree = "<group>"; };
 		56E6B5E524E4F7BD0099C675 /* RTMAudioplayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMAudioplayer.m; sourceTree = "<group>"; };
+		56E89D6B255281160023E664 /* Rtm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Rtm.framework; sourceTree = "<group>"; };
 		56EA004C23B1F9CB002B5B77 /* mp4Test.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = mp4Test.mp4; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -116,6 +120,7 @@
 			files = (
 				56E664CA23FD377200C680BC /* libresolv.9.tbd in Frameworks */,
 				5649316524EA622F00E6A06B /* libvo-amrwbenc.a in Frameworks */,
+				56E89D6C255281160023E664 /* Rtm.framework in Frameworks */,
 				5649316424EA622F00E6A06B /* libopencore-amrwb.a in Frameworks */,
 				5649316324EA622F00E6A06B /* libopencore-amrnb.a in Frameworks */,
 				56E664CB23FD377C00C680BC /* libresolv.tbd in Frameworks */,
@@ -142,6 +147,7 @@
 		566F06D623A090D800D1D949 = {
 			isa = PBXGroup;
 			children = (
+				56E89D6B255281160023E664 /* Rtm.framework */,
 				56B9EF19246E900000CB9766 /* RTMAudioManager */,
 				566F06E123A090D800D1D949 /* Test */,
 				566F06FD23A090D900D1D949 /* TestTests */,
@@ -164,6 +170,7 @@
 		566F06E123A090D800D1D949 /* Test */ = {
 			isa = PBXGroup;
 			children = (
+				56C9240825405A4400839301 /* 1603281517793586.wav */,
 				5677C59123F28B60005815DA /* 16 16 1 wav.wav */,
 				5677C59023F28B60005815DA /* 16 16 1.amr */,
 				56E013E0245814800097E98F /* head2.jpg */,
@@ -390,6 +397,7 @@
 				566F06F223A090D900D1D949 /* LaunchScreen.storyboard in Resources */,
 				566F06EF23A090D900D1D949 /* Assets.xcassets in Resources */,
 				5677C59223F28B60005815DA /* 16 16 1.amr in Resources */,
+				56C9240925405A4400839301 /* 1603281517793586.wav in Resources */,
 				56E013E1245814800097E98F /* head2.jpg in Resources */,
 				5677C59323F28B60005815DA /* 16 16 1 wav.wav in Resources */,
 				5691BA9623B34C00008FE64F /* text.mp3 in Resources */,
@@ -611,9 +619,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/FPCustomerService",
+					"$(PROJECT_DIR)/RTMAudioManager",
 				);
 				INFOPLIST_FILE = Test/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -645,9 +654,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/FPCustomerService",
+					"$(PROJECT_DIR)/RTMAudioManager",
 				);
 				INFOPLIST_FILE = Test/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

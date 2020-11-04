@@ -10,19 +10,20 @@
 #import "VoiceConverter.h"
 @implementation RtmVoiceConverterManager
 //amr->wav
-+(NSString*)voiceConvertAmrToWavFromFilePath:(NSData *)voiceData{
++(NSString*)voiceConvertAmrToWavWithData:(NSData *)voiceData{
     
     if (voiceData) {
         //tmp路径  可自行修改
         NSString * tmpDir = NSTemporaryDirectory();
-        NSString * amrTmpDir = [tmpDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_rtm_voice.amr",[NSNumber numberWithLongLong:[[NSDate date] timeIntervalSince1970] * 1000 * 1000]]];
-        NSString * wavTmpDir = [tmpDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_rtm_voice.wav",[NSNumber numberWithLongLong:[[NSDate date] timeIntervalSince1970] * 1000 * 1000]]];
+        NSString * amrTmpDir = [tmpDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.amr",[NSNumber numberWithLongLong:[[NSDate date] timeIntervalSince1970] * 1000 * 1000]]];
+        NSString * wavTmpDir = [tmpDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.wav",[NSNumber numberWithLongLong:[[NSDate date] timeIntervalSince1970] * 1000 * 1000]]];
         
 
         if ([voiceData writeToFile:amrTmpDir atomically:YES]) {
             
             if ([RtmVoiceConverterManager decodeAmrToWavFromPath:amrTmpDir wavSaveToPath:wavTmpDir]) {
                 
+                [[NSFileManager defaultManager] removeItemAtPath:amrTmpDir error:nil];
 //                NSLog(@"wav 路径 === %@",wavTmpDir);
                 return wavTmpDir;
                 
@@ -125,5 +126,7 @@
 //    NSLog(@"NSTimeInterval  %f",audioDurationSeconds);
     return audioDurationSeconds;
 }
+
+
 @end
 

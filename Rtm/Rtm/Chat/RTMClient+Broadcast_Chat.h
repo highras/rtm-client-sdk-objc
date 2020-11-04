@@ -17,12 +17,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @interface RTMClient (Broadcast_Chat)
-/// 获取广播历史消息  对 getBroadCastHistoryMessageWithNum 的封装 mtypes = [30,31,32,40,41,42]
+/// 获取广播历史消息  对 getBroadCastHistoryMessageWithNum 的封装 mtypes = [30,32,40,41,42,50]
 /// @param num int16 条数
 /// @param desc 是否降序排列
 /// @param begin int64 开始时间戳，精确到 毫秒
 /// @param end int64 结束时间戳，精确到 毫秒
-/// @param lastid int64 最后一条消息的id
+/// @param lastid int64 最后一条消息的id 对应RTMGetMessage RTMHistoryMessage 的 cursorId字段
 /// @param timeout 请求超时时间 秒
 /// @param successCallback 成功回调
 /// @param failCallback 失败回调

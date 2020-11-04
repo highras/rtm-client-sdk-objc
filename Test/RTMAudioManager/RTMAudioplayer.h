@@ -7,15 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import <Rtm/Rtm.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RTMAudioplayer : NSObject
 
 +(instancetype)shareInstance;
--(void)playWithData:(NSData*)audioData;//通过RTM SDK getMessage接口获取的binary音频消息
--(void)playWithWavPath:(NSString*)wavAudioPath;
--(void)playWithAmrPath:(NSString*)amrAudioPath;
+-(void)playWithAudioModel:(RTMAudioModel*)audioModel;//audioFilePath is not nil
+-(void)playWithAmrData:(NSData*)amrData;//通过音频url获取的二进制数据
 -(void)stop;
 
 @end

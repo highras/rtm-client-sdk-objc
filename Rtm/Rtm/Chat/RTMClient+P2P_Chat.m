@@ -13,6 +13,9 @@
 #import "RTMAudioTools.h"
 #import <Foundation/Foundation.h>
 #import "RTMMessageModelConvert.h"
+#import "RTMClient+FileToken.h"
+#import "RTMIPv6Adapter.h"
+
 @implementation RTMClient (P2P_Chat)
 -(void)sendP2PMessageChatWithId:(NSNumber * _Nonnull)userId
                         message:(NSString * _Nonnull)message
@@ -89,16 +92,23 @@
 
 
 -(void)sendAudioMessageChatWithId:(NSNumber * _Nonnull)userId
-                    audioFilePath:(NSString * _Nonnull)audioFilePath
-                            attrs:(NSDictionary * )attrs
-                             lang:(NSString * _Nonnull)lang
-                         duration:(long long)duration
+                        audioModel:(RTMAudioModel * _Nonnull)audioModel
+                            attrs:(NSDictionary * _Nullable)attrs
                           timeout:(int)timeout
                           success:(void(^)(RTMSendAnswer* sendAnswer))successCallback
                              fail:(RTMAnswerFailCallBack)failCallback{
     
+    if ([attrs objectForKey:@"rtm"] != nil) {
+        FPNSLog(@"rtm sendAudioMessageChatWithId error. sendAudioMessageChatWithId attrs exist rtm key");
+        return;
+    }
     
     clientConnectStatueVerify
+    
+    NSString * audioFilePath = audioModel.audioFilePath;
+    int duration = audioModel.duration;
+    NSString * lang = audioModel.lang;
+    
     if (duration == 0 || audioFilePath == nil) {
         FPNSLog(@"rtm P2P audioMessage duration or audioFile is nil");
         return ;
@@ -111,140 +121,78 @@
     }
     
     
-    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    [dic setValue:userId forKey:@"to"];
-    [dic setValue:mid forKey:@"mid"];
-    [dic setValue:@(31) forKey:@"mtype"];
-    NSData * resultData = [RTMAudioTools audioDataAddHeader:audioData lang:lang time:duration srate:16000];
-    if (resultData) {
-        [dic setValue:resultData forKey:@"msg"];
-    }else{
-        FPNSLog(@"rtm P2P audioDataAddHeader error");
+    if ([RTMAudioTools isAmrVerify:audioData] == NO) {
+        FPNSLog(@"rtm P2P sendAudioMessageChatWithId no amr type");
         return ;
     }
     
-    
-    NSMutableDictionary * attrsDic = [NSMutableDictionary dictionaryWithDictionary:attrs];
-    if (attrsDic == nil) {
-        attrsDic = [NSMutableDictionary dictionary];
-    }
-    [attrsDic setValue:@(duration) forKey:@"duration"];
-    [attrsDic setValue:lang forKey:@"lang"];
-    NSData * strData = [NSJSONSerialization dataWithJSONObject:attrsDic options:NSJSONWritingPrettyPrinted error:nil];
-    [dic setValue:[[NSString alloc] initWithData:strData encoding:NSUTF8StringEncoding] forKey:@"attrs"];
-    
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendmsg" message:dic twoWay:YES];
-    
-    BOOL result = [mainClient sendQuest:quest
-                                timeout:RTMClientSendQuestTimeout
-                                success:^(NSDictionary * _Nullable data) {
+    [self getP2PFileTokenWithId:userId
+                        timeout:RTMClientFileQuestTimeout
+                        success:^(NSDictionary * _Nullable data) {
         
-        if (successCallback) {
-            RTMSendAnswer* sendAnswer  = [RTMSendAnswer new];
-            sendAnswer.mtime = [[data objectForKey:@"mtime"] longLongValue];
-            sendAnswer.messageId = [[dic objectForKey:@"mid"] longLongValue];
-            successCallback(sendAnswer);
+        if (RTMNullString(data[@"endpoint"]) || RTMNullString(data[@"token"])) {
+            FPNSLog(@"rtm sendFile error. getP2PFileTokenWithId return data is nil");
+            return ;
         }
-    
-    }fail:^(FPNError * _Nullable error) {
+        NSDictionary * resultBody = [self getAudioFileQuestBody:data
+                                                         recvId:userId
+                                                       fileData:audioData
+                                                           lang:lang
+                                                       duration:duration
+                                                          attrs:attrs];
+                                                      
+        [resultBody setValue:userId forKey:@"to"];
+
+        NSString * endPoint = data[@"endpoint"];
+        if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
+            endPoint = [[RTMIPv6Adapter getInstance] handleIpv4Address:endPoint];
+        }
+        FPNNTCPClient * fileClient = [self getFileClient:endPoint];
+        FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendfile" message:resultBody twoWay:YES];
+        BOOL result = [fileClient sendQuest:quest
+                                    timeout:RTMClientSendQuestTimeout
+                                    success:^(NSDictionary * _Nullable data) {
+
+            
+            if (successCallback) {
+
+                RTMSendAnswer* sendAnswer  = [RTMSendAnswer new];
+                sendAnswer.mtime = [[data objectForKey:@"mtime"] longLongValue];
+                sendAnswer.messageId = [[resultBody objectForKey:@"mid"] longLongValue];
+                successCallback(sendAnswer);
+            }
+
+        } fail:^(FPNError * _Nullable error) {
+            _failCallback(error);
+
+        }];
+
+
+        handlerNetworkError
+
         
-          _failCallback(error);
+        
+        
+    } fail:^(FPNError * _Nullable error) {
+
+        _failCallback(error);
 
     }];
-        
-    handlerNetworkError;
-    
-}
--(RTMSendAnswer*)sendAudioMessageChatWithId:(NSNumber * _Nonnull)userId
-                              audioFilePath:(NSString * _Nonnull)audioFilePath
-                                      attrs:(NSDictionary * _Nullable)attrs
-                                       lang:(NSString * _Nonnull)lang
-                                   duration:(long long)duration
-                                    timeout:(int)timeout{
-    RTMSendAnswer * model = [RTMSendAnswer new];
-    clientConnectStatueVerifySync
-    
-    
-    if (duration == 0 || audioFilePath == nil) {
-//        FPNSLog(@"rtm P2P audioMessage duration or audioFile is nil");
-//        return ;
-    }
-    
-    
-    NSData * audioData = [NSData dataWithContentsOfFile:audioFilePath];
-    if (audioData == nil) {
-//        FPNSLog(@"rtm P2P audioMessage get audioData error");
-//        return ;
-    }
-    
-    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    [dic setValue:userId forKey:@"to"];
-    [dic setValue:mid forKey:@"mid"];
-    [dic setValue:@(31) forKey:@"mtype"];
-    NSData * resultData = [RTMAudioTools audioDataAddHeader:audioData lang:lang time:duration srate:16000];
-    if (resultData) {
-        [dic setValue:resultData forKey:@"msg"];
-    }else{
-        FPNSLog(@"rtm P2P audioDataAddHeader error");
-//        return ;
-    }
     
     
     
-    NSMutableDictionary * attrsDic = [NSMutableDictionary dictionaryWithDictionary:attrs];
-    if (attrsDic == nil) {
-        attrsDic = [NSMutableDictionary dictionary];
-    }
-    [attrsDic setValue:@(duration) forKey:@"duration"];
-    [attrsDic setValue:lang forKey:@"lang"];
-    NSData * strData = [NSJSONSerialization dataWithJSONObject:attrsDic options:NSJSONWritingPrettyPrinted error:nil];
-    [dic setValue:[[NSString alloc] initWithData:strData encoding:NSUTF8StringEncoding] forKey:@"attrs"];
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendmsg" message:dic twoWay:YES];
-    
-    FPNNAnswer * answer = [mainClient sendQuest:quest
-                                       timeout:RTMClientSendQuestTimeout];
-    
-    if (answer.error == nil) {
-        model.mtime = [[answer.responseData objectForKey:@"mtime"] longLongValue];
-        model.messageId = [[dic objectForKey:@"mid"] longLongValue];
-    }else{
-        model.error = answer.error;
-    }
-    
-    return model;
-}
-
-
-
-//-(void)sendAudioMessageChatWithId:(NSNumber * _Nonnull)userId
-//                        audioData:(NSData * _Nonnull)audioData
-//                            attrs:(NSDictionary * )attrs
-//                             lang:(NSString * _Nonnull)lang
-//                         duration:(long long)duration
-//                          timeout:(int)timeout
-//                          success:(void(^)(int64_t mtime))successCallback
-//                             fail:(RTMAnswerFailCallBack)failCallback{
-//
-//
-//    clientConnectStatueVerify
-//    if (duration == 0 || audioData == nil) {
-//        FPNSLog(@"rtm P2P audioMessage duration or audioData is nil");
-//        return ;
-//    }
-//
-//
 //    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
 //    [dic setValue:userId forKey:@"to"];
 //    [dic setValue:mid forKey:@"mid"];
 //    [dic setValue:@(31) forKey:@"mtype"];
-//    NSData * resultData = [RTMAudioTools audioDataAddHeader:audioData lang:lang time:duration srate:16000];
-//    if (resultData) {
-//        [dic setValue:resultData forKey:@"msg"];
-//    }else{
-//        FPNSLog(@"rtm P2P audioDataAddHeader error");
-//        return ;
-//    }
+////    NSData * resultData = [RTMAudioTools audioDataAddHeader:audioData lang:lang time:duration srate:16000];
+////    if (resultData) {
+//        [dic setValue:audioData forKey:@"msg"];
+////    }else{
+////        FPNSLog(@"rtm P2P audioDataAddHeader error");
+////        return ;
+////    }
 //
 //
 //    NSMutableDictionary * attrsDic = [NSMutableDictionary dictionaryWithDictionary:attrs];
@@ -263,7 +211,10 @@
 //                                success:^(NSDictionary * _Nullable data) {
 //
 //        if (successCallback) {
-//            successCallback([[data objectForKey:@"mtime"] longLongValue]);
+//            RTMSendAnswer* sendAnswer  = [RTMSendAnswer new];
+//            sendAnswer.mtime = [[data objectForKey:@"mtime"] longLongValue];
+//            sendAnswer.messageId = [[dic objectForKey:@"mid"] longLongValue];
+//            successCallback(sendAnswer);
 //        }
 //
 //    }fail:^(FPNError * _Nullable error) {
@@ -271,25 +222,87 @@
 //          _failCallback(error);
 //
 //    }];
-//
+        
 //    handlerNetworkError;
-//
-//}
-//-(RTMAnswer*)sendAudioMessageChatWithId:(NSNumber * _Nonnull)userId
-//                              audioData:(NSData * _Nonnull)audioData
-//                                  attrs:(NSDictionary * )attrs
-//                                   lang:(NSString * _Nonnull)lang
-//                               duration:(long long)duration
-//                                timeout:(int)timeout{
-//    
-//    
-//    clientStatueVerify
-//    if (duration == 0 || audioData == nil) {
-//        FPNSLog(@"rtm P2P audioMessage duration or audioData is nil");
-//        return nil;
-//    }
-//    
-//    
+    
+}
+-(RTMSendAnswer*)sendAudioMessageChatWithId:(NSNumber * _Nonnull)userId
+                                 audioModel:(RTMAudioModel * _Nonnull)audioModel
+                                      attrs:(NSDictionary * _Nullable)attrs
+                                    timeout:(int)timeout{
+    
+    if ([attrs objectForKey:@"rtm"] != nil) {
+        FPNSLog(@"rtm sendAudioMessageChatWithId error. sendAudioMessageChatWithId attrs exist rtm key");
+        return nil;
+    }
+    
+    RTMSendAnswer * model = [RTMSendAnswer new];
+    clientConnectStatueVerifySync
+    
+    NSString * audioFilePath = audioModel.audioFilePath;
+    int duration = audioModel.duration;
+    NSString * lang = audioModel.lang;
+    
+    if (duration == 0 || audioFilePath == nil) {
+        FPNSLog(@"rtm P2P audioMessage duration or audioFile is nil");
+        return nil;
+    }
+    
+    NSData * audioData = [NSData dataWithContentsOfFile:audioFilePath];
+    if (audioData == nil) {
+        FPNSLog(@"rtm P2P audioMessage get audioData error");
+        return nil;
+    }
+    
+    if ([RTMAudioTools isAmrVerify:audioData] == NO) {
+        FPNSLog(@"rtm P2P sendAudioMessageChatWithId no amr type");
+        return nil;
+    }
+    
+    FPNNAnswer * answer = [self getP2PFileTokenWithId:userId timeout:RTMClientFileQuestTimeout];
+    if (answer.error == nil) {
+        
+        NSDictionary * data = answer.responseData;
+        if (RTMNullString(data[@"endpoint"]) || RTMNullString(data[@"token"])) {
+            FPNSLog(@"rtm sendFile error. getP2PFileTokenWithId return data is nil");
+            return nil;
+        }
+        NSDictionary * resultBody = [self getAudioFileQuestBody:data
+                                                         recvId:userId
+                                                       fileData:audioData
+                                                           lang:lang
+                                                       duration:duration
+                                                          attrs:attrs];
+        [resultBody setValue:userId forKey:@"to"];
+        
+        NSString * endPoint = data[@"endpoint"];
+        if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
+            endPoint = [[RTMIPv6Adapter getInstance] handleIpv4Address:endPoint];
+        }
+        FPNNTCPClient * fileClient = [self getFileClient:endPoint];
+        FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendfile" message:resultBody twoWay:YES];
+        FPNNAnswer * answer = [fileClient sendQuest:quest timeout:RTMClientSendQuestTimeout];
+        if (answer.error == nil) {
+            model.mtime = [[answer.responseData objectForKey:@"mtime"] longLongValue];
+            model.messageId = [[resultBody objectForKey:@"mid"] longLongValue];
+        }else{
+            model.error = answer.error;
+        }
+        
+        
+    }else{
+        model.error = answer.error;
+        
+    }
+
+           
+    
+    return model;
+                               
+
+                               
+    
+    
 //    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
 //    [dic setValue:userId forKey:@"to"];
 //    [dic setValue:mid forKey:@"mid"];
@@ -299,10 +312,11 @@
 //        [dic setValue:resultData forKey:@"msg"];
 //    }else{
 //        FPNSLog(@"rtm P2P audioDataAddHeader error");
-//        return nil;
+////        return ;
 //    }
-//    
-//    
+//
+//
+//
 //    NSMutableDictionary * attrsDic = [NSMutableDictionary dictionaryWithDictionary:attrs];
 //    if (attrsDic == nil) {
 //        attrsDic = [NSMutableDictionary dictionary];
@@ -311,13 +325,25 @@
 //    [attrsDic setValue:lang forKey:@"lang"];
 //    NSData * strData = [NSJSONSerialization dataWithJSONObject:attrsDic options:NSJSONWritingPrettyPrinted error:nil];
 //    [dic setValue:[[NSString alloc] initWithData:strData encoding:NSUTF8StringEncoding] forKey:@"attrs"];
-//    
-//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendmsg" message:dic twoWay:YES];
-//    
-//    return  handlerResult(quest,timeout);
-//    
-//}
 //
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendmsg" message:dic twoWay:YES];
+//
+//    FPNNAnswer * answer = [mainClient sendQuest:quest
+//                                       timeout:RTMClientSendQuestTimeout];
+//
+//    if (answer.error == nil) {
+//        model.mtime = [[answer.responseData objectForKey:@"mtime"] longLongValue];
+//        model.messageId = [[dic objectForKey:@"mid"] longLongValue];
+//    }else{
+//        model.error = answer.error;
+//    }
+//
+//    return model;
+}
+
+
+
+
 -(void)sendCmdMessageChatWithId:(NSNumber * _Nonnull)userId
                         message:(NSString * _Nonnull)message
                           attrs:(NSString * _Nonnull)attrs
@@ -412,7 +438,7 @@
     [dic setValue:begin forKey:@"begin"];
     [dic setValue:end forKey:@"end"];
     [dic setValue:lastid forKey:@"lastid"];
-    [dic setValue:@[@(30),@(31),@(32),@(40),@(41),@(42)] forKey:@"mtypes"];
+    [dic setValue:@[@(30),@(32),@(40),@(41),@(42),@(50)] forKey:@"mtypes"];
     
     
     
@@ -502,7 +528,7 @@
     [dic setValue:begin forKey:@"begin"];
     [dic setValue:end forKey:@"end"];
     [dic setValue:lastid forKey:@"lastid"];
-    [dic setValue:@[@(30),@(31),@(32),@(40),@(41),@(42)] forKey:@"mtypes"];
+    [dic setValue:@[@(30),@(32),@(40),@(41),@(42),@(50)] forKey:@"mtypes"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getp2pmsg" message:dic twoWay:YES];
     FPNNAnswer * answer = [mainClient sendQuest:quest

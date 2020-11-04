@@ -11,16 +11,10 @@
 #import "RTMRecordManager.h"
 #import "RTMAudioplayer.h"
 #import <Rtm/Rtm.h>
-#import <Rtm/Rtm.h>
 #import "NSObject+Description.h"
 #define NSAllLog(FORMAT, ...) fprintf(stderr, "%s:%zd\t%s\n", [[[NSString stringWithUTF8String: __FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat: FORMAT, ## __VA_ARGS__] UTF8String]);
 
 @interface MainViewController ()<UITableViewDelegate,UITableViewDataSource,RTMProtocol>{
-    
-    
-    
-    int a,b,c,d,e,dd,ee;
-    
     
 }
 @property(nonatomic,strong)UITableView * listView;
@@ -36,9 +30,9 @@
 @property(nonatomic,strong)RTMClient * client8;
 
 @property(nonatomic,strong)RTMRecordManager * recordManager;
-@property(nonatomic,strong)NSString * recordAmrAudioPath;
-@property(nonatomic,assign)double  recordAmrAudioTime;
-@property(nonatomic,strong)NSString * recordWavAudioPath;
+//@property(nonatomic,strong)NSString * recordHeaderAudioPath;
+//@property(nonatomic,assign)double  recordAmrAudioTime;
+//@property(nonatomic,strong)NSString * recordWavAudioPath;
 
 
 @end
@@ -62,89 +56,116 @@
 //房间踢出
 -(void)rtmRoomKickoutData:(RTMClient *)client data:(NSDictionary * _Nullable)data
 {
-    
+    NSLog(@"rtmRoomKickoutData %@",data);
 }
 //normal Binary
 -(void)rtmPushP2PBinary:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
+    NSLog(@"rtmPushP2PBinary %@",message.rtm_autoDescription);
 }
 -(void)rtmPushGroupBinary:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
+    NSLog(@"rtmPushGroupBinary %@",message.rtm_autoDescription);
 }
 -(void)rtmPushRoomBinary:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
+    NSLog(@"rtmPushRoomBinary %@",message.rtm_autoDescription);
 }
 -(void)rtmPushBroadcastBinary:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
+    NSLog(@"rtmPushBroadcastBinary %@",message.rtm_autoDescription);
 }
 //normal message
 -(void)rtmPushP2PMessage:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
+    NSLog(@"rtmPushP2PMessage %@",message.rtm_autoDescription);
 }
 -(void)rtmPushGroupMessage:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
+    NSLog(@"rtmPushGroupMessage %@",message.rtm_autoDescription);
 }
 -(void)rtmPushRoomMessage:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
+    NSLog(@"rtmPushRoomMessage %@",message.rtm_autoDescription);
 }
 -(void)rtmPushBroadcastMessage:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
+    NSLog(@"rtmPushBroadcastMessage %@",message.rtm_autoDescription);
 }
 
 //file
 -(void)rtmPushP2PFile:(RTMClient *)client message:(RTMMessage * _Nullable)message{
+    NSLog(@"rtmPushP2PFile = %@  %@",message.rtm_autoDescription,message.fileInfo.rtm_autoDescription);
+    
+    if (message.fileInfo.isRtmAudio) {
+        NSLog(@"rtm audio file");
+        NSData * audioData = [NSData dataWithContentsOfURL:[NSURL URLWithString:message.fileInfo.url]];
+        [[RTMAudioplayer shareInstance] playWithAmrData:audioData];
+    }else{
+        NSLog(@"rtm normal file");
+    }
     
 }
 -(void)rtmPushGroupFile:(RTMClient *)client message:(RTMMessage * _Nullable)message{
+    NSLog(@"rtmPushGroupFile = %@  %@",message.rtm_autoDescription,message.fileInfo.rtm_autoDescription);
     
+    if (message.fileInfo.isRtmAudio) {
+        NSLog(@"rtm audio file");
+        NSData * audioData = [NSData dataWithContentsOfURL:[NSURL URLWithString:message.fileInfo.url]];
+        [[RTMAudioplayer shareInstance] playWithAmrData:audioData];
+    }else{
+        NSLog(@"rtm normal file");
+    }
 }
 -(void)rtmPushRoomFile:(RTMClient *)client message:(RTMMessage * _Nullable)message{
+    NSLog(@"rtmPushRoomFile = %@  %@",message.rtm_autoDescription,message.fileInfo.rtm_autoDescription);
     
+    if (message.fileInfo.isRtmAudio) {
+        NSLog(@"rtm audio file");
+        NSData * audioData = [NSData dataWithContentsOfURL:[NSURL URLWithString:message.fileInfo.url]];
+        [[RTMAudioplayer shareInstance] playWithAmrData:audioData];
+    }else{
+        NSLog(@"rtm normal file");
+    }
 }
 -(void)rtmPushBroadcastFile:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
+    NSLog(@"rtmPushBroadcastFile = %@  %@",message.rtm_autoDescription,message.fileInfo.rtm_autoDescription);
 }
 
 //chat message
 -(void)rtmPushP2PChatMessage:(RTMClient *)client message:(RTMMessage *_Nullable)message{
-    NSLog(@"rtmPushP2PChatMessage  %@ ",message);
+    NSLog(@"rtmPushP2PChatMessage = %@ %@  %@",message.rtm_autoDescription,message.translatedInfo.rtm_autoDescription,message.fileInfo.rtm_autoDescription);
+    
 }
 -(void)rtmPushGroupChatMessage:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
+    NSLog(@"rtmPushGroupChatMessage  %@ %@  %@",message.rtm_autoDescription,message.translatedInfo.rtm_autoDescription,message.fileInfo.rtm_autoDescription);
 }
 -(void)rtmPushRoomChatMessage:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
+    NSLog(@"rtmPushRoomChatMessage  %@ %@  %@",message.rtm_autoDescription,message.translatedInfo.rtm_autoDescription,message.fileInfo.rtm_autoDescription);
 }
 -(void)rtmPushBroadcastChatMessage:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
+    NSLog(@"rtmPushBroadcastChatMessagertmPushBroadcastChatMessage  %@  %@  %@   %@",message.rtm_autoDescription,message.translatedInfo.rtm_autoDescription,message.translatedInfo.sourceText,message.fileInfo.rtm_autoDescription);
 }
 
-//chat audio
--(void)rtmPushP2PChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
-}
--(void)rtmPushGroupChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
-}
--(void)rtmPushRoomChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
-}
--(void)rtmPushBroadcastChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
-}
+////chat audio
+//-(void)rtmPushP2PChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message{
+//
+//    NSLog(@"rtmPushP2PChatAudio = %@  %@",message.rtm_autoDescription,message.fileInfo.rtm_autoDescription);
+//}
+//-(void)rtmPushGroupChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message{
+//    NSLog(@"rtmPushGroupChatAudio = %@  %@",message.rtm_autoDescription,message.fileInfo.rtm_autoDescription);
+//}
+//-(void)rtmPushRoomChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message{
+//    NSLog(@"rtmPushRoomChatAudio = %@  %@",message.rtm_autoDescription,message.fileInfo.rtm_autoDescription);
+//}
+//-(void)rtmPushBroadcastChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message{
+//    NSLog(@"rtmPushBroadcastChatAudio = %@  %@",message.rtm_autoDescription,message.fileInfo.rtm_autoDescription);
+//}
 
 //chat cmd
 -(void)rtmPushP2PChatCmd:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
+    NSLog(@"rtmPushP2PChatCmd = %@",message.rtm_autoDescription);
 }
 -(void)rtmPushGroupChatCmd:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
+    NSLog(@"rtmPushGroupChatCmd = %@",message.rtm_autoDescription);
 }
 -(void)rtmPushRoomChatCmd:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
+    NSLog(@"rtmPushRoomChatCmdrtmPushRoomChatCmd  %@ ",message.rtm_autoDescription);
 }
 -(void)rtmPushBroadcastChatCmd:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-    
+    NSLog(@"rtmPushBroadcastChatCmd = %@",message.rtm_autoDescription);
 }
 
 //重连
@@ -154,7 +175,7 @@
 -(BOOL)rtmReloginWillStart:(RTMClient *)client reloginCount:(int)reloginCount{
 
     NSLog(@"rtmReloginWillStart  %d",reloginCount);
-    return YES;
+    return NO;
 }
 -(void)rtmConnectClose:(RTMClient *)client{
     NSLog(@"rtmConnectClose  %lld",client.userId);
@@ -177,8 +198,7 @@
         
         if (indexPath.row == 0) {//@[@"验证登录"]
         
-//            [self test];
-            self.client = [RTMClient clientWithEndpoint:@"161.189.171.91:13325"
+            self.client = [RTMClient clientWithEndpoint:@""
                                               projectId:90000014
                                                  userId:666
                                                delegate:self
@@ -186,22 +206,49 @@
                                             autoRelogin:YES];
             
             if (self.client) {
-                [self.client loginWithToken:@"285684F3B18F10166A8CF13BCAD31E34"
+                [self.client loginWithToken:@""
                                    language:@"en"
                                   attribute:@{@"aaa":@"bbb"}
                                     timeout:30
                                     success:^{
                     
-                    NSLog(@"login success");
+                    NSLog(@"66666login success  %@",[NSThread currentThread]);
 
-                            
+                    
                     
                 } connectFail:^(FPNError * _Nullable error) {
                     
-                    NSLog(@"login error %@",error);
+                    NSLog(@"login error %@",[NSThread currentThread]);
                 }];
+                
             }
         
+            
+            self.client2 = [RTMClient clientWithEndpoint:@""
+                                              projectId:90000014
+                                                 userId:777
+                                               delegate:self
+                                                 config:nil
+                                            autoRelogin:YES];
+            
+            if (self.client2) {
+                [self.client2 loginWithToken:@""
+                                   language:@"en"
+                                  attribute:@{@"aaa":@"bbb"}
+                                    timeout:30
+                                    success:^{
+                    
+                    NSLog(@"7777login success  %@",[NSThread currentThread]);
+
+                    
+                    
+                } connectFail:^(FPNError * _Nullable error) {
+                    
+                    NSLog(@"login error %@",[NSThread currentThread]);
+                }];
+                
+            }
+            
         }
         
         
@@ -213,21 +260,22 @@
         
         if (indexPath.row == 0) {//发送P2P消息
             
+            
             [self.client sendP2PMessageToUserId:@(777)
                                     messageType:@(80)
-                                        message:@"message"
+                                        message:@"aaaaaaaaa"
                                           attrs:@"attrs"
                                         timeout:10
                                         success:^(RTMSendAnswer * sendAnswer) {
 
-                NSLog(@"sendP2PMessageToUserId %lld %lld",sendAnswer.mtime,sendAnswer.messageId);
+                NSLog(@"sendP2PMessageToUserId %@",sendAnswer.rtm_autoDescription);
 
             }fail:^(FPNError * _Nullable error) {
 
                 NSLog(@"sendP2PMessageToUserId %@",error);
 
             }];
-//
+
             
             //同步接口
 //            RTMSendAnswer * answer = [self.client sendP2PMessageToUserId:@(777)
@@ -248,16 +296,18 @@
             [self.client getP2PHistoryMessageWithUserId:@(777)
                                                  desc:YES
                                                   num:@(20)
-                                                begin:nil
-                                                  end:nil
+                                                begin:0
+                                                  end:0
                                                lastid:nil
-                                               mtypes:@[@(80),@(40),@(31),@(30)]
+                                               mtypes:@[@(80),@(40),@(31),@(30),@(41),@(42),@(32)]
                                               timeout:10
                                               success:^(RTMHistory * _Nullable history) {
                 
-                NSLog(@"getP2PHistoryMessageWithUserId %@",history.messageArray);
-                NSLog(@"getP2PHistoryMessageWithUserId %lld %lld",history.messageArray.firstObject.fromUid,history.messageArray.firstObject.toId);
-//                NSLog(@"getP2PHistoryMessageWithUserId %@",history.messageArray.firstObject.audioInfo.rtm_autoDescription);
+                for (int i = 0; i<history.messageArray.count; i++) {
+                    
+                    NSLog(@"getP2PHistoryMessageWithUserId %@ %@",[history.messageArray objectAtIndex:i].rtm_autoDescription,[history.messageArray objectAtIndex:i].fileInfo.rtm_autoDescription);
+                }
+                
                 
             } fail:^(FPNError * _Nullable error) {
                 
@@ -268,7 +318,7 @@
 
         }else if (indexPath.row == 2){//删除消息 p2p
             
-                    [self.client deleteMessageWithMessageId:[NSNumber numberWithLongLong:1597718247286284]
+                    [self.client deleteMessageWithMessageId:[NSNumber numberWithLongLong:105105514351296516]
                                                  fromUserId:@(666)
                                                    toUserId:@(777)
                                                     timeout:10
@@ -284,17 +334,14 @@
             
 
         }else if (indexPath.row == 3){//获取消息 p2p
-            [self.client getP2pMessageWithId:[NSNumber numberWithLongLong:1597733183879984]
+            [self.client getP2pMessageWithId:[NSNumber numberWithLongLong:105105514351296516]
                                   fromUserId:@(666)
                                     toUserId:@(777)
                                      timeout:10
                                      success:^(RTMGetMessage * _Nullable message) {
-               
-                NSLog(@"%@",message.rtm_autoDescription);
-                
-                if (message.audioMessage != nil) {//语音消息
-                    [[RTMAudioplayer shareInstance] playWithData:message.audioMessage];
-                }
+               //257104CCDB356CF66EEA9379EB474EF2
+                NSLog(@"getP2pMessageWithId -=-=  %@  \n %@",message.rtm_autoDescription,message.fileInfo.rtm_autoDescription);
+
                 
             } fail:^(FPNError * _Nullable error) {
                 
@@ -302,24 +349,6 @@
                 
             }];
 
-        }else if (indexPath.row == 4){//语音识别 p2p
-            
-            [self.client stranscribeP2pWithId:@(1597733183879984)
-                                   fromUserId:@(666)
-                                     toUserId:@(777)
-                              profanityFilter:NO
-                                      timeout:10
-                                      success:^(RTMSpeechRecognitionAnswer * _Nullable message) {
-                
-                 NSLog(@"%@",message.rtm_autoDescription);
-                
-            } fail:^(FPNError * _Nullable error) {
-                
-                NSLog(@"%@",error);
-                
-            }];
-
-               
         }
         
         //                if ([[data objectForKey:@"mtype"] intValue] == 31) {
@@ -345,6 +374,8 @@
             
             if (indexPath.row == 0) {//发送Group消息
                     
+                NSData *imageData = UIImageJPEGRepresentation([UIImage imageNamed:@"timg"], 0);
+                
                 [self.client sendGroupMessageWithId:[NSNumber numberWithLongLong:666]
                                         messageType:[NSNumber numberWithLongLong:80]
                                             message:@"group message123"
@@ -352,7 +383,7 @@
                                             timeout:10
                                             success:^(RTMSendAnswer * sendAnswer) {
                     
-                    NSLog(@"%lld %lld",sendAnswer.mtime,sendAnswer.messageId);
+                    NSLog(@"sendGroupMessageWithId %@",sendAnswer.rtm_autoDescription);
                     
                 } fail:^(FPNError * _Nullable error) {
                     
@@ -369,11 +400,14 @@
                                                          begin:nil
                                                            end:nil
                                                         lastid:nil
-                                                        mtypes:@[@(80),@(40),@(31),@(30)]
+                                                        mtypes:@[@(80),@(40),@(31),@(30),@(41),@(42),@(32),@(33)]
                                                        timeout:10
                                                        success:^(RTMHistory * _Nullable history) {
                                                
-                    NSLog(@"%lld",history.messageArray.firstObject.fromUid);
+                    for (int i = 0; i<history.messageArray.count; i++) {
+                        
+                        NSLog(@"getGroupHistoryMessageWithGroupId %@ %@",[history.messageArray objectAtIndex:i].rtm_autoDescription,[history.messageArray objectAtIndex:i].fileInfo.rtm_autoDescription);
+                    }
                     
                    
                 } fail:^(FPNError * _Nullable error) {
@@ -385,7 +419,7 @@
     
             }else if (indexPath.row == 2){//删除group消息
             
-                [self.client deleteGroupMessageWithId:[NSNumber numberWithLongLong:1597735267814886]
+                [self.client deleteGroupMessageWithId:[NSNumber numberWithLongLong:105139345092182021]
                                               groupId:[NSNumber numberWithLongLong:666]
                                            fromUserId:@(666)
                                               timeout:10
@@ -401,16 +435,14 @@
                 
             }else if (indexPath.row == 3){//获取消息 group
                         
-                [self.client getGroupMessageWithId:[NSNumber numberWithLongLong:1597735470385533]
+                [self.client getGroupMessageWithId:[NSNumber numberWithLongLong:105139345092182021]
                                            groupId:[NSNumber numberWithLongLong:666]
                                         fromUserId:@(666)
                                            timeout:10
                                            success:^(RTMGetMessage * _Nullable message) {
                     
-                    NSLog(@"%@",message.rtm_autoDescription);
-                    if (message.audioMessage != nil) {//语音消息
-                        [[RTMAudioplayer shareInstance] playWithData:message.audioMessage];
-                    }
+                    NSLog(@"getGroupMessageWithId %@ %@",message.rtm_autoDescription,message.fileInfo.rtm_autoDescription);
+                  
                     
                 } fail:^(FPNError * _Nullable error) {
                     
@@ -421,7 +453,7 @@
             }else if (indexPath.row == 4){//添加Group成员，每次最多添加100人
                 
                 [self.client addGroupMembersWithId:@(666)
-                                         membersId:@[@(888)]
+                                         membersId:@[@(777)]
                                            timeout:10
                                            success:^{
                     
@@ -436,7 +468,7 @@
             }else if (indexPath.row == 5){//删除Group成员，每次最多删除100人
             
                 [self.client deleteGroupMembersWithId:@(666)
-                                            membersId:@[[NSNumber numberWithLongLong:888]]
+                                            membersId:@[[NSNumber numberWithLongLong:777]]
                                               timeout:10
                                               success:^{
                     
@@ -481,8 +513,8 @@
             }else if (indexPath.row == 8){//设置群组的公开信息或者私有信息，会检查用户是否在组内
             
                         [self.client setGroupInfoWithId:@(666)
-                                               openInfo:@"open info123"
-                                            privateInfo:@"private info123"
+                                               openInfo:@"open info123aaa"
+                                            privateInfo:@"private info123aaa"
                                                 timeout:10
                                                 success:^{
                             
@@ -500,7 +532,7 @@
                                                 timeout:10
                                                 success:^(RTMInfoAnswer * _Nullable info) {
                             
-                            NSLog(@"%@  %@",info.openInfo,info.privateInfo);
+                            NSLog(@"%@",info.rtm_autoDescription);
                             
                         } fail:^(FPNError * _Nullable error) {
                             
@@ -514,27 +546,27 @@
                                                     timeout:10
                                                     success:^(RTMInfoAnswer * _Nullable info) {
                             
-                            NSLog(@"%@",info.openInfo);
+                            NSLog(@"%@",info.rtm_autoDescription);
+                            
+                        } fail:^(FPNError * _Nullable error) {
+                            
+                            NSLog(@"%@",error);
+                            
+                        }];
+                    
+            }else if (indexPath.row == 10){//获取群组的公开信息
+                
+                        [self.client getGroupOpenInfoWithId:[NSNumber numberWithLongLong:666]
+                                                    timeout:10
+                                                    success:^(RTMInfoAnswer * _Nullable info) {
+                            
+                            NSLog(@"%@",info.rtm_autoDescription);
                             
                         } fail:^(FPNError * _Nullable error) {
                             
                         }];
                              
                     
-            }else if (indexPath.row == 11){//语音识别 group
-                
-                [self.client stranscribeGroupWithId:@(123)
-                                         fromUserId:@(666)
-                                          toGroupId:@(777)
-                                    profanityFilter:NO
-                                            timeout:10
-                                            success:^(RTMSpeechRecognitionAnswer * _Nullable message) {
-                    
-                } fail:^(FPNError * _Nullable error) {
-                    
-                }];
-
-                   
             }
             
             
@@ -547,6 +579,7 @@
                 
                 if (indexPath.row == 0) {//发送房间消息
         
+                    
                     [self.client sendRoomMessageWithId:[NSNumber numberWithLongLong:666]
                                            messageType:[NSNumber numberWithLongLong:80]
                                                message:@"room message"
@@ -571,11 +604,14 @@
                                                                begin:nil
                                                                  end:nil
                                                               lastid:nil
-                                                              mtypes:@[@(80),@(40),@(31),@(30)]
+                                                              mtypes:@[@(80),@(40),@(31),@(30),@(41),@(42),@(32),@(33)]
                                                              timeout:10
                                                              success:^(RTMHistory * _Nullable history) {
                                 
-                                NSLog(@"----%lld",history.messageArray.firstObject.fromUid);
+                                for (int i = 0; i<history.messageArray.count; i++) {
+                                    
+                                    NSLog(@"getRoomHistoryMessageWithId %@ %@",[history.messageArray objectAtIndex:i].rtm_autoDescription,[history.messageArray objectAtIndex:i].fileInfo.rtm_autoDescription);
+                                }
                                 
                             } fail:^(FPNError * _Nullable error) {
                                 
@@ -586,7 +622,7 @@
                         
                 }else if (indexPath.row == 2){//删除消息 room
                 
-                            [self.client deleteRoomMessageWithId:[NSNumber numberWithLongLong:1597737469848698]
+                            [self.client deleteRoomMessageWithId:[NSNumber numberWithLongLong:1603679446926741]
                                                           roomId:[NSNumber numberWithLongLong:666]
                                                       fromUserId:@(666)
                                                          timeout:10
@@ -603,16 +639,14 @@
                        
                 }else if (indexPath.row == 3){//获取消息 room
                 
-                            [self.client getRoomMessageWithId:[NSNumber numberWithLongLong:1597737845804116]
+                            [self.client getRoomMessageWithId:[NSNumber numberWithLongLong:105104387852009474]
                                                        roomId:[NSNumber numberWithLongLong:666]
                                                    fromUserId:@(666)
                                                       timeout:10
                                                       success:^(RTMGetMessage * _Nullable message) {
                                 
-                                NSLog(@"%@",message.rtm_autoDescription);
-                                if (message.audioMessage != nil) {//语音消息
-                                    [[RTMAudioplayer shareInstance] playWithData:message.audioMessage];
-                                }
+                                NSLog(@"%@  %@",message.rtm_autoDescription,message.fileInfo.rtm_autoDescription);
+                                
                                 
                             } fail:^(FPNError * _Nullable error) {
                                 NSLog(@"%@",error);
@@ -632,6 +666,18 @@
                                 NSLog(@"%@",error);
                                 
                             }];
+                    
+                    [self.client2 enterRoomWithId:[NSNumber numberWithLongLong:666]
+                                         timeout:10
+                                         success:^{
+                        
+                        NSLog(@"enterRoomWithId success");
+                        
+                    } fail:^(FPNError * _Nullable error) {
+                        
+                        NSLog(@"%@",error);
+                        
+                    }];
                     
                 }else if (indexPath.row == 5){//离开某个房间或者频道（不会持久化）
                     
@@ -663,8 +709,8 @@
                 }else if (indexPath.row == 7){//设置房间的公开信息或者私有信息，会检查用户是否在房间
                     
                             [self.client setRoomInfoWithId:[NSNumber numberWithLongLong:666]
-                                                  openInfo:@"open"
-                                               privateInfo:@"pri"
+                                                  openInfo:@"open123"
+                                               privateInfo:@"pri123"
                                                    timeout:10
                                                    success:^{
                                 
@@ -681,7 +727,7 @@
                                                    timeout:10
                                                    success:^(RTMInfoAnswer * _Nullable info) {
                                 
-                                NSLog(@"%@",info);
+                                NSLog(@"%@",info.rtm_autoDescription);
                                 
                             } fail:^(FPNError * _Nullable error) {
                                 
@@ -694,27 +740,13 @@
                                                        timeout:10
                                                        success:^(RTMInfoAnswer * _Nullable info) {
                                 
-                                NSLog(@"%@",info);
+                                NSLog(@"%@  ",info.rtm_autoDescription);
                                 
                             } fail:^(FPNError * _Nullable error) {
                                 
                                 NSLog(@"%@",error);
                                 
                             }];
-                       
-                }else if (indexPath.row == 10){//语音识别 room
-                    
-                    [self.client stranscribeRoomWithId:@(123)
-                                            fromUserId:@(666)
-                                              toRoomId:@(777)
-                                       profanityFilter:NO
-                                               timeout:10
-                                               success:^(RTMSpeechRecognitionAnswer * _Nullable message) {
-                        
-                    } fail:^(FPNError * _Nullable error) {
-                        
-                    }];
-
                        
                 }
                 
@@ -732,7 +764,10 @@
                                                            timeout:10
                                                            success:^(RTMHistory * _Nullable history) {
                                                            
-                        NSLog(@"%@",history.messageArray);
+                        for (int i = 0; i<history.messageArray.count; i++) {
+                            
+                            NSLog(@"getBroadCastHistoryMessageWithNum %@  %@",[history.messageArray objectAtIndex:i].rtm_autoDescription,[history.messageArray objectAtIndex:i].translatedInfo.rtm_autoDescription);
+                        }
                         
                     } fail:^(FPNError * _Nullable error) {
                         
@@ -740,20 +775,8 @@
                         
                     }];
         
-        
-                }else if (indexPath.row == 1){//语音识别 广播
                     
-                    [self.client stranscribeBroadcastWithId:@(123)
-                                                 fromUserId:@(666)
-                                            profanityFilter:NO
-                                                    timeout:10
-                                                    success:^(RTMSpeechRecognitionAnswer * _Nullable message) {
-                        
-                    } fail:^(FPNError * _Nullable error) {
-                        
-                    }];
-
-                       
+        
                 }
             
             
@@ -768,10 +791,12 @@
                                               fileName:@"imgName"
                                             fileSuffix:@"jpeg"
                                               fileType:RTMImage
+                                                 attrs:@{@"userKey":@"userValue"}
+                                            audioModel:nil
                                                timeout:60
                                                success:^(RTMSendAnswer * sendAnswer) {
                             
-                            NSLog(@"File%lld",sendAnswer.mtime);
+                            NSLog(@"File%@",sendAnswer.rtm_autoDescription);
                             
                         } fail:^(FPNError * _Nullable error) {
                             
@@ -788,10 +813,12 @@
                                                  fileName:@"mp3Name"
                                                fileSuffix:@"mp3"
                                                  fileType:RTMVoice
+                                                   attrs:@{@"user key":@"user Value"}
+                                              audioModel:nil
                                                   timeout:60
                                                  success:^(RTMSendAnswer * sendAnswer) {
                             
-                            NSLog(@"File%lld",sendAnswer.mtime);
+                            NSLog(@"File%@",sendAnswer.rtm_autoDescription);
                             
                         } fail:^(FPNError * _Nullable error) {
                             
@@ -808,10 +835,12 @@
                                                  fileName:@"mp4Test"
                                                fileSuffix:@"mp4"
                                                  fileType:RTMVideo
-                                                  timeout:60
+                                                  attrs:@{@"user key":@"user Value"}
+                                                audioModel:nil
+                                                    timeout:60
                                                 success:^(RTMSendAnswer * sendAnswer) {
                             
-                            NSLog(@"File%lld",sendAnswer.mtime);
+                            NSLog(@"File%@",sendAnswer.rtm_autoDescription);
                             
                         } fail:^(FPNError * _Nullable error) {
                             
@@ -869,7 +898,7 @@
                                 
                             
                     }else if (indexPath.row == 3){//添加黑名单
-                        [self.client addBlacklistWithUserIds:@[[NSNumber numberWithLongLong:100]]
+                        [self.client addBlacklistWithUserIds:@[[NSNumber numberWithLongLong:777]]
                                                      timeout:10
                                                      success:^{
                             
@@ -884,7 +913,7 @@
                     
                             
                     }else if (indexPath.row == 4){//解除黑名单
-                        [self.client deleteBlacklistWithUserIds:@[[NSNumber numberWithLongLong:100]]
+                        [self.client deleteBlacklistWithUserIds:@[[NSNumber numberWithLongLong:777]]
                                                      timeout:10
                                                         success:^{
                             
@@ -950,7 +979,7 @@
                           
                     }else if (indexPath.row == 2){//添加key_value形式的变量（例如设置客户端信息，会保存在当前链接中，客户端可以获取到）
                     
-                        [self.client addAttrsWithAttrs:@{@"key1":@"value1"}
+                        [self.client addAttrsWithAttrs:@{@"key2":@"value2"}
                                                timeout:10
                                                success:^{
                             
@@ -1027,7 +1056,7 @@
                          
                     }else if (indexPath.row == 7){//获取在线用户列表，限制每次最多获取200个
                                 
-                        [self.client getOnlineUsers:@[[NSNumber numberWithLongLong:666]]
+                        [self.client getOnlineUsers:@[@(666),@(777)]
                                             timeout:10
                                             success:^(NSArray * _Nullable uidArray) {
                             
@@ -1040,8 +1069,8 @@
                         }];
                         
                     }else if (indexPath.row == 8){//设置用户自己的公开信息或者私有信息
-                            [self.client setUserInfoWithOpenInfo:@"open"
-                                                      privteinfo:@"pri"
+                            [self.client setUserInfoWithOpenInfo:@"open123"
+                                                      privteinfo:@"pri123"
                                                          timeout:10
                                                          success:^{
                                 
@@ -1093,7 +1122,7 @@
                             
                     }else if (indexPath.row == 12){//设置存储的数据信息
                                 [self.client setUserValueInfoWithKey:@"kkk"
-                                                               value:@"vvvv"
+                                                               value:@"vvvv123"
                                                              timeout:10
                                                              success:^{
                                     
@@ -1184,7 +1213,7 @@
                                                       timeout:10
                                                       success:^(RTMSendAnswer * sendAnswer) {
                             
-                            NSLog(@"%lld",sendAnswer.mtime);
+                            NSLog(@"%@",sendAnswer.rtm_autoDescription);
                             
                         } fail:^(FPNError * _Nullable error) {
                             
@@ -1199,31 +1228,35 @@
                         NSString * wavPath = [[NSBundle mainBundle] pathForResource:@"16 16 1 wav" ofType:@"wav"];
                         NSTimeInterval durationTime = [RtmVoiceConverterManager audioDurationFromURL:wavPath];
                         NSString * amrPath = [RtmVoiceConverterManager voiceConvertWavToAmrFromFilePath:wavPath];
-                        NSData * amrData = [NSData dataWithContentsOfFile:amrPath];
+//                        NSData * amrData = [NSData dataWithContentsOfFile:amrPath];
                         
+                        NSLog(@"%f------",durationTime);
                         
-                        if (amrPath) {
+//                            NSLog(@"%@ %f",self.recordHeaderAudioPath,self.recordAmrAudioTime);
+                        RTMAudioModel * model = [RTMAudioModel new];
+                        model.audioFilePath = amrPath;
+                        model.duration = durationTime * 1000;
+                        model.lang = @"zh-CN";
+                        [self.client sendP2PFileWithId:[NSNumber numberWithLongLong:777]
+                                                 fileData:nil
+                                                 fileName:nil
+                                               fileSuffix:nil
+                                                 fileType:RTMOther
+                                                  attrs:@{@"user key":@"user Value"}
+                                                audioModel:model
+                                                    timeout:60
+                                                success:^(RTMSendAnswer * sendAnswer) {
                             
-                            NSLog(@"%@ %f",self.recordAmrAudioPath,self.recordAmrAudioTime);
-                            [self.client sendAudioMessageChatWithId:@(777)
-                                                      audioFilePath:amrPath
-                                                              attrs:@{}
-                                                               lang:@"zh-cn"
-                                                           duration:durationTime * 1000
-                                                            timeout:20
-                                                            success:^(RTMSendAnswer * sendAnswer) {
-                                                                              
-                                                    NSLog(@"%lld %lld",sendAnswer.mtime,sendAnswer.messageId);
-                                                                              
-                                } fail:^(FPNError * _Nullable error) {
-                                                                                
-                                                    NSLog(@"%@",error);
-                                                                              
-                                            
-                            }];
+                            NSLog(@"File%@",sendAnswer.rtm_autoDescription);
                             
+                        } fail:^(FPNError * _Nullable error) {
+                            
+                            NSLog(@"%@",error);
+                            
+                        }];
+                       
                                 
-                        }
+                       
                     
                     }else if (indexPath.row == 2){//发送系统命令 对 sendP2pMessageWithId 的封装 mtype=32
                     
@@ -1255,7 +1288,10 @@
                                                                         timeout:10
                                                                         success:^(RTMHistory * _Nullable history) {
                                                                         
-                                    NSLog(@"getP2PHistoryMessageChatWithUserId %lld %lld",history.messageArray.firstObject.fromUid,history.messageArray.firstObject.toId);
+                                    for (int i = 0; i<history.messageArray.count; i++) {
+                                        
+                                        NSLog(@"getP2PHistoryMessageWithUserId %@ %@ %@",[history.messageArray objectAtIndex:i].rtm_autoDescription,[history.messageArray objectAtIndex:i].fileInfo.rtm_autoDescription,[history.messageArray objectAtIndex:i].translatedInfo.rtm_autoDescription);
+                                    }
                                     
                                 } fail:^(FPNError * _Nullable error) {
                                     
@@ -1294,23 +1330,33 @@
                                 NSString * wavPath = [[NSBundle mainBundle] pathForResource:@"16 16 1 wav" ofType:@"wav"];
                                 NSTimeInterval durationTime = [RtmVoiceConverterManager audioDurationFromURL:wavPath];
                                 NSString * amrPath = [RtmVoiceConverterManager voiceConvertWavToAmrFromFilePath:wavPath];
-                                NSData * amrData = [NSData dataWithContentsOfFile:amrPath];
+//                                NSData * amrData = [NSData dataWithContentsOfFile:amrPath];
                     
-                        if (amrPath) {
-                            NSLog(@"%@ %f",self.recordAmrAudioPath,self.recordAmrAudioTime);
-                                    [self.client sendGroupAudioMessageChatWithId:[NSNumber numberWithInt:666]
-                                                              audioFilePath:amrPath
-                                                                      attrs:@{}
-                                                                       lang:@"zh-cn"
-                                                                   duration:durationTime * 1000
-                                                                    timeout:20
-                                                                         success:^(RTMSendAnswer * sendAnswer) {
-                                        NSLog(@"%lld",sendAnswer.mtime);
-                                    } fail:^(FPNError * _Nullable error) {
-                                        NSLog(@"%@",error);
-                                    }];
+                        RTMAudioModel * model = [RTMAudioModel new];
+                        model.audioFilePath = amrPath;
+                        model.duration = durationTime * 1000;
+                        model.lang = @"zh-CN";
+                            
+                            
+                        [self.client sendGroupFileWithId:[NSNumber numberWithLongLong:666]
+                                                 fileData:nil
+                                                 fileName:nil
+                                               fileSuffix:nil
+                                                 fileType:RTMOther
+                                                  attrs:@{@"user key":@"user Value"}
+                                                audioModel:model
+                                                    timeout:60
+                                                success:^(RTMSendAnswer * sendAnswer) {
+                            
+                            NSLog(@"File%@",sendAnswer.rtm_autoDescription);
+                            
+                        } fail:^(FPNError * _Nullable error) {
+                            
+                            NSLog(@"%@",error);
+                            
+                        }];
                     
-                                }
+                                
                     
                             }else if (indexPath.row == 2){// 发送系统命令 对 sendGroupMessageWithId 的封装 mtype=32
                             
@@ -1342,7 +1388,10 @@
                                                                                    timeout:10
                                                                                     success:^(RTMHistory * _Nullable history) {
                                                                                    
-                                            NSLog(@"getGroupHistoryMessageChatWithGroupId %lld %lld",history.messageArray.firstObject.fromUid,history.messageArray.firstObject.toId);
+                                            for (int i = 0; i<history.messageArray.count; i++) {
+                                                
+                                                NSLog(@"getGroupHistoryMessageChatWithGroupId %@ %@",[history.messageArray objectAtIndex:i].rtm_autoDescription,[history.messageArray objectAtIndex:i].fileInfo.rtm_autoDescription);
+                                            }
                                             
                                         } fail:^(FPNError * _Nullable error) {
                                             
@@ -1377,26 +1426,38 @@
                     
                     }else if (indexPath.row == 1){//发送音频消息 对 sendRoomMessageWithId 的封装 mtype=31
                     
-                                NSString * wavPath = [[NSBundle mainBundle] pathForResource:@"16 16 1 wav" ofType:@"wav"];
-                                NSTimeInterval durationTime = [RtmVoiceConverterManager audioDurationFromURL:wavPath];
-                                NSString * amrPath = [RtmVoiceConverterManager voiceConvertWavToAmrFromFilePath:wavPath];
+                        NSString * wavPath = [[NSBundle mainBundle] pathForResource:@"16 16 1 wav" ofType:@"wav"];
+                        NSTimeInterval durationTime = [RtmVoiceConverterManager audioDurationFromURL:wavPath];
+                        NSString * amrPath = [RtmVoiceConverterManager voiceConvertWavToAmrFromFilePath:wavPath];
+//                                NSData * amrData = [NSData dataWithContentsOfFile:amrPath];
+            
+                        RTMAudioModel * model = [RTMAudioModel new];
+                        model.audioFilePath = amrPath;
+                        model.duration = durationTime * 1000;
+                        model.lang = @"zh-CN";
                     
-                                if (amrPath) {//调用demo
-                                    NSLog(@"%@ %f",self.recordAmrAudioPath,self.recordAmrAudioTime);
+        
+                        [self.client sendRoomFileWithId:[NSNumber numberWithLongLong:666]
+                                                 fileData:nil
+                                                 fileName:nil
+                                               fileSuffix:nil
+                                                 fileType:RTMOther
+                                                  attrs:@{@"user key":@"user Value"}
+                                                audioModel:model
+                                                    timeout:60
+                                                success:^(RTMSendAnswer * sendAnswer) {
+                            
+                            NSLog(@"File%@",sendAnswer.rtm_autoDescription);
+                            
+                        } fail:^(FPNError * _Nullable error) {
+                            
+                            NSLog(@"%@",error);
+                            
+                        }];
+                                
+                                    
                     
-                                    [self.client sendRoomAudioMessageChatWithId:[NSNumber numberWithInt:666]
-                                                                  audioFilePath:amrPath
-                                                                          attrs:@{}
-                                                                           lang:@"cn"
-                                                                       duration:durationTime * 1000
-                                                                        timeout:20
-                                                                        success:^(RTMSendAnswer * sendAnswer) {
-                                        NSLog(@"%lld",sendAnswer.mtime);
-                                    } fail:^(FPNError * _Nullable error) {
-                                        NSLog(@"%@",error);
-                                    }];
-                    
-                                }
+                                
                            
                     }else if (indexPath.row == 2){//发送系统命令 对 sendRoomMessageWithId 的封装 mtype=32
                     
@@ -1425,7 +1486,10 @@
                                                                           timeout:10
                                                                             success:^(RTMHistory * _Nullable history) {
                                                                         
-                                    NSLog(@"getRoomHistoryMessageChatWithRoomId %lld %lld",history.messageArray.firstObject.fromUid,history.messageArray.firstObject.toId);
+                                    for (int i = 0; i<history.messageArray.count; i++) {
+                                        
+                                        NSLog(@"getP2PHistoryMessageWithUserId %@ %@",[history.messageArray objectAtIndex:i].rtm_autoDescription,[history.messageArray objectAtIndex:i].fileInfo.rtm_autoDescription);
+                                    }
                                     
                                 } fail:^(FPNError * _Nullable error) {
                                     
@@ -1449,7 +1513,10 @@
                                                                    timeout:10
                                                                    success:^(RTMHistory * _Nullable history) {
                                                                   
-                            NSLog(@"%@",history.messageArray.firstObject.rtm_autoDescription);
+                            for (int i = 0; i<history.messageArray.count; i++) {
+                                
+                                NSLog(@"getP2PHistoryMessageWithUserId %@",[history.messageArray objectAtIndex:i].rtm_autoDescription);
+                            }
                             
                         } fail:^(FPNError * _Nullable error) {
                             
@@ -1496,43 +1563,16 @@
                             
                         }];
                     
-                            
-                    }else if (indexPath.row == 2){//@"敏感词过滤, 返回过滤后的字符串或者返回错误（调用此接口需在管理系统启用文本检测系统）",
+                        
+                    }else if (indexPath.row == 2){//@"文本审核
                     
-                                [self.client textProfanity:@"hello fuck"
-                                                  classify:YES
-                                                   timeout:10
-                                                   success:^(RTMTextProfanityAnswer * _Nullable textProfanity) {
-                                    
-                                    NSLog(@"%@",textProfanity.rtm_autoDescription);
-                                    
-                                } fail:^(FPNError * _Nullable error) {
-                                    
-                                    NSLog(@"%@",error);
-                                    
-                                }];
+                        [self.client textReviewWithText:@"hello fuck" timeout:10 success:^(RTMTextReviewAnswer * _Nullable textReview) {
+                            NSLog(@"%@",textReview.rtm_autoDescription);
+                        } fail:^(FPNError * _Nullable error) {
+                            NSLog(@"%@",error.rtm_autoDescription);
+                        }];
                     
                            
-                    }else if (indexPath.row == 3){//@"语音识别（调用此接口需在管理系统启用语音识别系统）调用这个接口的超时时间得加大到120s"
-                    
-                                NSString * wavPath = [[NSBundle mainBundle] pathForResource:@"16 16 1 wav" ofType:@"wav"];
-                                NSString * amrPath = [RtmVoiceConverterManager voiceConvertWavToAmrFromFilePath:wavPath];
-                                
-                                [self.client speechRecognition:amrPath
-                                                          lang:@"zh-CN"
-                                                      duration:2950
-                                               profanityFilter:YES
-                                                       timeout:120
-                                                       success:^(RTMSpeechRecognitionAnswer * _Nullable textProfanity) {
-                                
-                                    NSLog(@"%@",textProfanity.rtm_autoDescription);
-                                    
-                                } fail:^(FPNError * _Nullable error) {
-                                    
-                                    NSLog(@"%@",error);
-                                    
-                                }];
-                        
                     }
                     
                         
@@ -1555,20 +1595,22 @@
                 if (indexPath.row == 0) {
                     //开始录音
                     self.recordManager = [[RTMRecordManager alloc] init];
-                    [self.recordManager startRecord];
+                    [self.recordManager startRecordWithLang:@"zh-CN"];
                     
                 }else if (indexPath.row == 1){
                     //录音结束
-                    [self.recordManager stopRecord:^(NSString * _Nullable amrAudioPath, NSString * _Nullable wavAudioPath,double durationTime) {
-                        if (amrAudioPath && wavAudioPath && durationTime > 0) {
-                            self.recordAmrAudioPath = amrAudioPath;
-                            self.recordAmrAudioTime = durationTime;
-                            self.recordWavAudioPath = wavAudioPath;
+                    [self.recordManager stopRecord:^(RTMAudioModel * audioModel) {
+                        
+                        if (audioModel.audioFilePath != nil  && audioModel.duration > 0) {
                             
+                            NSLog(@"%@  %d",audioModel.audioFilePath,audioModel.duration);
                             
-//                            [[RTMAudioplayer shareInstance] playWithAmrPath:amrAudioPath];
-//                            [[RTMAudioplayer shareInstance] playWithWavPath:wavAudioPath];
+                            [[RTMAudioplayer shareInstance] playWithAudioModel:audioModel];
+                            
 //                            [[RTMAudioplayer shareInstance] stop];
+                            
+                            
+                            
                         }
                     }];
                 }
@@ -1596,7 +1638,7 @@
                        @"获取历史P2P消息（包括自己发送的消息）",
                        @"删除消息 p2p",
                        @"获取消息 p2p",
-                       @"语音识别"],
+                       ],
         },
         @{
             @"typeName":@"群聊接口",
@@ -1611,7 +1653,7 @@
                        @"设置群组的公开信息或者私有信息，会检查用户是否在组内",
                        @"获取群组的公开信息和私有信息，会检查用户是否在组内",
                        @"获取群组的公开信息",
-                       @"语音识别"
+                       
                        ]
         },
         @{
@@ -1626,7 +1668,7 @@
                        @"设置房间的公开信息或者私有信息，会检查用户是否在房间",
                        @"获取房间的公开信息和私有信息，会检查用户是否在房间内",
                        @"获取房间的公开信息",
-                       @"语音识别"
+                       
                        
             ]
         },
@@ -1634,7 +1676,7 @@
             @"typeName":@"广播接口",
             @"names":@[
                     @"获取广播历史消息",
-                    @"语音识别"
+                    
             ],
         },
         @{
@@ -1737,8 +1779,8 @@
             @"typeName":@"翻译接口 语音识别 敏感词过滤",
             @"names":@[@"设置当前用户需要的翻译语言(为空则取消翻译) 和 RTMClient里 lang属性 对应",
                        @"翻译, 返回翻译后的字符串及 经过翻译系统检测的 语言类型（调用此接口需在管理系统启用翻译系统）",
-                       @"敏感词过滤, 返回过滤后的字符串或者返回错误（调用此接口需在管理系统启用文本检测系统）",
-                       @"语音识别（调用此接口需在管理系统启用语音识别系统）调用这个接口的超时时间得加大到120s"
+                       @"文本审核",
+                       
                       
                        
                        
@@ -1778,182 +1820,6 @@
     [self tableView:self.listView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
 //    [self test];
 
-}
--(void)test2{
-    
-    
-//    self.client7 = [RTMClient clientWithEndpoint:@"52.82.27.68:13325"
-//                                                        pid:90000014
-//                                                        uid:18
-//                                                      token:@"4297E324D29B7F0FB8B6CD55838CCAA0"];//server 获取
-//    [self.client7 verifyConnectSuccess:^(NSDictionary * _Nullable data) {
-//         NSLog(@"验证成功 verifyConnectSuccess  ");
-//
-//        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-//            int a = 0;
-//            while (1) {
-//                sleep(1.2);
-//                a = a + 1;
-//                [self.client7 sendGroupMessageChatWithId:@(13) message:[NSString stringWithFormat:@"client7  group message %d",a] attrs:@"" timeout:10];
-//            }
-//        });
-//
-//
-//
-//    } connectFali:nil];
-    
-    
-}
--(void)test{
-    
-    self.client2 = [RTMClient clientWithEndpoint:@"161.189.171.91:13325"
-                                      projectId:90000014
-                                         userId:002
-                                       delegate:self
-                                         config:nil
-                                    autoRelogin:YES];
-    self.client3 = [RTMClient clientWithEndpoint:@"161.189.171.91:13325"
-                                       projectId:90000014
-                                          userId:003
-                                        delegate:self
-                                          config:nil
-                                     autoRelogin:YES];
-    self.client4 = [RTMClient clientWithEndpoint:@"161.189.171.91:13325"
-                                       projectId:90000014
-                                          userId:004
-                                        delegate:self
-                                          config:nil
-                                     autoRelogin:YES];
-    self.client5 = [RTMClient clientWithEndpoint:@"161.189.171.91:13325"
-                                       projectId:90000014
-                                          userId:005
-                                        delegate:self
-                                          config:nil
-                                     autoRelogin:YES];
-    self.client6 = [RTMClient clientWithEndpoint:@"161.189.171.91:13325"
-                                       projectId:90000014
-                                          userId:006
-                                        delegate:self
-                                          config:nil
-                                     autoRelogin:YES];
-    
-    
-    [self.client2 loginWithToken:@"6770DD93E43DBC2FC6628AA69338A208"
-                        language:@"en"
-                       attribute:nil
-                         timeout:30
-                         success:^{
-        NSLog(@"client2 successsuccesssuccesssuccess");
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-                    
-            int a = 0;
-            while (a < 5000) {
-                [NSThread sleepForTimeInterval:0];
-                a = a + 1;
-                NSLog(@"client2%d",a);
-                [self.client2 sendP2PMessageChatWithId:@(666) message:@"client2 msg" attrs:@"" timeout:10];
-            }
-                
-        });
-        
-    } connectFail:^(FPNError * _Nullable error) {
-        
-    }];
-    
-    
-    [self.client3 loginWithToken:@"1AF84BAB1E0D1639E9683F24329D03EA"
-                        language:@"en"
-                       attribute:nil
-                         timeout:30
-                         success:^{
-        NSLog(@"client3 successsuccesssuccesssuccess");
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-
-            int a = 0;
-            while (a < 5000) {
-                [NSThread sleepForTimeInterval:0];
-                a = a + 1;
-                NSLog(@"client3%d",a);
-                [self.client3 sendP2PMessageChatWithId:@(666) message:@"client3 msg" attrs:@"" timeout:10];
-            }
-
-        });
-    } connectFail:^(FPNError * _Nullable error) {
-        NSLog(@"errorerrorerrorerrorerrorerror %@",error);
-    }];
-
-    [self.client4 loginWithToken:@"8EB8874C0274447DF5A8E40484D6D770"
-                        language:@"en"
-                       attribute:nil
-                         timeout:30
-                         success:^{
-        NSLog(@"client4 successsuccesssuccesssuccess");
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-
-            int a = 0;
-            while (a < 5000) {
-                [NSThread sleepForTimeInterval:0];
-                a = a + 1;
-                NSLog(@"client4%d",a);
-                [self.client4 sendP2PMessageChatWithId:@(666) message:@"client4 msg" attrs:@"" timeout:10];
-            }
-
-        });
-    } connectFail:^(FPNError * _Nullable error) {
-
-        NSLog(@"errorerrorerrorerrorerrorerror %@",error);
-
-    }];
-
-    [self.client5 loginWithToken:@"9380B8E8F72A4E85C552525AFE2F2F34"
-                        language:@"en"
-                       attribute:nil
-                         timeout:30
-                         success:^{
-        NSLog(@"client5 successsuccesssuccesssuccess");
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-
-            int a = 0;
-            while (a < 5000) {
-                [NSThread sleepForTimeInterval:0];
-                a = a + 1;
-                NSLog(@"client5%d",a);
-                [self.client5 sendP2PMessageChatWithId:@(666) message:@"client5 msg" attrs:@"" timeout:10];
-            }
-
-        });
-    } connectFail:^(FPNError * _Nullable error) {
-
-        NSLog(@"errorerrorerrorerrorerrorerror %@",error);
-
-    }];
-
-    [self.client6 loginWithToken:@"6634AC72245BFC3D42663604D5E9299A"
-                        language:@"en"
-                       attribute:nil
-                         timeout:30
-                         success:^{
-        NSLog(@"client6 successsuccesssuccesssuccess");
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-
-            int a = 0;
-            while (a < 5000) {
-                [NSThread sleepForTimeInterval:0];
-                a = a + 1;
-                NSLog(@"client6%d",a);
-                [self.client6 sendP2PMessageChatWithId:@(666) message:@"client6 msg" attrs:@"" timeout:10];
-            }
-
-        });
-
-    } connectFail:^(FPNError * _Nullable error) {
-
-        NSLog(@"errorerrorerrorerrorerrorerror %@",error);
-
-    }];
-    
-    
-                    
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 77;

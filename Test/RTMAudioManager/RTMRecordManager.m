@@ -9,37 +9,46 @@
 #import "RTMRecordManager.h"
 #import <AVFoundation/AVFoundation.h>
 #import "RtmVoiceConverterManager.h"
+#import <Rtm/RTMAudioTools.h>
 @interface RTMRecordManager ()
 
 @property (strong, nonatomic)   AVAudioRecorder  *recorder;
 @property (strong, nonatomic)   AVAudioPlayer    *player;
 @property (strong, nonatomic)   NSString         *recordFileName;
 @property (strong, nonatomic)   NSString         *recordFilePath;
-
+@property (strong, nonatomic)   NSString         *lang;
 
 @end
 @implementation RTMRecordManager
--(void)stopRecord:(void(^)(NSString * _Nullable amrAudioPath,NSString * _Nullable wavAudioPath,double durationTime))recorderFinish{
+-(void)stopRecord:(void(^)(RTMAudioModel * audioModel))recorderFinish{
     if (self.recorder.recording) {
         [self.recorder stop];
-        NSString * amrPath = [RtmVoiceConverterManager voiceConvertWavToAmrFromFilePath:self.recordFilePath];
         double time = [RtmVoiceConverterManager audioDurationFromURL:self.recordFilePath];
+        NSString * amrPath = [RtmVoiceConverterManager voiceConvertWavToAmrFromFilePath:self.recordFilePath];//wav->amr
         if (recorderFinish && amrPath != nil && time > 1) {
-            recorderFinish(amrPath,self.recordFilePath,time);
+            RTMAudioModel * audioModel = [RTMAudioModel new];
+            audioModel.audioFilePath = amrPath;
+            audioModel.duration = time * 1000;
+            audioModel.lang = self.lang;
+            recorderFinish(audioModel);
+//            [[NSFileManager defaultManager] removeItemAtPath:self.recordFilePath error:nil];
         }
         self.recorder = nil;
     }
 }
--(void)startRecord{
+-(void)startRecordWithLang:(NSString*)lang{
     
     if (self.recorder.recording) {
         return;
     }
     
+    if (lang.length == 0) {
+        return;
+    }
+    
+    self.lang = lang;
     self.recordFileName = [self getCurrentTimeString];
-    self.recordFilePath = [self GetPathByFileName:self.recordFileName ofType:@"wav"];
-    //NSLog(@"录音文件的路径是：%@",self.recordFilePath);
-    //wav格式文件保存到这
+    self.recordFilePath = [self getPathByFileName:self.recordFileName ofType:@"wav"];
     
     NSDictionary *recordSetting = [[NSDictionary alloc] initWithObjectsAndKeys:
     [NSNumber numberWithFloat: 16000.0],AVSampleRateKey, //采样率
@@ -68,17 +77,14 @@
     }
 }
 
+//路径 以及 删除策略可根据业务自行修改
 - (NSString *)getCurrentTimeString{
-    NSDateFormatter *dateformat = [[NSDateFormatter  alloc]init];
-    [dateformat setDateFormat:@"yyyyMMddHHmmss"];
-    NSString* dateStr = [dateformat stringFromDate:[NSDate date]];
-    return [NSString stringWithFormat:@"16KHZWAV%@",dateStr];
+    return [NSString stringWithFormat:@"%@",[NSNumber numberWithLongLong:[[NSDate date] timeIntervalSince1970] * 1000 * 1000]];
 }
-- (NSString*)GetPathByFileName:(NSString *)fileName ofType:(NSString *)_type{
-    NSString *directory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)objectAtIndex:0];
-    directory = [directory stringByAppendingPathComponent:@"16KHZFile"];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:directory])
-    {
+- (NSString*)getPathByFileName:(NSString *)fileName ofType:(NSString *)_type{
+    NSString * directory = NSTemporaryDirectory();
+//    directory = [directory stringByAppendingPathComponent:@"16KHZFile"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:directory]){
         [[NSFileManager defaultManager] createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:nil];
     }
     NSString* fileDirectory = [[[directory stringByAppendingPathComponent:fileName]

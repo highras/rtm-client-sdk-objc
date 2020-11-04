@@ -11,6 +11,17 @@
 #import "MPMessagePackWriter.h"
 
 @implementation RTMAudioTools
++ (BOOL)isAmrVerify:(NSData*)audioData{
+    if (audioData.length >= 9) {
+        NSData * amrHeaderData = [audioData subdataWithRange:NSMakeRange(0, 9)];
+        NSString * headerString = [[NSString alloc] initWithData:amrHeaderData encoding:NSUTF8StringEncoding];
+        if ([headerString containsString:@"AMR-WB"]) {
+            return YES;
+        }
+        return NO;
+    }
+    return NO;
+}
 + (NSData*)audioDataAddHeader:(NSData*)audioData lang:(NSString*)lang time:(long long)time srate:(int)srate{
     
     Byte version[] = {1};
@@ -19,7 +30,7 @@
     
     NSMutableDictionary * amrParameterDic = [NSMutableDictionary dictionary];
 //    [amrParameterDic setValue:@"zh-cn" forKey:@"lang"];
-    [amrParameterDic setValue:lang forKey:@"lang"];
+    [amrParameterDic setValue:lang == nil ? @"" : lang forKey:@"lang"];
     [amrParameterDic setValue:@(time) forKey:@"dur"];
     [amrParameterDic setValue:@(srate) forKey:@"srate"];
     

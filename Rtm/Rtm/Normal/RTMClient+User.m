@@ -45,13 +45,19 @@ static NSString *name2Key = @"nameKey2";
         
         @synchronized (self) {
             [self setValue:@(YES) forKey:@"isOverlookFpnnCloseCallBack"];
+            [self setValue:@(NO) forKey:@"authFinish"];
+        }
+        if ([self.delegate respondsToSelector:@selector(rtmConnectClose:)]) {
+            [self.delegate rtmConnectClose:self];
         }
         
         if (successCallback) {
             successCallback();
         }
         
-        [self _sendByeCloseConnect];
+//        [self _sendByeCloseConnect];
+        
+        
         
     }fail:^(FPNError * _Nullable error) {
         
@@ -69,17 +75,30 @@ static NSString *name2Key = @"nameKey2";
     FPNNAnswer * answer = [mainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
+    
     if (answer.error == nil) {
-        [self performSelector:@selector(_sendByeCloseConnect) withObject:nil afterDelay:0.1];
+        
+        @synchronized (self) {
+            [self setValue:@(YES) forKey:@"isOverlookFpnnCloseCallBack"];
+            [self setValue:@(NO) forKey:@"authFinish"];
+        }
+        
+        if ([self.delegate respondsToSelector:@selector(rtmConnectClose:)]) {
+            [self.delegate rtmConnectClose:self];
+        }
+        
     }else{
+        
         model.error = answer.error;
+        
     }
     
     return model;
 }
--(void)_sendByeCloseConnect{
-    ((void* (*)(id, SEL))[self methodForSelector:NSSelectorFromString(@"_byeCloseConnect")])(self, NSSelectorFromString(@"_byeCloseConnect"));
-}
+//-(void)_sendByeCloseConnect{
+//    [self performSelector:@selector(_byeCloseConnect) withObject:@(NO)];
+////    ((void* (*)(id, SEL))[self methodForSelector:NSSelectorFromString(@"_byeCloseConnect")])(self, NSSelectorFromString(@"_byeCloseConnect"));
+//}
 
 
 

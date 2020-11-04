@@ -9,6 +9,7 @@
 #import "RTMAudioplayer.h"
 #import <AVFoundation/AVFoundation.h>
 #import "RtmVoiceConverterManager.h"
+#import <Rtm/RTMAudioTools.h>
 @interface RTMAudioplayer ()<AVAudioPlayerDelegate>
 @property(nonatomic,strong) AVAudioPlayer * _Nullable audioPlayer;
 @end
@@ -22,69 +23,75 @@
     });
     return _mySingle;
 }
--(void)playWithData:(NSData*)audioData{
+-(void)playWithAudioModel:(RTMAudioModel*)audioModel{
 
     
     if ([self _playing]) {
-           
         [self stop];
-        
     }
-            
-    NSString * wavPath = [RtmVoiceConverterManager voiceConvertAmrToWavFromFilePath:audioData];
-    if (wavPath) {
-        NSData * wavData = [NSData dataWithContentsOfFile:wavPath];
-        if (wavData) {
-            [self _initAudioPlayer:wavData];
-            
-            if (self.audioPlayer != nil) {
-                [self.audioPlayer play];
+    
+    if (audioModel.audioFilePath != nil && audioModel.audioFilePath.length > 0) {
+        NSData * amrData = [NSData dataWithContentsOfFile:audioModel.audioFilePath];
+        if (amrData) {
+            NSString * wavPath = [RtmVoiceConverterManager voiceConvertAmrToWavWithData:amrData];
+            if (wavPath) {
+                NSData * wavData = [NSData dataWithContentsOfFile:wavPath];
+                if (wavData) {
+                    [self _initAudioPlayer:wavData];
+                    if (self.audioPlayer != nil) {
+                        [self.audioPlayer play];
+                    }
+                            
+                }
             }
-                    
         }
     }
+    
         
     
 }
--(void)playWithWavPath:(NSString*)wavAudioPath{
-    
+-(void)playWithAmrData:(NSData*)amrData{
     if ([self _playing]) {
         [self stop];
     }
-       
-    NSData * wavData = [NSData dataWithContentsOfFile:wavAudioPath];
-    if (wavData) {
-        if (wavData) {
-            [self _initAudioPlayer:wavData];
-            if (self.audioPlayer != nil) {
-                [self.audioPlayer play];
+    if ([RTMAudioTools isAmrVerify:amrData]) {
+        NSString * wavPath = [RtmVoiceConverterManager voiceConvertAmrToWavWithData:amrData];
+        if (wavPath) {
+            NSData * wavData = [NSData dataWithContentsOfFile:wavPath];
+            if (wavData) {
+                [self _initAudioPlayer:wavData];
+                if (self.audioPlayer != nil) {
+                    [self.audioPlayer play];
+                }
+                        
             }
-                    
         }
     }
-        
 }
--(void)playWithAmrPath:(NSString*)amrAudioPath{
-    
-    if ([self _playing]) {
-        [self stop];
-    }
-       
-    NSData * amrData = [NSData dataWithContentsOfFile:amrAudioPath];
-    NSString * wavPath = [RtmVoiceConverterManager voiceConvertAmrToWavFromFilePath:amrData];
-    if (wavPath) {
-        NSData * wavData = [NSData dataWithContentsOfFile:wavPath];
-        if (wavData) {
-            [self _initAudioPlayer:wavData];
-            if (self.audioPlayer != nil) {
-                [self.audioPlayer play];
-            }
-                    
-        }
-    }
-        
-    
-}
+//-(void)playWithWavPath:(NSString*)wavAudioPath{
+//    
+//    if ([self _playing]) {
+//        [self stop];
+//    }
+//       
+//    NSData * wavData = [NSData dataWithContentsOfFile:wavAudioPath];
+//    if (wavData) {
+//        if (wavData) {
+//            [self _initAudioPlayer:wavData];
+//            if (self.audioPlayer != nil) {
+//                [self.audioPlayer play];
+//            }
+//                    
+//        }
+//    }
+//        
+//}
+//-(void)playWithAmrPath:(NSString*)amrAudioPath{
+//     
+//    NSData * amrData = [NSData dataWithContentsOfFile:amrAudioPath];
+//    [self playWithAmrData:amrData];
+//    
+//}
 -(void)stop{
     if (self.audioPlayer != nil) {
         [self.audioPlayer stop];
