@@ -24,38 +24,49 @@
                       success:(void(^)(RTMSendAnswer * sendAnswer))successCallback
                          fail:(RTMAnswerFailCallBack)failCallback{
 
-    
-    messageTypeFilter(messageType.intValue)
-    clientConnectStatueVerify
-    
-    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    [dic setValue:userId forKey:@"to"];
-    [dic setValue:mid forKey:@"mid"];
-    [dic setValue:messageType forKey:@"mtype"];
-    [dic setValue:message forKey:@"msg"];
-    [dic setValue:attrs forKey:@"attrs"];
-    
-    @synchronized (self) {
-        FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendmsg" message:dic twoWay:YES];
-        BOOL result = [mainClient sendQuest:quest
-                                    timeout:RTMClientSendQuestTimeout
-                                    success:^(NSDictionary * _Nullable data) {
+//    @autoreleasepool {
+        messageTypeFilter(messageType.intValue)
+            clientConnectStatueVerify
             
-            if (successCallback) {
-                RTMSendAnswer* sendAnswer  = [RTMSendAnswer new];
-                sendAnswer.mtime = [[data objectForKey:@"mtime"] longLongValue];
-                sendAnswer.messageId = [[dic objectForKey:@"mid"] longLongValue];
-                successCallback(sendAnswer);
-            }
-        
-        }fail:^(FPNError * _Nullable error) {
+            NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+            [dic setValue:userId forKey:@"to"];
+            [dic setValue:mid forKey:@"mid"];
+            [dic setValue:messageType forKey:@"mtype"];
+            [dic setValue:message forKey:@"msg"];
+            [dic setValue:attrs forKey:@"attrs"];
             
-              _failCallback(error);
+            
+                FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendmsg" message:dic twoWay:YES];
+                BOOL result = [mainClient sendQuest:quest
+                                            timeout:RTMClientSendQuestTimeout
+                                            success:^(NSDictionary * _Nullable data) {
+                    
+                    
+                        
+//                        if (successCallback) {
+//                            @autoreleasepool {
+                            
+                                RTMSendAnswer* sendAnswer  = [RTMSendAnswer new];
+                                sendAnswer.mtime = [[data objectForKey:@"mtime"] longLongValue];
+                                sendAnswer.messageId = [[dic objectForKey:@"mid"] longLongValue];
+                                successCallback(sendAnswer);
+                                
+//                            }
+//                        }
+                    
+                    
+                
+                }fail:^(FPNError * _Nullable error) {
+                    
+                      _failCallback(error);
 
-        }];
-//        NSLog(@"===%@",mainClient);
-        handlerNetworkError;
-    }
+                }];
+        //        NSLog(@"===%@",mainClient);
+                handlerNetworkError;
+//            }
+//    }
+//    
+    
     
     
 }
@@ -65,30 +76,35 @@
                            attrs:(NSString * _Nonnull)attrs
                          timeout:(int)timeout{
     
-    RTMSendAnswer * model = [RTMSendAnswer new];
-    messageTypeFilterSync(messageType.intValue)
-    clientConnectStatueVerifySync
-    
-    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    [dic setValue:userId forKey:@"to"];
-    [dic setValue:mid forKey:@"mid"];
-    [dic setValue:messageType forKey:@"mtype"];
-    [dic setValue:message forKey:@"msg"];
-    [dic setValue:attrs forKey:@"attrs"];
-    
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendmsg" message:dic twoWay:YES];
-    
-    FPNNAnswer * answer = [mainClient sendQuest:quest
-                                       timeout:RTMClientSendQuestTimeout];
-    
-    if (answer.error == nil) {
-        model.mtime = [[answer.responseData objectForKey:@"mtime"] longLongValue];
-        model.messageId = [[dic objectForKey:@"mid"] longLongValue];
-    }else{
-        model.error = answer.error;
+    @autoreleasepool {
+        
+        RTMSendAnswer * model = [RTMSendAnswer new];
+        messageTypeFilterSync(messageType.intValue)
+        clientConnectStatueVerifySync
+        
+        NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+        [dic setValue:userId forKey:@"to"];
+        [dic setValue:mid forKey:@"mid"];
+        [dic setValue:messageType forKey:@"mtype"];
+        [dic setValue:message forKey:@"msg"];
+        [dic setValue:attrs forKey:@"attrs"];
+        
+        FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendmsg" message:dic twoWay:YES];
+        
+        FPNNAnswer * answer = [mainClient sendQuest:quest
+                                           timeout:RTMClientSendQuestTimeout];
+        
+        if (answer.error == nil) {
+            model.mtime = [[answer.responseData objectForKey:@"mtime"] longLongValue];
+            model.messageId = [[dic objectForKey:@"mid"] longLongValue];
+        }else{
+            model.error = answer.error;
+        }
+        
+        return model;
+        
     }
     
-    return model;
     
 }
 

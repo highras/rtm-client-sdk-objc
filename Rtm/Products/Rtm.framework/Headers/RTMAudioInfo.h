@@ -11,10 +11,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RTMAudioInfo : NSObject
-@property(nonatomic,copy)NSString * sourceLanguage;
-@property(nonatomic,copy)NSString * recognizedLanguage;
-@property(nonatomic,copy)NSString * recognizedText;
-@property(nonatomic,assign)int duration;
+//@property(nonatomic,copy)NSString * sourceLanguage;
+//@property(nonatomic,copy)NSString * recognizedLanguage;
+//@property(nonatomic,copy)NSString * recognizedText;
+//@property(nonatomic,assign)int duration;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -383,13 +383,21 @@
                                                         options:NSJSONReadingMutableContainers
                                                           error:nil];
     if (attrsDic != nil) {
-        NSDictionary * custom = [attrsDic objectForKey:@"custom"];
-        if (custom != nil) {
-            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:custom options:NSJSONWritingPrettyPrinted error:nil];
-            NSString * customString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-            result = customString;
-        }else{
-            result = nil;
+        if ([attrsDic objectForKey:@"custom"] != nil) {
+            
+            if ([[attrsDic objectForKey:@"custom"] isKindOfClass:[NSDictionary class]]) {
+                
+                NSDictionary * custom = [attrsDic objectForKey:@"custom"];
+                NSData *jsonData = [NSJSONSerialization dataWithJSONObject:custom options:NSJSONWritingPrettyPrinted error:nil];
+                NSString * customString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                result = customString;
+                
+            }else if([[attrsDic objectForKey:@"custom"] isKindOfClass:[NSString class]]){
+                
+                result = [attrsDic objectForKey:@"custom"];
+                
+            }
+            
         }
         
     }

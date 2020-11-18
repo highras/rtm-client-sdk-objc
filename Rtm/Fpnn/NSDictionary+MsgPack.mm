@@ -81,25 +81,28 @@
 
 -(void)_decoderAnswer:(fpnn::FPAnswerPtr)cppAnswer{
         
-    if (cppAnswer->status() != 0){
-        fpnn::FPAReader ar(cppAnswer);
-        int code = (int)ar.getInt("code", fpnn::FPNN_EC_CORE_UNKNOWN_ERROR);
-        std::string ex = ar.getString("ex");
+    @autoreleasepool {
+        if (cppAnswer->status() != 0){
+            fpnn::FPAReader ar(cppAnswer);
+            int code = (int)ar.getInt("code", fpnn::FPNN_EC_CORE_UNKNOWN_ERROR);
+            std::string ex = ar.getString("ex");
 
-        _error = [FPNError errorWithEx:[NSString stringWithFormat:@"%@",[NSString stringWithUTF8String:ex.c_str()]] code:code];
+            _error = [FPNError errorWithEx:[NSString stringWithFormat:@"%@",[NSString stringWithUTF8String:ex.c_str()]] code:code];
+        }
+        
+        std::string cppData = cppAnswer->payload();
+        Byte * bytes = (Byte*)cppData.c_str();
+        NSData * ocData = [NSData dataWithBytes:bytes length:cppData.length()];
+        NSError * error;
+        NSDictionary * resultDic = [MPMessagePackReader readData:ocData error:&error];
+        if (error == nil) {
+            _decodeResult = resultDic;
+        }else{
+            FPNSLog(@"fpnn decoderAnswer MPMessagePackWriter error.");
+            _error = [FPNError errorWithEx:@"fpnn decoder answer error. convert answer message to oc failed." code:fpnn::FPNN_EC_CORE_DECODING];
+        }
     }
     
-    std::string cppData = cppAnswer->payload();
-    Byte * bytes = (Byte*)cppData.c_str();
-    NSData * ocData = [NSData dataWithBytes:bytes length:cppData.length()];
-    NSError * error;
-    NSDictionary * resultDic = [MPMessagePackReader readData:ocData error:&error];
-    if (error == nil) {
-        _decodeResult = resultDic;
-    }else{
-        FPNSLog(@"fpnn decoderAnswer MPMessagePackWriter error.");
-        _error = [FPNError errorWithEx:@"fpnn decoder answer error. convert answer message to oc failed." code:fpnn::FPNN_EC_CORE_DECODING];
-    }
 //    const std::string& cppPayload = cppAnswer->payload();
 //    PayloadDictionaryBuilder* ocBuilder = [[PayloadDictionaryBuilder alloc] init];
 //    ocBuilder.mainStart = YES;
@@ -151,17 +154,22 @@
 
 -(void)_decoderQuest:(fpnn::FPQuestPtr)cppQuest{
     
-    std::string cppData = cppQuest->payload();
-    Byte * bytes = (Byte*)cppData.c_str();
-    NSData * ocData = [NSData dataWithBytes:bytes length:cppData.length()];
-    NSError * error;
-    NSDictionary * resultDic = [MPMessagePackReader readData:ocData error:&error];
-    if (error == nil) {
-        _decodeResult = resultDic;
-    }else{
-        FPNSLog(@"fpnn _decoderQuest MPMessagePackWriter error.");
-        _error = [FPNError errorWithEx:@"fpnn decoder quest Error. convert quest message to oc failed." code:fpnn::FPNN_EC_CORE_DECODING];
+    @autoreleasepool {
+        
+        std::string cppData = cppQuest->payload();
+        Byte * bytes = (Byte*)cppData.c_str();
+        NSData * ocData = [NSData dataWithBytes:bytes length:cppData.length()];
+        NSError * error;
+        NSDictionary * resultDic = [MPMessagePackReader readData:ocData error:&error];
+        if (error == nil) {
+            _decodeResult = resultDic;
+        }else{
+            FPNSLog(@"fpnn _decoderQuest MPMessagePackWriter error.");
+            _error = [FPNError errorWithEx:@"fpnn decoder quest Error. convert quest message to oc failed." code:fpnn::FPNN_EC_CORE_DECODING];
+        }
+        
     }
+    
     
 //    const std::string& cppPayload = cppQuest->payload();
 ////    std::cout << cppQuest->payload() << std::endl;
@@ -212,30 +220,34 @@
 //    FPNSLog(@"FPNNMessageEncoder dealloc");
 }
 - (instancetype)initWithMessage:(NSDictionary*)message{
-    if (message == nil) {
-        FPNSLog(@"fpnn FPNNMessageEncoder init error.  Please input valid message");
-        return nil;
-    }
-    self = [super init];
-    if (self) {
+    
+    @autoreleasepool {
+        if (message == nil) {
+                FPNSLog(@"fpnn FPNNMessageEncoder init error.  Please input valid message");
+                return nil;
+            }
+            self = [super init];
+            if (self) {
 
-//        _packer = new msgpack::packer<std::stringstream>(_ss);
-//        _encodeResult = [self convertFrom:message];
-        
-        NSError *error = nil;
-        NSData * messageData = [MPMessagePackWriter writeObject:message error:&error];
-        if (error == nil) {
-            NSUInteger len = [messageData length];
-//            Byte *byteData = (Byte*)malloc(len);
-//            memcpy(byteData, [messageData bytes], len);
-            std::string resultStr((char*)[messageData bytes], len);
-            _encodeResult = resultStr;
-        }else{
-            FPNSLog(@"fpnn MPMessagePackWriter error.");
-            return nil;
-        }
+        //        _packer = new msgpack::packer<std::stringstream>(_ss);
+        //        _encodeResult = [self convertFrom:message];
+                
+                NSError *error = nil;
+                NSData * messageData = [MPMessagePackWriter writeObject:message error:&error];
+                if (error == nil) {
+                    NSUInteger len = [messageData length];
+        //            Byte *byteData = (Byte*)malloc(len);
+        //            memcpy(byteData, [messageData bytes], len);
+                    std::string resultStr((char*)[messageData bytes], len);
+                    _encodeResult = resultStr;
+                }else{
+                    FPNSLog(@"fpnn MPMessagePackWriter error.");
+                    return nil;
+                }
+            }
+            return self;
     }
-    return self;
+    
 }
 
 

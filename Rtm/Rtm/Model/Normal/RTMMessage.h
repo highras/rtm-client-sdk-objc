@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,assign)int64_t messageId;
 @property(nonatomic,copy)NSString * stringMessage;
 @property(nonatomic,strong)NSData * binaryMessage;
-@property(nonatomic,copy)NSString * attrs;
+@property(nonatomic,copy,nullable)NSString * attrs;
 @property(nonatomic,assign)int64_t modifiedTime;
 @property(nonatomic,strong)RTMFileInfo * fileInfo;
 @property(nonatomic,strong)RTMTranslatedInfo * translatedInfo;//chat结构

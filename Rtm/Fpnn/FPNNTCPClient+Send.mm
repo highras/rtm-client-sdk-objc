@@ -28,8 +28,10 @@
 
 -(void)_setConnectionStatusAndReplyListen:(fpnn::TCPClientPtr)client{
     if (Listen == nil || Listen == nullptr) {
-        Listen = FPNNCppConnectionListen::createCppConnectionListen(self.connectionSuccessCallBack, self.connectionCloseCallBack, self.listenAndReplyCallBack,self);
-        client->setQuestProcessor(Listen);
+        @synchronized (self) {
+            Listen = FPNNCppConnectionListen::createCppConnectionListen(self.connectionSuccessCallBack, self.connectionCloseCallBack, self.listenAndReplyCallBack,self);
+            client->setQuestProcessor(Listen);
+        }
     }
 }
 

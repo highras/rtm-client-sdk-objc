@@ -13,14 +13,14 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol RTMProtocol <NSObject>
 
 @required
-//重连将要开始
+//重连将要开始  根据返回值是否进行重连
 -(BOOL)rtmReloginWillStart:(RTMClient *)client reloginCount:(int)reloginCount;
 //重连结果
 -(void)rtmReloginCompleted:(RTMClient *)client reloginCount:(int)reloginCount reloginResult:(BOOL)reloginResult error:(FPNError*)error;
 
 
 @optional
-//关闭连接回调
+//关闭连接
 -(void)rtmConnectClose:(RTMClient *)client;
 //被踢下线
 -(void)rtmKickout:(RTMClient *)client;
@@ -51,11 +51,11 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)rtmPushRoomChatMessage:(RTMClient *)client message:(RTMMessage * _Nullable)message;
 -(void)rtmPushBroadcastChatMessage:(RTMClient *)client message:(RTMMessage * _Nullable)message;
 
-//chat audio
--(void)rtmPushP2PChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message;
--(void)rtmPushGroupChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message;
--(void)rtmPushRoomChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message;
--(void)rtmPushBroadcastChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message;
+////chat audio
+//-(void)rtmPushP2PChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message;
+//-(void)rtmPushGroupChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message;
+//-(void)rtmPushRoomChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message;
+//-(void)rtmPushBroadcastChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message;
 
 //chat cmd
 -(void)rtmPushP2PChatCmd:(RTMClient *)client message:(RTMMessage * _Nullable)message;

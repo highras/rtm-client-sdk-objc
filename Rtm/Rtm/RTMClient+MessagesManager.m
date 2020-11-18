@@ -11,16 +11,18 @@
 #import "RTMMessageModelConvert.h"
 
 @interface RTMClient()
-@property(nonatomic,strong)NSCache * messageDuplicatedCache;
+@property(nonatomic,strong)NSMutableDictionary * messageDuplicatedCache;
 @end
 @implementation RTMClient (MessagesManager)
 
 -(void)messageShareCenter:(NSDictionary*)data method:(NSString*)method{
     
-    if (self.messageDuplicatedCache == nil) {
-        self.messageDuplicatedCache = [[NSCache alloc]init];
-        self.messageDuplicatedCache.countLimit = 10000;
+    @synchronized (self) {
+        if (self.messageDuplicatedCache == nil) {
+            self.messageDuplicatedCache = [[NSMutableDictionary alloc]init];
+        }
     }
+    
     
     if ([method isEqualToString:@"pushmsg"]){
         [self _pushmsg:data method:method];
@@ -83,7 +85,7 @@
 -(void)_pushgroupmsg:(NSDictionary*)data method:(NSString*)method{
     
     
-    if ([self _duplicatedPushMsgFilter:method data:data] == NO) {
+    if ([self _duplicatedPushGroupMsgFilter:method data:data] == NO) {
         int mtype = [[data objectForKey:@"mtype"] intValue];
         
         if (mtype == 30) {
@@ -126,7 +128,7 @@
 }
 #pragma mark  room
 -(void)_pushroommsg:(NSDictionary*)data method:(NSString*)method{
-    if ([self _duplicatedPushMsgFilter:method data:data] == NO) {
+    if ([self _duplicatedPushRoomMsgFilter:method data:data] == NO) {
         int mtype = [[data objectForKey:@"mtype"] intValue];
         
         if (mtype == 30) {
@@ -169,7 +171,7 @@
 }
 #pragma mark  broadcast
 -(void)_pushbroadcastmsg:(NSDictionary*)data method:(NSString*)method{
-    if ([self _duplicatedPushMsgFilter:method data:data] == NO) {
+    if ([self _duplicatedPushBroadcastMsgFilter:method data:data] == NO) {
         int mtype = [[data objectForKey:@"mtype"] intValue];
         
         if (mtype == 30) {
@@ -239,10 +241,14 @@
     NSString * msgCacheKey = [NSString stringWithFormat:@"%lld-%lld-%@-%@-%@",self.projectId,self.userId,method,[data objectForKey:@"mid"],[data objectForKey:@"from"]];
     return [self _isExistMessage:msgCacheKey];
 }
+
 -(BOOL)_isExistMessage:(NSString*)msgCacheKey{
     @synchronized (self) {
         if (self.messageDuplicatedCache != nil && [self.messageDuplicatedCache objectForKey:msgCacheKey] == nil) {
             [self.messageDuplicatedCache setObject:@(YES) forKey:msgCacheKey];
+            if (self.messageDuplicatedCache.allKeys.count > 2000) {
+                [self.messageDuplicatedCache removeAllObjects];
+            }
             return NO;
         }else{
             return YES;

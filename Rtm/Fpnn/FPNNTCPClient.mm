@@ -31,7 +31,7 @@
 
 - (void)_initDefaultParameters{
     _autoReconnect = YES;
-    _sdkVersion = @"2.0.0";
+    _ocFpnnSdkVersion = @"2.0.0";
 }
 - (instancetype)initWithEndpoint:(NSString *)endpoint{
     

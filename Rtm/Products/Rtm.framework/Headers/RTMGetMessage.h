@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "RTMFileInfo.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RTMGetMessage : NSObject
@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,strong)NSData * audioMessage;
 @property(nonatomic,copy)NSString * attrs;
 @property(nonatomic,assign)int64_t modifiedTime;
+@property(nonatomic,strong)RTMFileInfo * fileInfo;
 @end
 
 NS_ASSUME_NONNULL_END

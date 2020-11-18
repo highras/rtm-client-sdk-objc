@@ -502,8 +502,10 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                 if (result) {
                     [self _toLogin:NO];
                 }else{
-//                    NSLog(@"resultresult");
-//                    [self closeConnect];
+//                    NSLog(@"resultresult  %ld",(long)self.connectStatus);
+                    @synchronized (self) {
+                        self.connectStatus = RTMClientConnectStatusConnectClosed;
+                    }
                     if ([self.delegate respondsToSelector:@selector(rtmConnectClose:)]) {
                         [self.delegate rtmConnectClose:self];
                     }
@@ -536,21 +538,12 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 -(void)_closeConnectHandle:(BOOL)needNotification{
     
 //    NSLog(@"开始断开");
-    dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+//    dispatch_semaphore_t sema = dispatch_semaphore_create(0);
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"bye" message:nil twoWay:YES];
     [self.usingClient sendQuest:quest
-                        timeout:2
-                        success:^(NSDictionary * _Nullable data) {
-        
-        dispatch_semaphore_signal(sema);
-        
-    }fail:^(FPNError * _Nullable error) {
-        
-        dispatch_semaphore_signal(sema);
-
-    }];
+                        timeout:2];
     
-    dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
+//    dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
     if (needNotification == YES) {
         self.authFinish = NO;
     }
@@ -691,6 +684,9 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
         }else{
             
 //            NSLog(@"断开");
+            @synchronized (self) {
+                self.isOverlookFpnnCloseCallBack = YES;
+            }
             if (self.autoRelogin) {
                 [self _closeConnectHandle:NO];
                 [self _reLogin];
@@ -741,7 +737,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
         }else{
             
                 
-                self.connectStatus = RTMClientConnectStatusConnectClosed;
+            self.connectStatus = RTMClientConnectStatusConnectClosed;
               
             
         }
@@ -883,18 +879,22 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 //                NSLog(@"connectionCloseCallBackconnectionCloseCall %d ",self.isOverlookFpnnCloseCallBack);
                 if (self.isOverlookFpnnCloseCallBack) {
                     @synchronized (self) {
+//                        NSLog(@"11111");
                         self.isOverlookFpnnCloseCallBack = NO;
                     }
                 }else{
                     if (self.authFinish && self.autoRelogin && self.connectStatus != RTMClientConnectStatusConnectClosed) {
-                        
-                        [self _closeConnectHandle:NO];
-//                        [self _notificationClose:NO];
-
+//                        NSLog(@"22222");
+//                        [self _closeConnectHandle:NO];
+                        [self _notificationClose:NO];
                         [self _getDelegateToRelogin];
                     }else{
+//                        NSLog(@"444444");
+                        if (self.authFinish) {
+//                            NSLog(@"33333");
+                            [self _byeCloseConnect:YES];
+                        }
                         
-                        [self _byeCloseConnect:YES];
                     }
                 }
 //                if(self.connectStatus != RTMClientConnectStatusConnectClosed){
@@ -906,7 +906,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
             
             _authClient.listenAndReplyCallBack = ^FPNNAnswer * _Nullable(NSDictionary * _Nullable data, NSString * _Nullable method) {
                 
-                NSLog(@"listenAndReplyCallBack %@ %@",method,data);
+//                FPNSLog(@"listenAndReplyCallBack %@ %@",method,data);
                 @rtmStrongify(self);
                 
                 if ([method isEqualToString:@"ping"]) {
@@ -944,11 +944,14 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                     return nil;//one way
                 }
                 
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     
+//                @autoreleasepool {
                     [self messageShareCenter:data method:method];
+//                }
                     
-                });
+                    
+//                });
                 
                 
                 return [RTMAnswer emptyAnswer];
