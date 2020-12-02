@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol RTMProtocol <NSObject>
 
 @required
+//重连只有在登录成功过1次后才会有效
 //重连将要开始  根据返回值是否进行重连
 -(BOOL)rtmReloginWillStart:(RTMClient *)client reloginCount:(int)reloginCount;
 //重连结果
@@ -20,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @optional
-//关闭连接
+//关闭连接  
 -(void)rtmConnectClose:(RTMClient *)client;
 //被踢下线
 -(void)rtmKickout:(RTMClient *)client;
@@ -50,12 +51,6 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)rtmPushGroupChatMessage:(RTMClient *)client message:(RTMMessage * _Nullable)message;
 -(void)rtmPushRoomChatMessage:(RTMClient *)client message:(RTMMessage * _Nullable)message;
 -(void)rtmPushBroadcastChatMessage:(RTMClient *)client message:(RTMMessage * _Nullable)message;
-
-////chat audio
-//-(void)rtmPushP2PChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message;
-//-(void)rtmPushGroupChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message;
-//-(void)rtmPushRoomChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message;
-//-(void)rtmPushBroadcastChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message;
 
 //chat cmd
 -(void)rtmPushP2PChatCmd:(RTMClient *)client message:(RTMMessage * _Nullable)message;

@@ -134,6 +134,7 @@
                     success:(void(^)(RTMSendAnswer * sendAnswer))successCallback
                       fail:(RTMAnswerFailCallBack)failCallback{
     
+    
     clientConnectStatueVerify
     BOOL isAudio = NO;
     BOOL isFile = NO;
@@ -141,11 +142,12 @@
     if (audioModel.audioFilePath.length > 0 && audioModel.duration > 0  && audioModel.lang.length > 0 && groupId != 0){
         isAudio = YES;
     }
+    NSLog(@"%@  %@  %@  %@",groupId,fileData,fileName,fileSuffix);
     if (groupId != 0 && fileData != nil && fileName.length > 0 && fileSuffix.length > 0) {
         isFile = YES;
     }
     if (isAudio == NO && isFile == NO) {
-        FPNSLog(@"rtm sendGroupFileWithId error. invalid parameter");
+        FPNSLog(@"rtm sendGroupFileWithId error. invalid parameter  %d   %d",isAudio,isFile);
         return;
     }
     

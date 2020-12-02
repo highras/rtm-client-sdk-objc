@@ -178,7 +178,71 @@
     return model;
 }
 
+-(void)getP2pUnreadWithUserIds:(NSArray<NSNumber*> * _Nonnull)userIds
+                         mtime:(int64_t)mtime
+                  messageTypes:(NSArray<NSNumber*> * _Nullable)messageTypes
+                       timeout:(int)timeout
+                       success:(void(^)(RTMUnreadAnswer * _Nullable unreadAnswer))successCallback
+                          fail:(RTMAnswerFailCallBack)failCallback{
+    
+    
+    clientConnectStatueVerify
+    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+    [dic setValue:userIds forKey:@"uids"];
+    [dic setValue:@(mtime) forKey:@"mtime"];
+    [dic setValue:messageTypes forKey:@"mtypes"];
+    
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getp2punread" message:dic twoWay:YES];
+    
+    BOOL result = [mainClient sendQuest:quest
+                                timeout:RTMClientSendQuestTimeout
+                                success:^(NSDictionary * _Nullable data) {
+        
+        
+        if (successCallback) {
+            RTMUnreadAnswer* unreadAnswer  = [RTMUnreadAnswer new];
+            unreadAnswer.unreadDictionary = [data objectForKey:@"p2p"];
+            successCallback(unreadAnswer);
+        }
+    
+    }fail:^(FPNError * _Nullable error) {
+        
+          _failCallback(error);
 
+    }];
+        
+    handlerNetworkError;
+    
+}
+
+-(RTMUnreadAnswer *)getP2pUnreadWithUserIds:(NSArray<NSNumber*> * _Nonnull)userIds
+                                             mtime:(int64_t)mtime
+                                      messageTypes:(NSArray<NSNumber*> * _Nullable)messageTypes
+                                           timeout:(int)timeout{
+    
+        RTMUnreadAnswer* model  = [RTMUnreadAnswer new];
+        clientConnectStatueVerifySync
+        
+        NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+        [dic setValue:userIds forKey:@"uids"];
+        [dic setValue:@(mtime) forKey:@"mtime"];
+        [dic setValue:messageTypes forKey:@"mtypes"];
+        
+        FPNNQuest * quest = [FPNNQuest questWithMethod:@"getp2punread" message:dic twoWay:YES];
+        FPNNAnswer * answer = [mainClient sendQuest:quest
+                                           timeout:RTMClientSendQuestTimeout];
+        
+        if (answer.error == nil) {
+            
+            model.unreadDictionary = [answer.responseData objectForKey:@"p2p"];
+            
+        }else{
+            model.error = answer.error;
+        }
+        
+        return model;
+    
+}
 
 -(void)getP2PHistoryMessageWithUserId:(NSNumber * _Nonnull)userId
                                desc:(BOOL)desc

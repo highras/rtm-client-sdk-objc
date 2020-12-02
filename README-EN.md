@@ -51,6 +51,7 @@ iOS RTM Usage document (integration + interface description)
 ```objc
 
 @required
+//reconnection is valid only after one successful login
 //reconnection is will begin
 -(BOOL)rtmReloginWillStart:(RTMClient *)client reloginCount:(int)reloginCount;
 

@@ -44,6 +44,7 @@ static NSString *name2Key = @"nameKey2";
                                 success:^(NSDictionary * _Nullable data) {
         
         @synchronized (self) {
+            NSLog(@"async offLineWithTimeoutoffLineWithTimeout");
             [self setValue:@(YES) forKey:@"isOverlookFpnnCloseCallBack"];
             [self setValue:@(NO) forKey:@"authFinish"];
         }
@@ -79,6 +80,7 @@ static NSString *name2Key = @"nameKey2";
     if (answer.error == nil) {
         
         @synchronized (self) {
+            NSLog(@"sync offLineWithTimeoutoffLineWithTimeout");
             [self setValue:@(YES) forKey:@"isOverlookFpnnCloseCallBack"];
             [self setValue:@(NO) forKey:@"authFinish"];
         }

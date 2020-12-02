@@ -50,6 +50,7 @@ iOS RTM 使用文档 （集成+接口说明）
 ```objc
 
 @required
+//重连只有在登录成功过1次后才会有效
 //重连将要开始
 -(BOOL)rtmReloginWillStart:(RTMClient *)client reloginCount:(int)reloginCount;
 

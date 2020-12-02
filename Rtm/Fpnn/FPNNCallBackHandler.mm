@@ -15,8 +15,7 @@
 #pragma mark FPNNCppAnswerCallback
 
 void FPNNCppAnswerCallback::onAnswer(fpnn::FPAnswerPtr answer){
-    
-    
+        
     @autoreleasepool {
         //NSLog(@"%s",__FUNCTION__);
         FPNNMessageDecoder * decoder = [[FPNNMessageDecoder alloc] initWithAnswer:answer];

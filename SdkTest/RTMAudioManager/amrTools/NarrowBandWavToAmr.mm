@@ -378,7 +378,7 @@ int DecodeNarrowBandAMRFileToWAVEFile(const char* pchAMRFileName, const char* pc
         nFrameCount++;
         fwrite(pcmFrame, sizeof(short), PCM_FRAME_SIZE, fpwave);
     }
-    printf("frame = %d\n", nFrameCount);
+//    printf("frame = %d\n", nFrameCount);
     Decoder_Interface_exit(destate);
     
     fclose(fpwave);

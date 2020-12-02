@@ -812,6 +812,8 @@
 		563BD391243DAE4C00C6AC11 /* MidGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 563BD082243DAE4B00C6AC11 /* MidGenerator.cpp */; };
 		563BD392243DAE4C00C6AC11 /* MidGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 563BD083243DAE4B00C6AC11 /* MidGenerator.h */; };
 		563BD393243DAE4C00C6AC11 /* queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 563BD084243DAE4B00C6AC11 /* queue.h */; };
+		5651BF15256E7F68006CD0D2 /* RTMUnreadAnswer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5651BF13256E7F68006CD0D2 /* RTMUnreadAnswer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5651BF16256E7F68006CD0D2 /* RTMUnreadAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5651BF14256E7F68006CD0D2 /* RTMUnreadAnswer.m */; };
 		566319E22418B90000072479 /* RTMAudioTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 566319E02418B90000072479 /* RTMAudioTools.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		566319E32418B90000072479 /* RTMAudioTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 566319E12418B90000072479 /* RTMAudioTools.m */; };
 		5667E4F324D9555D00C89DF8 /* RTMMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 5667E4F124D9555D00C89DF8 /* RTMMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1764,6 +1766,8 @@
 		563BD082243DAE4B00C6AC11 /* MidGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MidGenerator.cpp; sourceTree = "<group>"; };
 		563BD083243DAE4B00C6AC11 /* MidGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MidGenerator.h; sourceTree = "<group>"; };
 		563BD084243DAE4B00C6AC11 /* queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = queue.h; sourceTree = "<group>"; };
+		5651BF13256E7F68006CD0D2 /* RTMUnreadAnswer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMUnreadAnswer.h; sourceTree = "<group>"; };
+		5651BF14256E7F68006CD0D2 /* RTMUnreadAnswer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMUnreadAnswer.m; sourceTree = "<group>"; };
 		566319E02418B90000072479 /* RTMAudioTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMAudioTools.h; sourceTree = "<group>"; };
 		566319E12418B90000072479 /* RTMAudioTools.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMAudioTools.m; sourceTree = "<group>"; };
 		5667E4F124D9555D00C89DF8 /* RTMMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMMessage.h; sourceTree = "<group>"; };
@@ -3668,6 +3672,8 @@
 				56776E7D25399699007372C6 /* RTMTextReviewAnswer.m */,
 				56776E8625399E8D007372C6 /* RTMReviewAnswer.h */,
 				56776E8725399E8D007372C6 /* RTMReviewAnswer.m */,
+				5651BF13256E7F68006CD0D2 /* RTMUnreadAnswer.h */,
+				5651BF14256E7F68006CD0D2 /* RTMUnreadAnswer.m */,
 			);
 			path = syncAnswer;
 			sourceTree = "<group>";
@@ -3694,6 +3700,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5651BF15256E7F68006CD0D2 /* RTMUnreadAnswer.h in Headers */,
 				56C923AF253ED2E500839301 /* RTMFileInfo.h in Headers */,
 				56C923A2253D89AA00839301 /* RTMAudioModel.h in Headers */,
 				56776E8825399E8D007372C6 /* RTMReviewAnswer.h in Headers */,
@@ -4664,6 +4671,7 @@
 				563BD089243DAE4B00C6AC11 /* EncryptedStreamReceiver.cpp in Sources */,
 				563BD33B243DAE4C00C6AC11 /* FPWriter.cpp in Sources */,
 				563BD391243DAE4C00C6AC11 /* MidGenerator.cpp in Sources */,
+				5651BF16256E7F68006CD0D2 /* RTMUnreadAnswer.m in Sources */,
 				56776E7F25399699007372C6 /* RTMTextReviewAnswer.m in Sources */,
 				56E6B61024E6405E0099C675 /* RTMAttriAnswer.m in Sources */,
 				563BD383243DAE4C00C6AC11 /* obpool.c in Sources */,

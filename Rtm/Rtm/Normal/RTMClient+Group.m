@@ -165,6 +165,73 @@
 
 
 
+-(void)getGroupUnreadWithGroupIds:(NSArray<NSNumber*> * _Nonnull)groupIds
+                            mtime:(int64_t)mtime
+                     messageTypes:(NSArray<NSNumber*> * _Nullable)messageTypes
+                          timeout:(int)timeout
+                          success:(void(^)(RTMUnreadAnswer * _Nullable unreadAnswer))successCallback
+                             fail:(RTMAnswerFailCallBack)failCallback{
+    
+    
+    clientConnectStatueVerify
+    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+    [dic setValue:groupIds forKey:@"gids"];
+    [dic setValue:@(mtime) forKey:@"mtime"];
+    [dic setValue:messageTypes forKey:@"mtypes"];
+    
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getgroupunread" message:dic twoWay:YES];
+    
+    BOOL result = [mainClient sendQuest:quest
+                                timeout:RTMClientSendQuestTimeout
+                                success:^(NSDictionary * _Nullable data) {
+        
+        
+        if (successCallback) {
+            RTMUnreadAnswer* unreadAnswer  = [RTMUnreadAnswer new];
+            unreadAnswer.unreadDictionary = [data objectForKey:@"group"];
+            successCallback(unreadAnswer);
+        }
+    
+    }fail:^(FPNError * _Nullable error) {
+        
+          _failCallback(error);
+
+    }];
+        
+    handlerNetworkError;
+    
+}
+
+-(RTMUnreadAnswer *)getGroupUnreadWithGroupIds:(NSArray<NSNumber*> * _Nonnull)groupIds
+                                         mtime:(int64_t)mtime
+                                  messageTypes:(NSArray<NSNumber*> * _Nullable)messageTypes
+                                       timeout:(int)timeout{
+    
+        RTMUnreadAnswer* model  = [RTMUnreadAnswer new];
+        clientConnectStatueVerifySync
+        
+        NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+        [dic setValue:groupIds forKey:@"gids"];
+        [dic setValue:@(mtime) forKey:@"mtime"];
+        [dic setValue:messageTypes forKey:@"mtypes"];
+        
+        FPNNQuest * quest = [FPNNQuest questWithMethod:@"getgroupunread" message:dic twoWay:YES];
+        FPNNAnswer * answer = [mainClient sendQuest:quest
+                                           timeout:RTMClientSendQuestTimeout];
+        
+        if (answer.error == nil) {
+            
+            model.unreadDictionary = [answer.responseData objectForKey:@"group"];
+            
+        }else{
+            model.error = answer.error;
+        }
+        
+        return model;
+    
+}
+
+
 
 
 -(void)getGroupHistoryMessageWithGroupId:(NSNumber * _Nonnull)groupId

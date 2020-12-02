@@ -31,6 +31,7 @@
 @property(nonatomic,strong)RTMClient * client8;
 
 @property(nonatomic,strong)RTMRecordManager * recordManager;
+
 //@property(nonatomic,strong)NSString * recordHeaderAudioPath;
 //@property(nonatomic,assign)double  recordAmrAudioTime;
 //@property(nonatomic,strong)NSString * recordWavAudioPath;
@@ -176,7 +177,7 @@
 -(BOOL)rtmReloginWillStart:(RTMClient *)client reloginCount:(int)reloginCount{
 
     NSLog(@"rtmReloginWillStart  %d",reloginCount);
-    return NO;
+    return YES;
 }
 -(void)rtmConnectClose:(RTMClient *)client{
     NSLog(@"rtmConnectClose  %lld",client.userId);
@@ -207,25 +208,50 @@
                                             autoRelogin:YES];
             
             if (self.client) {
-                [self.client loginWithToken:@""
+                [self.client loginWithToken:@"615FD7A974D96C3EDE863D127B3B488E"
                                    language:@"en"
                                   attribute:@{@"aaa":@"bbb"}
                                     timeout:30
                                     success:^{
                     
                     
-                    
+                    NSLog(@"66666login success  %@",[NSThread currentThread]);
+
+
                     
                     
                 } connectFail:^(FPNError * _Nullable error) {
                     
-                    
+                    NSLog(@"login error %@ %@",[NSThread currentThread],error);
                 }];
                 
             }
         
             
-            
+//            self.client2 = [RTMClient clientWithEndpoint:@"161.189.171.91:13325"
+//                                              projectId:90000014
+//                                                 userId:777
+//                                               delegate:self
+//                                                 config:nil
+//                                            autoRelogin:YES];
+//
+//            if (self.client2) {
+//                [self.client2 loginWithToken:@"17B94F59961EB5772F71044A96837C6F"
+//                                   language:@"en"
+//                                  attribute:@{@"aaa":@"bbb"}
+//                                    timeout:30
+//                                    success:^{
+//
+//                    NSLog(@"7777login success  %@",[NSThread currentThread]);
+//
+//
+//
+//                } connectFail:^(FPNError * _Nullable error) {
+//
+//                    NSLog(@"login error %@",[NSThread currentThread]);
+//                }];
+
+//            }
             
         }
         
@@ -763,7 +789,9 @@
                     
                     if (indexPath.row == 0) {//p2p 发送文件 mtype=40图片  mtype=41语音  mtype=42视频
             
-                        NSData *imageData = UIImageJPEGRepresentation([UIImage imageNamed:@"timg"], 0);
+//                        NSData *imageData = UIImagePNGRepresentation([UIImage imageNamed:@"bizhi22.png"]);
+                        NSData *imageData = UIImageJPEGRepresentation([UIImage imageNamed:@"bizhi.jpeg"], 1);
+                        NSLog(@"-======%ld",imageData.length);
                         [self.client sendP2PFileWithId:@(777)
                                               fileData:imageData
                                               fileName:@"imgName"
@@ -786,6 +814,7 @@
                         
                         NSString * filePath = [[NSBundle mainBundle] pathForResource:@"text" ofType:@"mp3"];
                         NSData * voiceData= [NSData dataWithContentsOfFile:filePath];
+                        NSLog(@"1231  %@  ",voiceData);
                         [self.client sendGroupFileWithId:[NSNumber numberWithLongLong:666]
                                                  fileData:voiceData
                                                  fileName:@"mp3Name"
@@ -1603,6 +1632,7 @@
 #pragma mark UI
 
 -(void)loadView{
+    
     self.array = @[
 
 

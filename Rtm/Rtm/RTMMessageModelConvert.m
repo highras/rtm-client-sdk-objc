@@ -217,6 +217,7 @@
         RTMTranslatedInfo * translatedInfo = [RTMTranslatedInfo new];
         translatedInfo.sourceText = [itemArray objectAtIndex:5];
         msgOb.translatedInfo = translatedInfo;
+        msgOb.stringMessage = translatedInfo.sourceText;
         
     }else if (msgOb.messageType == 40  || msgOb.messageType == 41 || msgOb.messageType == 42 || msgOb.messageType == 50){//chat audio
         
@@ -261,6 +262,7 @@
         RTMTranslatedInfo * translatedInfo = [RTMTranslatedInfo new];
         translatedInfo.sourceText = [itemArray objectAtIndex:5];
         msgOb.translatedInfo = translatedInfo;
+        msgOb.stringMessage = translatedInfo.sourceText;
         
     }else if (msgOb.messageType == 40  || msgOb.messageType == 41 || msgOb.messageType == 42 || msgOb.messageType == 50){//chat audio
         
@@ -304,6 +306,7 @@
         RTMTranslatedInfo * translatedInfo = [RTMTranslatedInfo new];
         translatedInfo.sourceText = [itemArray objectAtIndex:5];
         msgOb.translatedInfo = translatedInfo;
+        msgOb.stringMessage = translatedInfo.sourceText;
         
     }else if (msgOb.messageType == 40  || msgOb.messageType == 41 || msgOb.messageType == 42 || msgOb.messageType == 50){//chat audio
         
@@ -346,6 +349,7 @@
         RTMTranslatedInfo * translatedInfo = [RTMTranslatedInfo new];
         translatedInfo.sourceText = [itemArray objectAtIndex:5];
         msgOb.translatedInfo = translatedInfo;
+        msgOb.stringMessage = translatedInfo.sourceText;
         
     }else if (msgOb.messageType == 40  || msgOb.messageType == 41 || msgOb.messageType == 42 || msgOb.messageType == 50){//chat audio
         

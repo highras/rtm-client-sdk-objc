@@ -1,6 +1,0 @@
-framework module Rtm {
-  umbrella header "Rtm.h"
-
-  export *
-  module * { export * }
-}

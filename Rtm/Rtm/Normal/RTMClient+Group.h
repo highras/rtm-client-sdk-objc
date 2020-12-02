@@ -17,6 +17,7 @@
 #import "RTMInfoAnswer.h"
 #import "RTMSpeechRecognitionAnswer.h"
 #import "RTMAttriAnswer.h"
+#import "RTMUnreadAnswer.h"
 NS_ASSUME_NONNULL_BEGIN
 
 
@@ -64,6 +65,28 @@ NS_ASSUME_NONNULL_BEGIN
                                          data:(NSData * _Nonnull)data
                                         attrs:(NSString * _Nonnull)attrs
                                       timeout:(int)timeout;
+
+
+
+/// 检测group离线聊天数目   只要是设置为保存的消息，均可获取未读。不限于 chat、cmd、file。
+/// @param groupIds int64 用户集合
+/// @param mtime 毫秒级时间戳，获取这个时间戳之后的未读消息，如果mtime 为空，则获取上一次logout后的未读消息
+/// @param messageTypes int 消息类型集合 (如果不传默认所有聊天相关消息类型，不包含自定义的type)
+/// @param timeout 请求超时时间 秒
+/// @param successCallback 成功回调
+/// @param failCallback 失败回调
+
+-(void)getGroupUnreadWithGroupIds:(NSArray<NSNumber*> * _Nonnull)groupIds
+                            mtime:(int64_t)mtime
+                     messageTypes:(NSArray<NSNumber*> * _Nullable)messageTypes
+                          timeout:(int)timeout
+                          success:(void(^)(RTMUnreadAnswer *_Nullable history))successCallback
+                             fail:(RTMAnswerFailCallBack)failCallback;
+-(RTMUnreadAnswer * _Nullable)getGroupUnreadWithGroupIds:(NSArray<NSNumber*> * _Nonnull)groupIds
+                                                   mtime:(int64_t)mtime
+                                            messageTypes:(NSArray<NSNumber*> * _Nullable)messageTypes
+                                                 timeout:(int)timeout;
+
 
 
 
@@ -251,27 +274,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 
-///// 语音识别 （调用此接口需在管理系统启用语音识别系统）调用这个接口的超时时间得加大到120s，此接口只支持通过rtm发送的语音消息，无需把原始语音再一次发送，节省流量
-///// @param messageId int64 消息ID
-///// @param fromUserId int64 发送者ID
-///// @param toGroupId int64 群ID
-///// @param profanityFilter 敏感词过滤
-///// @param timeout 请求超时时间 秒
-///// @param successCallback 成功回调
-///// @param failCallback 失败回调
-//-(void)stranscribeGroupWithId:(NSNumber * _Nonnull)messageId
-//                   fromUserId:(NSNumber * _Nonnull)fromUserId
-//                    toGroupId:(NSNumber * _Nonnull)toGroupId
-//              profanityFilter:(BOOL)profanityFilter
-//                      timeout:(int)timeout
-//                      success:(void(^)(RTMSpeechRecognitionAnswer * _Nullable recognition))successCallback
-//                         fail:(RTMAnswerFailCallBack)failCallback;
-//
-//-(RTMSpeechRecognitionAnswer*)stranscribeGroupWithId:(NSNumber * _Nonnull)messageId
-//                                          fromUserId:(NSNumber * _Nonnull)fromUserId
-//                                           toGroupId:(NSNumber * _Nonnull)toGroupId
-//                                     profanityFilter:(BOOL)profanityFilter
-//                                             timeout:(int)timeout;
+
 @end
 
 NS_ASSUME_NONNULL_END
