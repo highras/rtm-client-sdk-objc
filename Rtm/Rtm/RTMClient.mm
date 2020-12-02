@@ -529,9 +529,9 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
     @synchronized (self) {
         self.connectStatus = RTMClientConnectStatusConnectClosed;
     }
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"bye" message:nil twoWay:YES];
-    FPNNAnswer * an = [self.usingClient sendQuest:quest
-                        timeout:2];
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"bye" message:nil twoWay:YES];
+//    FPNNAnswer * an = [self.usingClient sendQuest:quest
+//                        timeout:2];
 
     if (needNotification == YES) {
         self.authFinish = NO;
