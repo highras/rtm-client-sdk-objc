@@ -229,7 +229,24 @@ self.client = [RTMClient clientWithEndpoint:
                                                   timeout:(int)timeout;
 
 
+/// 检测p2p离线聊天数目  只要是设置为保存的消息，均可获取未读。不限于 chat、cmd、file。
+/// @param userIds int64 用户集合
+/// @param mtime 毫秒级时间戳，获取这个时间戳之后的未读消息，如果mtime 为空，则获取上一次logout后的未读消息
+/// @param messageTypes int 消息类型集合 (如果不传默认所有聊天相关消息类型，不包含自定义的type)
+/// @param timeout 请求超时时间 秒
+/// @param successCallback 成功回调
+/// @param failCallback 失败回调
 
+-(void)getP2pUnreadWithUserIds:(NSArray<NSNumber*> * _Nonnull)userIds
+                         mtime:(int64_t)mtime
+                  messageTypes:(NSArray<NSNumber*> * _Nullable)messageTypes
+                       timeout:(int)timeout
+                       success:(void(^)(RTMUnreadAnswer *_Nullable history))successCallback
+                          fail:(RTMAnswerFailCallBack)failCallback;
+-(RTMUnreadAnswer * _Nullable)getP2pUnreadWithUserIds:(NSArray<NSNumber*> * _Nonnull)userIds
+                                                mtime:(int64_t)mtime
+                                         messageTypes:(NSArray<NSNumber*> * _Nullable)messageTypes
+                                              timeout:(int)timeout;
 
 
 /// 删除消息 p2p
