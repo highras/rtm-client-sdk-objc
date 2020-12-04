@@ -895,6 +895,8 @@
 		56C7A41A24C8463900077C44 /* FPNetworkReachabilityManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 56C7A41824C8463900077C44 /* FPNetworkReachabilityManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		56C7A41D24C8483C00077C44 /* RTMClient+MessagesManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 56C7A41B24C8483C00077C44 /* RTMClient+MessagesManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		56C7A41E24C8483C00077C44 /* RTMClient+MessagesManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C7A41C24C8483C00077C44 /* RTMClient+MessagesManager.m */; };
+		56C8DD6725778133000CBA19 /* RTMNetworkReachabilityShare.h in Headers */ = {isa = PBXBuildFile; fileRef = 56C8DD6525778133000CBA19 /* RTMNetworkReachabilityShare.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		56C8DD6825778133000CBA19 /* RTMNetworkReachabilityShare.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C8DD6625778133000CBA19 /* RTMNetworkReachabilityShare.m */; };
 		56C9237D253D379D00839301 /* RTMClient+FileToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 56C9237B253D379D00839301 /* RTMClient+FileToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		56C9237E253D379D00839301 /* RTMClient+FileToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 56C9237C253D379D00839301 /* RTMClient+FileToken.m */; };
 		56C923A2253D89AA00839301 /* RTMAudioModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 56C923A0253D89AA00839301 /* RTMAudioModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1852,6 +1854,8 @@
 		56C7A41824C8463900077C44 /* FPNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPNetworkReachabilityManager.h; sourceTree = "<group>"; };
 		56C7A41B24C8483C00077C44 /* RTMClient+MessagesManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTMClient+MessagesManager.h"; sourceTree = "<group>"; };
 		56C7A41C24C8483C00077C44 /* RTMClient+MessagesManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTMClient+MessagesManager.m"; sourceTree = "<group>"; };
+		56C8DD6525778133000CBA19 /* RTMNetworkReachabilityShare.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMNetworkReachabilityShare.h; sourceTree = "<group>"; };
+		56C8DD6625778133000CBA19 /* RTMNetworkReachabilityShare.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMNetworkReachabilityShare.m; sourceTree = "<group>"; };
 		56C9237B253D379D00839301 /* RTMClient+FileToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTMClient+FileToken.h"; sourceTree = "<group>"; };
 		56C9237C253D379D00839301 /* RTMClient+FileToken.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTMClient+FileToken.m"; sourceTree = "<group>"; };
 		56C923A0253D89AA00839301 /* RTMAudioModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMAudioModel.h; sourceTree = "<group>"; };
@@ -3506,6 +3510,8 @@
 			children = (
 				56C7A41824C8463900077C44 /* FPNetworkReachabilityManager.h */,
 				56C7A41724C8463900077C44 /* FPNetworkReachabilityManager.m */,
+				56C8DD6525778133000CBA19 /* RTMNetworkReachabilityShare.h */,
+				56C8DD6625778133000CBA19 /* RTMNetworkReachabilityShare.m */,
 				566F074823A0914D00D1D949 /* Rtm.h */,
 				568A8FA1255BE1D3008805B3 /* RTMLanguageCode.h */,
 				566F0E5323A33DD600D1D949 /* RTMCallBackDefinition.h */,
@@ -3700,6 +3706,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56C8DD6725778133000CBA19 /* RTMNetworkReachabilityShare.h in Headers */,
 				5651BF15256E7F68006CD0D2 /* RTMUnreadAnswer.h in Headers */,
 				56C923AF253ED2E500839301 /* RTMFileInfo.h in Headers */,
 				56C923A2253D89AA00839301 /* RTMAudioModel.h in Headers */,
@@ -4714,6 +4721,7 @@
 				56E6B60424E565F80099C675 /* RTMGetMessageAnswer.m in Sources */,
 				5667E4F824D9557200C89DF8 /* RTMHistoryMessage.m in Sources */,
 				563BD38D243DAE4C00C6AC11 /* StringUtil.cpp in Sources */,
+				56C8DD6825778133000CBA19 /* RTMNetworkReachabilityShare.m in Sources */,
 				5667E4FC24D9558A00C89DF8 /* RTMAudioInfo.m in Sources */,
 				56E6B61C24E6751B0099C675 /* RTMTextProfanityAnswer.m in Sources */,
 				563BD099243DAE4B00C6AC11 /* Config.cpp in Sources */,

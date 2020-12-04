@@ -25,6 +25,8 @@
 }
 -(void)playWithAudioModel:(RTMAudioModel*)audioModel{
 
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
     
     if ([self _playing]) {
         [self stop];

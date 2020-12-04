@@ -12,7 +12,6 @@
 #import "RTMAudioplayer.h"
 #import <Rtm/Rtm.h>
 #import "NSObject+Description.h"
-
 #define NSAllLog(FORMAT, ...) fprintf(stderr, "%s:%zd\t%s\n", [[[NSString stringWithUTF8String: __FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat: FORMAT, ## __VA_ARGS__] UTF8String]);
 
 @interface MainViewController ()<UITableViewDelegate,UITableViewDataSource,RTMProtocol>{
@@ -29,7 +28,6 @@
 @property(nonatomic,strong)RTMClient * client6;
 @property(nonatomic,strong)RTMClient * client7;
 @property(nonatomic,strong)RTMClient * client8;
-
 @property(nonatomic,strong)RTMRecordManager * recordManager;
 
 //@property(nonatomic,strong)NSString * recordHeaderAudioPath;
@@ -75,7 +73,7 @@
 }
 //normal message
 -(void)rtmPushP2PMessage:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-//    NSLog(@"rtmPushP2PMessage %@",message.rtm_autoDescription);
+    NSLog(@"rtmPushP2PMessage %@",message.rtm_autoDescription);
 }
 -(void)rtmPushGroupMessage:(RTMClient *)client message:(RTMMessage * _Nullable)message{
     NSLog(@"rtmPushGroupMessage %@",message.rtm_autoDescription);
@@ -141,21 +139,6 @@
     NSLog(@"rtmPushBroadcastChatMessagertmPushBroadcastChatMessage  %@  %@  %@   %@",message.rtm_autoDescription,message.translatedInfo.rtm_autoDescription,message.translatedInfo.sourceText,message.fileInfo.rtm_autoDescription);
 }
 
-////chat audio
-//-(void)rtmPushP2PChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-//
-//    NSLog(@"rtmPushP2PChatAudio = %@  %@",message.rtm_autoDescription,message.fileInfo.rtm_autoDescription);
-//}
-//-(void)rtmPushGroupChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-//    NSLog(@"rtmPushGroupChatAudio = %@  %@",message.rtm_autoDescription,message.fileInfo.rtm_autoDescription);
-//}
-//-(void)rtmPushRoomChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-//    NSLog(@"rtmPushRoomChatAudio = %@  %@",message.rtm_autoDescription,message.fileInfo.rtm_autoDescription);
-//}
-//-(void)rtmPushBroadcastChatAudio:(RTMClient *)client message:(RTMMessage * _Nullable)message{
-//    NSLog(@"rtmPushBroadcastChatAudio = %@  %@",message.rtm_autoDescription,message.fileInfo.rtm_autoDescription);
-//}
-
 //chat cmd
 -(void)rtmPushP2PChatCmd:(RTMClient *)client message:(RTMMessage * _Nullable)message{
     NSLog(@"rtmPushP2PChatCmd = %@",message.rtm_autoDescription);
@@ -172,11 +155,11 @@
 
 //重连
 -(void)rtmReloginCompleted:(RTMClient *)client reloginCount:(int)reloginCount reloginResult:(BOOL)reloginResult error:(FPNError *)error{
-    NSLog(@"rtmReloginCompleted  %d %d",reloginCount,reloginResult);
+    NSLog(@"rtmReloginCompleted  uid = %lld reloginCount = %d reloginResult = %d",client.userId,reloginCount,reloginResult);
 }
 -(BOOL)rtmReloginWillStart:(RTMClient *)client reloginCount:(int)reloginCount{
 
-    NSLog(@"rtmReloginWillStart  %d",reloginCount);
+    NSLog(@"rtmReloginWillStart  reloginCount = %d  uid = %lld",reloginCount,client.userId);
     return YES;
 }
 -(void)rtmConnectClose:(RTMClient *)client{
@@ -201,34 +184,50 @@
         if (indexPath.row == 0) {//@[@"验证登录"]
         
             self.client = [RTMClient clientWithEndpoint:@""
-                                              projectId:0
+                                              projectId:90000014
                                                  userId:666
                                                delegate:self
                                                  config:nil
                                             autoRelogin:YES];
-            
+
             if (self.client) {
-                [self.client loginWithToken:@"615FD7A974D96C3EDE863D127B3B488E"
+                [self.client loginWithToken:@"9FC45C79A9B34877F409306EF791A5AD"
                                    language:@"en"
                                   attribute:@{@"aaa":@"bbb"}
                                     timeout:30
                                     success:^{
-                    
-                    
+
+
                     NSLog(@"66666login success  %@",[NSThread currentThread]);
 
+//                    for (int i = 0; i<200000; i++) {
+//
+//                            [NSThread sleepForTimeInterval:0.001];
+//                            [self.client sendP2PMessageToUserId:@(777)
+//                                                    messageType:@(80)
+//                                                        message:@"aaaaaaaaa"
+//                                                          attrs:@"attrs"
+//                                                        timeout:10 success:^(RTMSendAnswer * _Nonnull sendAnswer) {
+//
+//
+//                                NSLog(@"%@",sendAnswer.rtm_autoDescription);
+//                            } fail:^(FPNError * _Nullable error) {
+//
+//                            }];
+//                            NSLog(@"%d",i);
+//
+//                    }
 
-                    
-                    
+
                 } connectFail:^(FPNError * _Nullable error) {
-                    
+
                     NSLog(@"login error %@ %@",[NSThread currentThread],error);
                 }];
-                
+
             }
         
             
-//            self.client2 = [RTMClient clientWithEndpoint:@"161.189.171.91:13325"
+//            self.client2 = [RTMClient clientWithEndpoint:@""
 //                                              projectId:90000014
 //                                                 userId:777
 //                                               delegate:self
@@ -236,7 +235,7 @@
 //                                            autoRelogin:YES];
 //
 //            if (self.client2) {
-//                [self.client2 loginWithToken:@"17B94F59961EB5772F71044A96837C6F"
+//                [self.client2 loginWithToken:@"20C084A0A015A1D798CC23A1C7E4C1CE"
 //                                   language:@"en"
 //                                  attribute:@{@"aaa":@"bbb"}
 //                                    timeout:30
@@ -250,10 +249,10 @@
 //
 //                    NSLog(@"login error %@",[NSThread currentThread]);
 //                }];
-
+//
 //            }
-            
-        }
+//
+//        }
         
         
         
@@ -266,13 +265,13 @@
             
             
             [self.client sendP2PMessageToUserId:@(777)
-                                    messageType:@(80)
+                                    messageType:@(99)
                                         message:@"aaaaaaaaa"
                                           attrs:@"attrs"
                                         timeout:10
                                         success:^(RTMSendAnswer * sendAnswer) {
 
-                NSLog(@"sendP2PMessageToUserId %@",sendAnswer.rtm_autoDescription);
+                NSLog(@"111111sendP2PMessageToUserId %@",sendAnswer.rtm_autoDescription);
 
             }fail:^(FPNError * _Nullable error) {
 
@@ -280,6 +279,20 @@
 
             }];
 
+            [self.client2 sendP2PMessageToUserId:@(666)
+                                    messageType:@(99)
+                                        message:@"bbbb"
+                                          attrs:@"attrs"
+                                        timeout:10
+                                        success:^(RTMSendAnswer * sendAnswer) {
+
+                NSLog(@"222222sendP2PMessageToUserId %@",sendAnswer.rtm_autoDescription);
+
+            }fail:^(FPNError * _Nullable error) {
+
+                NSLog(@"sendP2PMessageToUserId %@",error);
+
+            }];
             
             //同步接口
 //            RTMSendAnswer * answer = [self.client sendP2PMessageToUserId:@(777)
@@ -380,8 +393,8 @@
                     
                 NSData *imageData = UIImageJPEGRepresentation([UIImage imageNamed:@"timg"], 0);
                 
-                [self.client sendGroupMessageWithId:[NSNumber numberWithLongLong:666]
-                                        messageType:[NSNumber numberWithLongLong:80]
+                [self.client sendGroupMessageWithId:[NSNumber numberWithLongLong:100]
+                                        messageType:[NSNumber numberWithLongLong:66]
                                             message:@"group message123"
                                               attrs:@"attrs"
                                             timeout:10

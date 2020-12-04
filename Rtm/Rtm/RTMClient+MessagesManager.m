@@ -16,7 +16,7 @@
 @implementation RTMClient (MessagesManager)
 
 -(void)messageShareCenter:(NSDictionary*)data method:(NSString*)method{
-    
+   
     @synchronized (self) {
         if (self.messageDuplicatedCache == nil) {
             self.messageDuplicatedCache = [[NSMutableDictionary alloc]init];
@@ -38,7 +38,6 @@
 
 #pragma mark p2p msg
 -(void)_pushmsg:(NSDictionary*)data method:(NSString*)method{
-    
     if ([self _duplicatedPushMsgFilter:method data:data] == NO) {
         int mtype = [[data objectForKey:@"mtype"] intValue];
         

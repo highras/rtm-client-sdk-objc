@@ -5,7 +5,9 @@
 //  Created by zsl on 2019/12/11.
 //  Copyright © 2019 FunPlus. All rights reserved.
 //
-
+#import <UIKit/UIKit.h>
+#import <ifaddrs.h>
+#import <arpa/inet.h>
 #import "RTMClient.h"
 #import "RTMIPv6Adapter.h"
 #import "Fpnn.h"
@@ -15,7 +17,7 @@
 #import "RTMAudioTools.h"
 #import "FPNetworkReachabilityManager.h"
 #import "RTMClient+MessagesManager.h"
-
+#import "RTMNetworkReachabilityShare.h"
 typedef NS_ENUM(NSInteger, RTMClientNetStatus){
     RTMClientNetStatusNoDetection = -1,
     RTMClientNetStatusNone = 0,
@@ -28,6 +30,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 
 //netState
 @property(nonatomic,assign)RTMClientNetStatus netStatus;
+@property(nonatomic,strong)NSString * wifiAddress;
 //relogin
 @property(nonatomic,assign)BOOL autoRelogin;  //
 @property(nonatomic,assign)int reloginNum;    //
@@ -150,16 +153,31 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
         }
         [self _startNetMonitor];
         
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        
+        
     }
     
     return self;
     
 }
-//-(void)didBecomeActive{
-//    NSLog(@"didBecomeActive");
-//}
+-(void)didBecomeActive{
+    if (self.netStatus == RTMClientNetStatusReachableWifi && self.authFinish) {
+        NSString * currentWifiAddress = [self getIPAddress];
+        if ([self.wifiAddress isEqualToString:currentWifiAddress] == NO && [currentWifiAddress isEqualToString:@"error"] == NO) {
+            FPNSLog(@"wifi 切换  %@",currentWifiAddress);
+            @synchronized (self) {
+                self.isOverlookFpnnCloseCallBack = YES;
+                self.wifiAddress =  currentWifiAddress;
+            }
+            [self _closeConnectHandle:NO];
+            [self _getDelegateToRelogin];
+        }
+        
+    }
+}
 //-(void)didEnterBackground{
 //    NSLog(@"didEnterBackground");
 ////    self.toBacKGroudTime = [NSDate date];
@@ -400,8 +418,8 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                     @synchronized (self) {
                         self.authEndPoint = endPoint;
                         [self.authClient closeConnect];
-                        self.authClient = nil;
-                        self.usingClient = nil;
+//                        self.authClient = nil;
+//                        self.usingClient = nil;
                     }
                       
                     [self _authRequest];
@@ -456,9 +474,9 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
            
                 [self.whichClient closeConnect];
                 [self.authClient closeConnect];
-                self.authClient = nil;
-                self.usingClient = nil;
-                self.whichClient = nil;
+//                self.authClient = nil;
+//                self.usingClient = nil;
+//                self.whichClient = nil;
                 
             }
             if (self.loginFail) {
@@ -560,9 +578,9 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                 [_whichClient closeConnect];
                 [_authClient closeConnect];
                 [_usingClient closeConnect];
-                _whichClient = nil;
-                _authClient = nil;
-                _usingClient = nil;
+//                _whichClient = nil;
+//                _authClient = nil;
+//                _usingClient = nil;
             
             //offline
             self.connectStatus = RTMClientConnectStatusConnectClosed;
@@ -598,35 +616,48 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
     }
 }
 #pragma mark net check
+- (void)_netChange:(NSNotification *)noti{
+    if ([noti.object intValue] == 0) {
+        FPNSLog(@"未知网络");
+        self.netStatus = RTMClientNetStatusNone;
+    }else if ([noti.object intValue] == 1){
+        FPNSLog(@"没有网络");
+        self.netStatus = RTMClientNetStatusNone;
+    }else if ([noti.object intValue] == 2){
+        FPNSLog(@"蜂窝网络");
+        self.netStatus = RTMClientNetStatusReachableViaWWAN;
+    }else if ([noti.object intValue] == 3){
+        FPNSLog(@"WIFI网络");
+        self.wifiAddress = [self getIPAddress];
+        self.netStatus = RTMClientNetStatusReachableWifi;
+    }
+    
+}
 -(void)_startNetMonitor{
-    
-    FPNetworkReachabilityManager *manager = [FPNetworkReachabilityManager sharedManager];
-    [manager setReachabilityStatusChangeBlock:^(FPNetworkReachabilityStatus status) {
-        
-        switch(status) {
-                
-         case FPNetworkReachabilityStatusUnknown:
-//                NSLog(@"未知网络");
-                self.netStatus = RTMClientNetStatusNone;
-                break;
-         case FPNetworkReachabilityStatusNotReachable:
-//                NSLog(@"没有网络");
-                self.netStatus = RTMClientNetStatusNone;
-                break;
-         case FPNetworkReachabilityStatusReachableViaWWAN:
-//                NSLog(@"蜂窝网络");
-                self.netStatus = RTMClientNetStatusReachableViaWWAN;
-                break;
-         case FPNetworkReachabilityStatusReachableViaWiFi:
-//                NSLog(@"WIFI网络");
-                self.netStatus = RTMClientNetStatusReachableWifi;
-                break;
+    [RTMNetworkReachabilityShare sharedManager];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_netChange:) name:RTMNetworkReachabilityShareDidChangeNotification object:nil];
+}
+- (NSString *)getIPAddress{
+    NSString *adress = @"error";
+    struct ifaddrs *interfaces = NULL;
+    struct ifaddrs *temp_addr = NULL;
+    int success = 0;
+    success = getifaddrs(&interfaces);
+    if (success == 0) {
+        temp_addr = interfaces;
+        while (temp_addr != NULL) {
+            if (temp_addr->ifa_addr->sa_family == AF_INET) {
+                //check if interface is en0 which is the wifi conection on the iphone
+                if ([[NSString stringWithUTF8String:temp_addr ->ifa_name] isEqualToString:@"en0"]) {
+                    adress = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
+                }
+            }
+            temp_addr = temp_addr -> ifa_next;
         }
-        
-    }];
+    }
     
-    [manager startMonitoring];
-        
+    freeifaddrs(interfaces);
+    return (adress);
 }
 -(void)_stopNetMonitor{
     FPNetworkReachabilityManager *manager = [FPNetworkReachabilityManager sharedManager];
@@ -642,8 +673,6 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 #pragma mark ping
 -(void)_startPingMonitor{
     
-    
-
         [self _cancelPingTimer];
         if (self.connectStatus == RTMClientConnectStatusConnected) {
 
@@ -708,7 +737,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
     @synchronized (self) {
         _messageId = _messageId + 1;
         int64_t millisecond = [[NSDate date] timeIntervalSince1970] * 1000;
-        return (millisecond << 14) + _messageId;
+        return (millisecond << 16) + _messageId;
     }
 }
 
@@ -835,7 +864,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
             
             _authClient.connectionCloseCallBack = ^{
                 @rtmStrongify(self);
-
+//                NSLog(@"connectionCloseCallBack");
                 if (self.connectStatus == RTMClientConnectStatusConnected) {
 
                     if (self.isOverlookFpnnCloseCallBack) {
@@ -927,6 +956,10 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
         
     
     
+}
+-(void)dealloc{
+    [self _cancelPingTimer];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 @end
 

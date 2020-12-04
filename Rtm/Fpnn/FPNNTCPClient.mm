@@ -103,8 +103,14 @@
 }
 
 -(void)dealloc{
-    
-    //FPNSLog(@"FPNNTCPClient dealloc");
+    _client.reset();
+    _client = nullptr;
+//    if (_client == nullptr) {
+//        NSLog(@"析构析构析构");
+//    }else{
+//        NSLog(@"没有没有没有析构析构析构");
+//    }
+    FPNSLog(@"FPNNTCPClient dealloc");
 }
 
 
