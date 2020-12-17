@@ -35,7 +35,7 @@
     [dic setValue:mtypes forKey:@"mtypes"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getbroadcastmsg" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
     
@@ -92,7 +92,7 @@
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getbroadcastmsg" message:dic twoWay:YES];
     
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                        timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -143,7 +143,7 @@
         
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getmsg" message:dic twoWay:YES];
         
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
     
@@ -182,7 +182,7 @@
     // type: 1,p2p; 2,group; 3, room
         
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getmsg" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -217,7 +217,7 @@
 //    
 //    FPNNQuest * quest = [FPNNQuest questWithMethod:@"stranscribe" message:dic twoWay:YES];
 //    
-//    BOOL result = [mainClient sendQuest:quest
+//    BOOL result = [fpnnMainClient sendQuest:quest
 //                                timeout:RTMClientSendQuestTimeout
 //                                success:^(NSDictionary * _Nullable data) {
 //        
@@ -261,7 +261,7 @@
 //    
 //    FPNNQuest * quest = [FPNNQuest questWithMethod:@"stranscribe" message:dic twoWay:YES];
 //    
-//    FPNNAnswer * answer = [mainClient sendQuest:quest
+//    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
 //                                        timeout:RTMClientSendQuestTimeout];
 //    
 //    if (answer.error == nil) {

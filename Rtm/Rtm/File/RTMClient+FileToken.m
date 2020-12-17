@@ -25,7 +25,7 @@
     [dic setValue:userId forKey:@"to"];
     [dic setValue:@"sendfile" forKey:@"cmd"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -52,7 +52,7 @@
     [dic setValue:userId forKey:@"to"];
     [dic setValue:@"sendfile" forKey:@"cmd"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest timeout:RTMClientSendQuestTimeout];
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest timeout:RTMClientSendQuestTimeout];
     return answer;
     
 }
@@ -69,7 +69,7 @@
     [dic setValue:groupId forKey:@"gid"];
     [dic setValue:@"sendgroupfile" forKey:@"cmd"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -96,7 +96,7 @@
     [dic setValue:groupId forKey:@"gid"];
     [dic setValue:@"sendfile" forKey:@"cmd"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest timeout:RTMClientSendQuestTimeout];
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest timeout:RTMClientSendQuestTimeout];
     return answer;
     
 }
@@ -111,7 +111,7 @@
     [dic setValue:roomId forKey:@"rid"];
     [dic setValue:@"sendroomfile" forKey:@"cmd"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -138,7 +138,7 @@
     [dic setValue:roomId forKey:@"rid"];
     [dic setValue:@"sendfile" forKey:@"cmd"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest timeout:RTMClientSendQuestTimeout];
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest timeout:RTMClientSendQuestTimeout];
     return answer;
     
 }

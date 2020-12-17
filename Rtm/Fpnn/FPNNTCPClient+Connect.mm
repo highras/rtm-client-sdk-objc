@@ -8,7 +8,7 @@
 #import "FPNNCallBackHandler.h"
 #import "FPNNTCPClient+Connect.h"
 #import "FPNNCallBackDefinition.h"
-
+#import "FpnnDefine.h"
 
 @implementation FPNNTCPClient (Connect)
 - (void)connect{

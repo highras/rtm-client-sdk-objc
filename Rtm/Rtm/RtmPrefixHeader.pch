@@ -4,13 +4,13 @@
 #ifndef RtmPrefixHeader_pch
 #define RtmPrefixHeader_pch
 
-#define Client *(fpnn::TCPClientPtr*)((void* (*)(id, SEL))[self methodForSelector:NSSelectorFromString(@"getPrivateClient")])(self, NSSelectorFromString(@"getPrivateClient"))
-#define Quest(quest) *(fpnn::FPQuestPtr*)((void* (*)(id, SEL))[quest methodForSelector:NSSelectorFromString(@"getQuest")])(quest, NSSelectorFromString(@"getQuest"))
-#define Listen *(FPNNCppConnectionListenPtr*)((void* (*)(id, SEL))[self methodForSelector:NSSelectorFromString(@"getPrivatelistenCall")])(self, NSSelectorFromString(@"getPrivatelistenCall"))
+//#define Client *(fpnn::TCPClientPtr*)((void* (*)(id, SEL))[self methodForSelector:NSSelectorFromString(@"getPrivateClient")])(self, NSSelectorFromString(@"getPrivateClient"))
+//#define Quest(quest) *(fpnn::FPQuestPtr*)((void* (*)(id, SEL))[quest methodForSelector:NSSelectorFromString(@"getQuest")])(quest, NSSelectorFromString(@"getQuest"))
+//#define Listen *(FPNNCppConnectionListenPtr*)((void* (*)(id, SEL))[self methodForSelector:NSSelectorFromString(@"getPrivatelistenCall")])(self, NSSelectorFromString(@"getPrivatelistenCall"))
+//
+//#define ListenWithClient(client) *(FPNNCppConnectionListenPtr*)((void* (*)(id, SEL))[client methodForSelector:NSSelectorFromString(@"getPrivatelistenCall")])(client, NSSelectorFromString(@"getPrivatelistenCall"))
 
-#define ListenWithClient(client) *(FPNNCppConnectionListenPtr*)((void* (*)(id, SEL))[client methodForSelector:NSSelectorFromString(@"getPrivatelistenCall")])(client, NSSelectorFromString(@"getPrivatelistenCall"))
-
-#define mainClient  ((FPNNTCPClient *)[self valueForKey:@"usingClient"])
+#define fpnnMainClient  ((FPNNTCPClient *)[self valueForKey:@"usingClient"])
 
 #define _successCallback(data)    if (successCallback) { successCallback(data);}
 #define _failCallback(error)       if (failCallback) { failCallback(error);}
@@ -35,9 +35,6 @@
 #define messageTypeGetHistoryFilter for (NSNumber * messageType in mtypes) {if (messageType.intValue < 51 || messageType.intValue > 127) {FPNError * error = [FPNError errorWithEx:@"RTM_EC_INVALID_MTYPE" code:200005];_failCallback(error);return;}}
 
 #define messageTypeGetHistoryFilterSync for (NSNumber * messageType in mtypes) {if (messageType.intValue < 51 || messageType.intValue > 127) {FPNError * error = [FPNError errorWithEx:@"RTM_EC_INVALID_MTYPE" code:200005];model.error = error;return model;}}
-
-
-
 
 
 #define mid  Int64Number(  (long long)((long long* (*)(id, SEL))[self methodForSelector:NSSelectorFromString(@"_getMessageId")])(self, NSSelectorFromString(@"_getMessageId"))  )

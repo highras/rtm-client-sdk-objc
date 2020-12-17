@@ -12,6 +12,9 @@
 #import "NSDictionary+MsgPack.h"
 #import "FPNError.h"
 
+
+#define ListenWithClient(client) *(FPNNCppConnectionListenPtr*)((void* (*)(id, SEL))[client methodForSelector:NSSelectorFromString(@"getPrivatelistenCall")])(client, NSSelectorFromString(@"getPrivatelistenCall"))
+
 @interface FPNNAsyncAnswer(){
    
     

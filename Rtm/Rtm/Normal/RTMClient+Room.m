@@ -33,7 +33,7 @@
     [dic setValue:attrs forKey:@"attrs"];
 
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
     
@@ -72,7 +72,7 @@
 
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES];
     
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                        timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -108,7 +108,7 @@
     [dic setValue:attrs forKey:@"attrs"];
 
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
     
@@ -147,7 +147,7 @@
 
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES];
     
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                        timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -192,7 +192,7 @@
     [dic setValue:mtypes forKey:@"mtypes"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroommsg" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
     
@@ -252,7 +252,7 @@
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroommsg" message:dic twoWay:YES];
     
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                        timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -304,7 +304,7 @@
     // type: 1,p2p; 2,group; 3, room
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"delmsg" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
     
@@ -336,7 +336,7 @@
     // type: 1,p2p; 2,group; 3, room
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"delmsg" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -368,7 +368,7 @@
     // type: 1,p2p; 2,group; 3, room
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getmsg" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
 //        NSLog(@"%@",data);
@@ -409,7 +409,7 @@
     // type: 1,p2p; 2,group; 3, room
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getmsg" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -435,7 +435,7 @@
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"enterroom" message:dic twoWay:YES];
     
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -462,7 +462,7 @@
     [dic setValue:roomId forKey:@"rid"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"enterroom" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -487,7 +487,7 @@
     [dic setValue:roomId forKey:@"rid"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"leaveroom" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -514,7 +514,7 @@
     [dic setValue:roomId forKey:@"rid"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"leaveroom" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -536,7 +536,7 @@
     
     clientConnectStatueVerify
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getuserrooms" message:nil twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -559,7 +559,7 @@
     clientConnectStatueVerifySync
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getuserrooms" message:nil twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                        timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -573,6 +573,105 @@
     return model;
     
 }
+
+
+
+-(void)getRoomMembersWithId:(NSNumber * _Nonnull)roomId
+                    timeout:(int)timeout
+                    success:(void(^)(NSArray * _Nullable userIdArray))successCallback
+                       fail:(RTMAnswerFailCallBack)failCallback{
+    
+    
+    clientConnectStatueVerify
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroommembers" message:@{@"rid":roomId} twoWay:YES];
+       BOOL result = [fpnnMainClient sendQuest:quest
+                                   timeout:RTMClientSendQuestTimeout
+                                   success:^(NSDictionary * _Nullable data) {
+           
+           if (successCallback) {
+               successCallback([data objectForKey:@"uids"]);
+           }
+       
+       }fail:^(FPNError * _Nullable error) {
+           
+             _failCallback(error);
+
+       }];
+       
+       handlerNetworkError;
+    
+}
+-(RTMMemberAnswer*)getRoomMembersWithId:(NSNumber * _Nonnull)roomId
+                                timeout:(int)timeout{
+    
+     RTMMemberAnswer * model = [RTMMemberAnswer new];
+        clientConnectStatueVerifySync
+        
+        FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroommembers" message:@{@"rid":roomId} twoWay:YES];
+        FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
+                                           timeout:RTMClientSendQuestTimeout];
+        
+        if (answer.error == nil) {
+            model.dataArray = [answer.responseData objectForKey:@"uids"];
+            
+        }else{
+            model.error = answer.error;
+        }
+        
+        return model;
+}
+
+
+
+
+-(void)getRoomMemberCountWithId:(NSNumber * _Nonnull)roomId
+                        timeout:(int)timeout
+                        success:(void(^)(int64_t count))successCallback
+                           fail:(RTMAnswerFailCallBack)failCallback{
+    
+    clientConnectStatueVerify
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroomcount" message:@{@"rid":roomId} twoWay:YES];
+       BOOL result = [fpnnMainClient sendQuest:quest
+                                   timeout:RTMClientSendQuestTimeout
+                                   success:^(NSDictionary * _Nullable data) {
+           
+           if (successCallback) {
+               successCallback([[data objectForKey:@"cn"] longLongValue]);
+           }
+       
+       }fail:^(FPNError * _Nullable error) {
+           
+             _failCallback(error);
+
+       }];
+       
+       handlerNetworkError;
+    
+}
+-(RTMCountAnswer*)getRoomMemberCountWithId:(NSNumber * _Nonnull)roomId
+                           timeout:(int)timeout{
+    
+    
+    RTMCountAnswer * model = [RTMCountAnswer new];
+    clientConnectStatueVerifySync
+    
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroomcount" message:@{@"rid":roomId} twoWay:YES];
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
+                                       timeout:RTMClientSendQuestTimeout];
+    
+    if (answer.error == nil) {
+        model.count = [[answer.responseData objectForKey:@"cn"] longLongValue];
+        
+    }else{
+        model.error = answer.error;
+    }
+    
+    return model;
+    
+}
+
+
+
 
 
 
@@ -595,7 +694,7 @@
     [dic setValue:privateInfo forKey:@"pinfo"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"setroominfo" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -625,7 +724,7 @@
     [dic setValue:privateInfo forKey:@"pinfo"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"setroominfo" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -654,7 +753,7 @@
     [dic setValue:roomId forKey:@"rid"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroominfo" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -685,7 +784,7 @@
     [dic setValue:roomId forKey:@"rid"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroominfo" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -714,7 +813,7 @@
     [dic setValue:roomId forKey:@"rid"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroomopeninfo" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -743,7 +842,7 @@
     [dic setValue:roomId forKey:@"rid"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroomopeninfo" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -767,7 +866,7 @@
    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
    [dic setValue:roomIds forKey:@"rids"];
    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroomsopeninfo" message:dic twoWay:YES];
-   BOOL result = [mainClient sendQuest:quest
+   BOOL result = [fpnnMainClient sendQuest:quest
                                timeout:RTMClientSendQuestTimeout
                                success:^(NSDictionary * _Nullable data) {
 //       NSLog(@"%@",data);
@@ -796,7 +895,7 @@
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:roomIds forKey:@"rids"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroomsopeninfo" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -834,7 +933,7 @@
 //    
 //    FPNNQuest * quest = [FPNNQuest questWithMethod:@"stranscribe" message:dic twoWay:YES];
 //    
-//    BOOL result = [mainClient sendQuest:quest
+//    BOOL result = [fpnnMainClient sendQuest:quest
 //                                timeout:RTMClientSendQuestTimeout
 //                                success:^(NSDictionary * _Nullable data) {
 //        
@@ -879,7 +978,7 @@
 //    
 //    FPNNQuest * quest = [FPNNQuest questWithMethod:@"stranscribe" message:dic twoWay:YES];
 //    
-//    FPNNAnswer * answer = [mainClient sendQuest:quest
+//    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
 //                                        timeout:RTMClientSendQuestTimeout];
 //    
 //    if (answer.error == nil) {

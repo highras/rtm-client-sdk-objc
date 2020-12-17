@@ -25,7 +25,7 @@
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"addfriends" message:dic twoWay:YES];
     
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -51,7 +51,7 @@
     [dic setValue:friendids forKey:@"friends"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"addfriends" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -77,7 +77,7 @@
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"delfriends" message:dic twoWay:YES];
     
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -103,7 +103,7 @@
     [dic setValue:friendids forKey:@"friends"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"delfriends" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -125,7 +125,7 @@
     clientConnectStatueVerify
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getfriends" message:nil twoWay:YES];
     
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -147,7 +147,7 @@
     RTMMemberAnswer * model = [RTMMemberAnswer new];
     clientConnectStatueVerifySync
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getfriends" message:nil twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -170,7 +170,7 @@
     [dic setValue:friendids forKey:@"blacks"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"addblacks" message:dic twoWay:YES];
     
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -195,7 +195,7 @@
        NSMutableDictionary * dic = [NSMutableDictionary dictionary];
        [dic setValue:friendids forKey:@"blacks"];
        FPNNQuest * quest = [FPNNQuest questWithMethod:@"addblacks" message:dic twoWay:YES];
-       FPNNAnswer * answer = [mainClient sendQuest:quest
+       FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                            timeout:RTMClientSendQuestTimeout];
        
        if (answer.error == nil) {
@@ -222,7 +222,7 @@
     [dic setValue:friendids forKey:@"blacks"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"delblacks" message:dic twoWay:YES];
     
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -248,7 +248,7 @@
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:friendids forKey:@"blacks"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"delblacks" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -269,7 +269,7 @@
     
     clientConnectStatueVerify
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getblacks" message:nil twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -291,7 +291,7 @@
     RTMMemberAnswer * model = [RTMMemberAnswer new];
     clientConnectStatueVerifySync
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getblacks" message:nil twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {

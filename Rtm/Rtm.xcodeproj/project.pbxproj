@@ -919,6 +919,10 @@
 		56D2B0A423B9A19100491DF7 /* MPMessagePackReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 56D2B09423B9A19100491DF7 /* MPMessagePackReader.h */; };
 		56D2B0A523B9A19100491DF7 /* NSDictionary+MPMessagePack.h in Headers */ = {isa = PBXBuildFile; fileRef = 56D2B09523B9A19100491DF7 /* NSDictionary+MPMessagePack.h */; };
 		56D2B0A623B9A19100491DF7 /* cmp.h in Headers */ = {isa = PBXBuildFile; fileRef = 56D2B09623B9A19100491DF7 /* cmp.h */; };
+		56E045E3257F2FF0007BC8CA /* RTMCountAnswer.h in Headers */ = {isa = PBXBuildFile; fileRef = 56E045E1257F2FF0007BC8CA /* RTMCountAnswer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		56E045E4257F2FF0007BC8CA /* RTMCountAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = 56E045E2257F2FF0007BC8CA /* RTMCountAnswer.m */; };
+		56E045E7257FA87E007BC8CA /* FpnnDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = 56E045E5257FA87E007BC8CA /* FpnnDefine.h */; };
+		56E045E8257FA87E007BC8CA /* FpnnDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = 56E045E6257FA87E007BC8CA /* FpnnDefine.m */; };
 		56E664D123FD3F1300C680BC /* IPV4HandleTools.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 56E664CF23FD3F1300C680BC /* IPV4HandleTools.cpp */; };
 		56E664D223FD3F1300C680BC /* IPV4HandleTools.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 56E664D023FD3F1300C680BC /* IPV4HandleTools.hpp */; };
 		56E6B5DF24E4E1AB0099C675 /* RTMGetMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 56E6B5DD24E4E1AB0099C675 /* RTMGetMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1878,6 +1882,10 @@
 		56D2B09423B9A19100491DF7 /* MPMessagePackReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPMessagePackReader.h; sourceTree = "<group>"; };
 		56D2B09523B9A19100491DF7 /* NSDictionary+MPMessagePack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+MPMessagePack.h"; sourceTree = "<group>"; };
 		56D2B09623B9A19100491DF7 /* cmp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cmp.h; sourceTree = "<group>"; };
+		56E045E1257F2FF0007BC8CA /* RTMCountAnswer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMCountAnswer.h; sourceTree = "<group>"; };
+		56E045E2257F2FF0007BC8CA /* RTMCountAnswer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMCountAnswer.m; sourceTree = "<group>"; };
+		56E045E5257FA87E007BC8CA /* FpnnDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FpnnDefine.h; sourceTree = "<group>"; };
+		56E045E6257FA87E007BC8CA /* FpnnDefine.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FpnnDefine.m; sourceTree = "<group>"; };
 		56E664CF23FD3F1300C680BC /* IPV4HandleTools.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = IPV4HandleTools.cpp; sourceTree = "<group>"; };
 		56E664D023FD3F1300C680BC /* IPV4HandleTools.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = IPV4HandleTools.hpp; sourceTree = "<group>"; };
 		56E6B5DD24E4E1AB0099C675 /* RTMGetMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMGetMessage.h; sourceTree = "<group>"; };
@@ -3592,6 +3600,8 @@
 				566F078E23A0917500D1D949 /* PayloadDictionaryBuilder.m */,
 				566F078B23A0917500D1D949 /* PayloadDictionaryBuildDelegate.hpp */,
 				566F07A123A0917500D1D949 /* PayloadDictionaryBuildDelegate.cpp */,
+				56E045E5257FA87E007BC8CA /* FpnnDefine.h */,
+				56E045E6257FA87E007BC8CA /* FpnnDefine.m */,
 			);
 			path = Fpnn;
 			sourceTree = "<group>";
@@ -3680,6 +3690,8 @@
 				56776E8725399E8D007372C6 /* RTMReviewAnswer.m */,
 				5651BF13256E7F68006CD0D2 /* RTMUnreadAnswer.h */,
 				5651BF14256E7F68006CD0D2 /* RTMUnreadAnswer.m */,
+				56E045E1257F2FF0007BC8CA /* RTMCountAnswer.h */,
+				56E045E2257F2FF0007BC8CA /* RTMCountAnswer.m */,
 			);
 			path = syncAnswer;
 			sourceTree = "<group>";
@@ -3706,6 +3718,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56E045E3257F2FF0007BC8CA /* RTMCountAnswer.h in Headers */,
 				56C8DD6725778133000CBA19 /* RTMNetworkReachabilityShare.h in Headers */,
 				5651BF15256E7F68006CD0D2 /* RTMUnreadAnswer.h in Headers */,
 				56C923AF253ED2E500839301 /* RTMFileInfo.h in Headers */,
@@ -4385,6 +4398,7 @@
 				563BD0B7243DAE4B00C6AC11 /* fbuffer_decl.hpp in Headers */,
 				563BD233243DAE4C00C6AC11 /* enum_binary_params.hpp in Headers */,
 				563BD37A243DAE4C00C6AC11 /* StringUtil.h in Headers */,
+				56E045E7257FA87E007BC8CA /* FpnnDefine.h in Headers */,
 				563BD10D243DAE4B00C6AC11 /* zone_decl.hpp in Headers */,
 				563BD341243DAE4C00C6AC11 /* ostreamwrapper.h in Headers */,
 				56D2B09723B9A19100491DF7 /* NSArray+MPMessagePack.h in Headers */,
@@ -4662,6 +4676,7 @@
 				5627135823A790E1009EF54E /* NSString+RTMTools.m in Sources */,
 				563BD36C243DAE4C00C6AC11 /* jenkins.c in Sources */,
 				563BD08B243DAE4B00C6AC11 /* UnencryptedReceiver.cpp in Sources */,
+				56E045E8257FA87E007BC8CA /* FpnnDefine.m in Sources */,
 				566F0B1523A0917700D1D949 /* FPNNTCPClient+Encryptor.mm in Sources */,
 				563BD38F243DAE4C00C6AC11 /* FpnnError.cpp in Sources */,
 				566F0B0F23A0917700D1D949 /* FPNNTCPClient+Send.mm in Sources */,
@@ -4699,6 +4714,7 @@
 				563BD0A9243DAE4B00C6AC11 /* asm_arm_mult_square.inc in Sources */,
 				568F8ED42408AA6100FE2D8A /* RTMIPv6PrefixResolver.mm in Sources */,
 				563BD373243DAE4C00C6AC11 /* Endian.cpp in Sources */,
+				56E045E4257F2FF0007BC8CA /* RTMCountAnswer.m in Sources */,
 				563BD362243DAE4C00C6AC11 /* FPReader.cpp in Sources */,
 				56EA006423B23A09002B5B77 /* RTMClient+Broadcast_Chat.m in Sources */,
 				563BD0A8243DAE4B00C6AC11 /* uECC.c in Sources */,

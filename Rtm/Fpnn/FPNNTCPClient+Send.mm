@@ -20,7 +20,7 @@
 #import "FPNNAsyncAnswer.h"
 #import "FPNNCallBackDefinition.h"
 
-
+#import "FpnnDefine.h"
 
 @implementation FPNNTCPClient (Send)
 

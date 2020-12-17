@@ -10,7 +10,7 @@
 #import "FPNNTCPClient+Encryptor.h"
 #import "FPNNCallBackDefinition.h"
 #import "FPNNTCPClient.h"
-
+#import "FpnnDefine.h"
 @implementation FPNNTCPClient (Encryptor)
 - (void)enableEncryptorWithCurve:(NSString*)curve serverPublicKey:(NSData*)publicKey packageMode:(BOOL)packageMode withReinforce:(BOOL)reinforce
 {

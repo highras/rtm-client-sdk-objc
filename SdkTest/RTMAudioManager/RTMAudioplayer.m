@@ -53,6 +53,10 @@
     
 }
 -(void)playWithAmrData:(NSData*)amrData{
+    
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    
     if ([self _playing]) {
         [self stop];
     }

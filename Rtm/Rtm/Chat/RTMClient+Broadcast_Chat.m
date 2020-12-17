@@ -33,7 +33,7 @@
     [dic setValue:@[@(30),@(32),@(40),@(41),@(42),@(50)] forKey:@"mtypes"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getbroadcastmsg" message:dic twoWay:YES];
-//    BOOL result = [mainClient sendQuest:quest
+//    BOOL result = [fpnnMainClient sendQuest:quest
 //                                timeout:(timeout <= 0 ? self.sendQuestTimeout : timeout)
 //                                success:^(NSDictionary * _Nullable data) {
 //
@@ -59,7 +59,7 @@
 //    }];
 //
 //    handlerResultFail;
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
 //        NSLog(@"%@",data);
@@ -112,7 +112,7 @@
     [dic setValue:@[@(30),@(32),@(40),@(41),@(42),@(50)] forKey:@"mtypes"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getbroadcastmsg" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                        timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {

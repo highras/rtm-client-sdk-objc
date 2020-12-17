@@ -22,7 +22,7 @@
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:language forKey:@"lang"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"setlang" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -48,7 +48,7 @@
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:language forKey:@"lang"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"setlang" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -85,7 +85,7 @@
     
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"translate" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientTranslateQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -126,7 +126,7 @@
     
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"translate" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientTranslateQuestTimeout];
     
     if (answer.error == nil) {
@@ -161,7 +161,7 @@
 //    [dic setValue:@(classify) forKey:@"classify"];
 //    FPNNQuest * quest = [FPNNQuest questWithMethod:@"profanity" message:dic twoWay:YES];
 //    
-//    BOOL result = [mainClient sendQuest:quest
+//    BOOL result = [fpnnMainClient sendQuest:quest
 //                                timeout:RTMClientSendQuestTimeout
 //                                success:^(NSDictionary * _Nullable data) {
 ////        NSLog(@"%@",data);
@@ -192,7 +192,7 @@
 //    [dic setValue:profanityText forKey:@"text"];
 //    [dic setValue:@(classify) forKey:@"classify"];
 //    FPNNQuest * quest = [FPNNQuest questWithMethod:@"profanity" message:dic twoWay:YES];
-//    FPNNAnswer * answer = [mainClient sendQuest:quest
+//    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
 //                                        timeout:RTMClientSendQuestTimeout];
 //    
 //    if (answer.error == nil) {
@@ -250,7 +250,7 @@
 //
 //
 //    FPNNQuest * quest = [FPNNQuest questWithMethod:@"transcribe" message:dic twoWay:YES];
-//    BOOL result = [mainClient sendQuest:quest
+//    BOOL result = [fpnnMainClient sendQuest:quest
 //                                timeout:RTMClientTranslateQuestTimeout
 //                                success:^(NSDictionary * _Nullable data) {
 //
@@ -303,7 +303,7 @@
 //
 //
 //    FPNNQuest * quest = [FPNNQuest questWithMethod:@"transcribe" message:dic twoWay:YES];
-//    FPNNAnswer * answer = [mainClient sendQuest:quest
+//    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
 //                                        timeout:RTMClientTranslateQuestTimeout];
 //
 //    if (answer.error == nil) {
@@ -334,7 +334,7 @@
     [dic setValue:msg forKey:@"msg"];
     [dic setValue:attrs forKey:@"attrs"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"adddebuglog" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -362,7 +362,7 @@
     [dic setValue:msg forKey:@"msg"];
     [dic setValue:attrs forKey:@"attrs"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"adddebuglog" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -390,7 +390,7 @@
     [dic setValue:apptype forKey:@"apptype"];
     [dic setValue:deviceToken forKey:@"devicetoken"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"adddevice" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -418,7 +418,7 @@
     [dic setValue:apptype forKey:@"apptype"];
     [dic setValue:deviceToken forKey:@"devicetoken"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"adddevice" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -444,7 +444,7 @@
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:deviceToken forKey:@"devicetoken"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"removedevice" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -470,7 +470,7 @@
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:deviceToken forKey:@"devicetoken"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"removedevice" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -600,7 +600,7 @@
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:text forKey:@"text"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"tcheck" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
@@ -630,7 +630,7 @@
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:text forKey:@"text"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"tcheck" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -668,7 +668,7 @@
     }
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"icheck" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
        
@@ -709,7 +709,7 @@
     }
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"icheck" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -767,7 +767,7 @@
     [dic setValue:@(srate) forKey:@"srate"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"acheck" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
 //        NSLog(@"%@",data);
@@ -828,7 +828,7 @@
     [dic setValue:@(srate) forKey:@"srate"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"acheck" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -870,7 +870,7 @@
     }
     [dic setValue:videoName forKey:@"videoName"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"vcheck" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
 //        NSLog(@"%@",data);
@@ -915,7 +915,7 @@
     }
     [dic setValue:videoName forKey:@"videoName"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"vcheck" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
@@ -973,7 +973,7 @@
     [dic setValue:@(srate) forKey:@"srate"];
 
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"speech2text" message:dic twoWay:YES];
-    BOOL result = [mainClient sendQuest:quest
+    BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
 //        NSLog(@"%@",data);
@@ -1036,7 +1036,7 @@
     [dic setValue:@(srate) forKey:@"srate"];
     
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"speech2text" message:dic twoWay:YES];
-    FPNNAnswer * answer = [mainClient sendQuest:quest
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {

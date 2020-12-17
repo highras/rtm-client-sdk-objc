@@ -13,27 +13,27 @@
 @implementation RTMClient (Encryptor)
 - (void)enableEncryptorWithCurve:(NSString*)curve serverPublicKey:(NSData*)publicKey packageMode:(BOOL)packageMode withReinforce:(BOOL)reinforce{
     
-    [mainClient enableEncryptorWithCurve:curve serverPublicKey:publicKey packageMode:packageMode withReinforce:reinforce];
+    [fpnnMainClient enableEncryptorWithCurve:curve serverPublicKey:publicKey packageMode:packageMode withReinforce:reinforce];
     
 }
 - (void)enableEncryptorByDerData:(NSData*)derData packageMode:(BOOL)packageMode withReinforce:(BOOL)reinforce{
     
-    [mainClient enableEncryptorByDerData:derData packageMode:packageMode withReinforce:reinforce];
+    [fpnnMainClient enableEncryptorByDerData:derData packageMode:packageMode withReinforce:reinforce];
     
 }
 - (void)enableEncryptorByPemData:(NSData*)pemData packageMode:(BOOL)packageMode withReinforce:(BOOL)reinforce{
     
-    [mainClient enableEncryptorByPemData:pemData packageMode:packageMode withReinforce:reinforce];
+    [fpnnMainClient enableEncryptorByPemData:pemData packageMode:packageMode withReinforce:reinforce];
     
 }
 - (void)enableEncryptorByDerFile:(NSString*)derFilePath packageMode:(BOOL)packageMode withReinforce:(BOOL)reinforce{
     
-    [mainClient enableEncryptorByDerFile:derFilePath packageMode:packageMode withReinforce:reinforce];
+    [fpnnMainClient enableEncryptorByDerFile:derFilePath packageMode:packageMode withReinforce:reinforce];
     
 }
 - (void)enableEncryptorByPemFile:(NSString*)pemFilePath packageMode:(BOOL)packageMode withReinforce:(BOOL)reinforce{
     
-    [mainClient enableEncryptorByPemFile:pemFilePath packageMode:packageMode withReinforce:reinforce];
+    [fpnnMainClient enableEncryptorByPemFile:pemFilePath packageMode:packageMode withReinforce:reinforce];
     
     
 }

@@ -120,7 +120,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
         _userId = userId;
         _config = config;
         _autoRelogin = autoRelogin;
-        _sdkVersion = @"2.0.7";
+        _sdkVersion = @"2.0.8";
         _apiVersion = @"2.4.0";
         _reloginNum = 0;
         _connectStatus = RTMClientConnectStatusConnectClosed;
@@ -700,7 +700,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
     if (self.connectStatus == RTMClientConnectStatusConnected) {
         float f = self.lastPingTime.timeIntervalSinceNow;
 //        FPNSLog(@"距离上次收到 ping 间隔 %f",-ceil(f));
-        if (-ceil(f) < 120) {
+        if (-ceil(f) < 60) {
 
         }else{
             
