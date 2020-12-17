@@ -695,6 +695,34 @@ self.client = [RTMClient clientWithEndpoint:
 
 
 
+/// 获取房间中的所有member
+/// @param roomId 房间ID int64
+/// @param timeout 请求超时时间 秒
+/// @param successCallback 成功回调
+/// @param failCallback 失败回调
+-(void)getRoomMembersWithId:(NSNumber * _Nonnull)roomId
+                    timeout:(int)timeout
+                    success:(void(^)(NSArray * _Nullable userIdArray))successCallback
+                       fail:(RTMAnswerFailCallBack)failCallback;
+-(RTMMemberAnswer*)getRoomMembersWithId:(NSNumber * _Nonnull)roomId
+                                timeout:(int)timeout;
+
+
+
+
+
+/// 获取房间中的用户数量
+/// @param roomId 房间ID int64
+/// @param timeout 请求超时时间 秒
+/// @param successCallback 成功回调
+/// @param failCallback 失败回调
+-(void)getRoomMemberCountWithId:(NSNumber * _Nonnull)roomId
+                        timeout:(int)timeout
+                        success:(void(^)(int64_t count))successCallback
+                           fail:(RTMAnswerFailCallBack)failCallback;
+-(RTMCountAnswer*)getRoomMemberCountWithId:(NSNumber * _Nonnull)roomId
+                                   timeout:(int)timeout;
+
 
 
 /// 设置房间的公开信息或者私有信息，会检查用户是否在房间(openInfo,privateInfo 最长 65535)
