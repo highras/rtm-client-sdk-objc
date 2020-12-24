@@ -10,7 +10,7 @@
 //
 //#define ListenWithClient(client) *(FPNNCppConnectionListenPtr*)((void* (*)(id, SEL))[client methodForSelector:NSSelectorFromString(@"getPrivatelistenCall")])(client, NSSelectorFromString(@"getPrivatelistenCall"))
 
-#define fpnnMainClient  ((FPNNTCPClient *)[self valueForKey:@"usingClient"])
+#define fpnnMainClient  ((FPNNTCPClient *)[self valueForKey:@"authClient"])
 
 #define _successCallback(data)    if (successCallback) { successCallback(data);}
 #define _failCallback(error)       if (failCallback) { failCallback(error);}

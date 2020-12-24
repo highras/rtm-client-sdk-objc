@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface RTMMessageModelConvert : NSObject
 +(RTMMessage*)messageModelConvert:(NSDictionary*)data chatType:(RTMChatType)chatType;
-+(RTMMessage*)audioModelConvert:(NSDictionary*)data chatType:(RTMChatType)chatType;
+//+(RTMMessage*)audioModelConvert:(NSDictionary*)data chatType:(RTMChatType)chatType;
 +(RTMMessage*)cmdModelConvert:(NSDictionary*)data chatType:(RTMChatType)chatType;
 +(RTMMessage*)fileModelConvert:(NSDictionary*)data chatType:(RTMChatType)chatType;
 

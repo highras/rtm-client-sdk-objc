@@ -23,6 +23,7 @@
 #import "RTMTextProfanityAnswer.h"
 #import "RTMTextReviewAnswer.h"
 #import "RTMReviewAnswer.h"
+#import "RTMGetPushAttrsAnswer.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RTMClient (Tools)
@@ -65,42 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 
-///// 敏感词过滤, 返回过滤后的字符串或者返回错误（调用此接口需在管理系统启用文本检测系统）
-///// @param profanityText 翻译文本
-///// @param classify 是否进行文本分类检测
-///// @param timeout 请求超时时间 秒
-///// @param successCallback 成功回调
-///// @param failCallback 失败回调
-//-(void)textProfanity:(NSString * _Nonnull)profanityText
-//            classify:(BOOL)classify
-//             timeout:(int)timeout
-//             success:(void(^)(RTMTextProfanityAnswer * _Nullable textProfanity))successCallback
-//                fail:(RTMAnswerFailCallBack)failCallback;
-//-(RTMTextProfanityAnswer*)textProfanity:(NSString * _Nonnull)profanityText
-//                               classify:(BOOL)classify
-//                                timeout:(int)timeout;
 
-
-///// 语音识别（调用此接口需在管理系统启用语音识别系统）调用这个接口的超时时间得加大到120s
-///// @param audioFilePath 语音文件路径
-///// @param lang 当前语音的语言
-///// @param duration 音频长度 毫秒
-///// @param profanityFilter 文本过滤
-///// @param timeout 请求超时时间 秒
-///// @param successCallback 成功回调
-///// @param failCallback 失败回调
-//-(void)speechRecognition:(NSString * _Nonnull)audioFilePath
-//                    lang:(NSString * _Nonnull)lang
-//                duration:(long long)duration
-//         profanityFilter:(BOOL)profanityFilter
-//                 timeout:(int)timeout
-//                 success:(void(^)(RTMSpeechRecognitionAnswer * _Nullable textProfanity))successCallback
-//                    fail:(RTMAnswerFailCallBack)failCallback;
-//-(RTMSpeechRecognitionAnswer*)speechRecognition:(NSData * _Nonnull)audioSource
-//                                           lang:(NSString * _Nullable)lang
-//                                       duration:(long long)duration
-//                                profanityFilter:(BOOL)profanityFilter
-//                                        timeout:(int)timeout;
 
 
 
@@ -148,6 +114,53 @@ NS_ASSUME_NONNULL_BEGIN
 -(RTMBaseAnswer*)removeDeviceWithToken:(NSString * _Nonnull)deviceToken
                                timeout:(int)timeout;
 
+
+///// 添加设备推送属性
+///// @param type type=0, 设置某个p2p 不推送    type=1, 设置某个group不推送
+///// @param xid type=0,对应fromUserId  type=1,对应groupId
+///// @param mTypes 消息类型数组  为空，则所有mtype均不推送，其他值，则指定mtype不推送
+///// @param timeout 请求超时时间 秒
+///// @param successCallback 成功回调
+///// @param failCallback 失败回调
+//-(void)addPushAttrsWithType:(int)type
+//                        xid:(int64_t)xid
+//                     mTypes:(NSArray <NSNumber*>* _Nullable)mTypes
+//                    timeout:(int)timeout
+//                    success:(void(^)(void))successCallback
+//                       fail:(RTMAnswerFailCallBack)failCallback;
+//-(RTMBaseAnswer*)addPushAttrsWithType:(int)type
+//                                  xid:(int64_t)xid
+//                               mTypes:(NSArray<NSNumber*>* _Nullable)mTypes
+//                              timeout:(int)timeout;
+//
+//
+///// 移除设备推送属性
+///// @param type type=0, 设置某个p2p 不推送    type=1, 设置某个group不推送
+///// @param xid type=0,对应fromUserId  type=1,对应groupId
+///// @param mTypes 消息类型数组  为空，则所有mtype均不推送，其他值，则指定mtype不推送
+///// @param timeout 请求超时时间 秒
+///// @param successCallback 成功回调
+///// @param failCallback 失败回调
+//-(void)removePushAttrsWithType:(int)type
+//                           xid:(int64_t)xid
+//                        mTypes:(NSArray <NSNumber*>* _Nullable)mTypes
+//                       timeout:(int)timeout
+//                       success:(void(^)(void))successCallback
+//                          fail:(RTMAnswerFailCallBack)failCallback;
+//-(RTMBaseAnswer*)removePushAttrsWithType:(int)type
+//                                     xid:(int64_t)xid
+//                                  mTypes:(NSArray<NSNumber*>* _Nullable)mTypes
+//                                 timeout:(int)timeout;
+//
+//
+///// 获取推送属性
+///// @param timeout 请求超时时间 秒
+///// @param successCallback 成功回调
+///// @param failCallback 失败回调
+//-(void)getPushAttrsWithTimeout:(int)timeout
+//                       success:(void(^)(RTMGetPushAttrsAnswer *answer))successCallback
+//                          fail:(RTMAnswerFailCallBack)failCallback;
+//-(RTMGetPushAttrsAnswer*)getPushAttrsWithTimeout:(int)timeout;
 
 
 

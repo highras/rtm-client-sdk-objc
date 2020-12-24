@@ -75,7 +75,6 @@ TCPClient::~TCPClient()
 		_autoReconnect = false;
 		close();
 	}
-    printf(" ~TCPClient");
 }
 
 bool TCPClient::enableEncryptorByDerData(const std::string &derData, bool packageMode, bool reinforce)
@@ -401,7 +400,6 @@ void TCPClient::close()
 		return;
 
 	_engine->quit(conn);
-//    printf("_engine->quit(conn);");
 	clearConnectionQuestCallbacks(conn, FPNN_EC_CORE_CONNECTION_CLOSED);
 	willClosed(conn, false);
 }
@@ -434,11 +432,9 @@ FPAnswerPtr TCPClient::sendQuest(FPQuestPtr quest, int timeout)
 	if (!_connected)
 	{
 		if (!_autoReconnect)
-            
 			return FPAWriter::errorAnswer(quest, FPNN_EC_CORE_CONNECTION_CLOSED, "Connection not inited.");
 
 		if (!reconnect())
-            
 			return FPAWriter::errorAnswer(quest, FPNN_EC_CORE_CONNECTION_CLOSED, "Reconnection failed.");
 	}
 
@@ -711,7 +707,6 @@ bool TCPClient::connect()
 	if (conn)
 	{
 		_engine->quit(conn);
-//        printf("_engine->quit(conn);");
 		clearConnectionQuestCallbacks(conn, FPNN_EC_CORE_CONNECTION_CLOSED);
 		willClosed(conn, false);
 	}

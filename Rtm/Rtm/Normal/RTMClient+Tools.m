@@ -485,6 +485,167 @@
 
 
 
+-(void)addPushAttrsWithType:(int)type
+                        xid:(int64_t)xid
+                     mTypes:(NSArray <NSNumber*>* _Nullable)mTypes
+                    timeout:(int)timeout
+                    success:(void(^)(void))successCallback
+                       fail:(RTMAnswerFailCallBack)failCallback{
+    
+    
+    clientConnectStatueVerify
+    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+    [dic setValue:@(type) forKey:@"type"];
+    [dic setValue:@(xid) forKey:@"xid"];
+    [dic setValue:mTypes forKey:@"mtypes"];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"addoption" message:dic twoWay:YES];
+    BOOL result = [fpnnMainClient sendQuest:quest
+                                    timeout:RTMClientSendQuestTimeout
+                                    success:^(NSDictionary * _Nullable data) {
+           
+           if (successCallback) {
+               successCallback();
+           }
+       
+    }fail:^(FPNError * _Nullable error) {
+           
+            _failCallback(error);
+
+    }];
+           
+    handlerNetworkError;
+    
+}
+-(RTMBaseAnswer*)addPushAttrsWithType:(int)type
+                                  xid:(int64_t)xid
+                               mTypes:(NSArray <NSNumber*>* _Nullable)mTypes
+                              timeout:(int)timeout{
+    
+    RTMBaseAnswer * model = [RTMBaseAnswer new];
+    clientConnectStatueVerifySync
+    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+    [dic setValue:@(type) forKey:@"type"];
+    [dic setValue:@(xid) forKey:@"xid"];
+    [dic setValue:mTypes forKey:@"mtypes"];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"addoption" message:dic twoWay:YES];
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
+                                        timeout:RTMClientSendQuestTimeout];
+    
+    if (answer.error == nil) {
+        
+    }else{
+        model.error = answer.error;
+    }
+    
+    return model;
+    
+}
+
+
+
+-(void)removePushAttrsWithType:(int)type
+                           xid:(int64_t)xid
+                        mTypes:(NSArray <NSNumber*>* _Nullable)mTypes
+                       timeout:(int)timeout
+                       success:(void(^)(void))successCallback
+                          fail:(RTMAnswerFailCallBack)failCallback{
+    
+    clientConnectStatueVerify
+    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+    [dic setValue:@(type) forKey:@"type"];
+    [dic setValue:@(xid) forKey:@"xid"];
+    [dic setValue:mTypes forKey:@"mtypes"];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"removeoption" message:dic twoWay:YES];
+    BOOL result = [fpnnMainClient sendQuest:quest
+                                    timeout:RTMClientSendQuestTimeout
+                                    success:^(NSDictionary * _Nullable data) {
+           
+           if (successCallback) {
+               successCallback();
+           }
+       
+    }fail:^(FPNError * _Nullable error) {
+           
+            _failCallback(error);
+
+    }];
+           
+    handlerNetworkError;
+    
+}
+-(RTMBaseAnswer*)removePushAttrsWithType:(int)type
+                                     xid:(int64_t)xid
+                                  mTypes:(NSArray<NSNumber*>* _Nullable)mTypes
+                                 timeout:(int)timeout{
+    
+    RTMBaseAnswer * model = [RTMBaseAnswer new];
+    clientConnectStatueVerifySync
+    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+    [dic setValue:@(type) forKey:@"type"];
+    [dic setValue:@(xid) forKey:@"xid"];
+    [dic setValue:mTypes forKey:@"mtypes"];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"removeoption" message:dic twoWay:YES];
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
+                                        timeout:RTMClientSendQuestTimeout];
+    
+    if (answer.error == nil) {
+        
+    }else{
+        model.error = answer.error;
+    }
+    
+    return model;
+    
+}
+
+
+-(void)getPushAttrsWithTimeout:(int)timeout
+                       success:(void(^)(RTMGetPushAttrsAnswer *answer))successCallback
+                          fail:(RTMAnswerFailCallBack)failCallback{
+    
+    
+    clientConnectStatueVerify
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getoption" message:nil twoWay:YES];
+    BOOL result = [fpnnMainClient sendQuest:quest
+                                    timeout:RTMClientSendQuestTimeout
+                                    success:^(NSDictionary * _Nullable data) {
+           
+        if (successCallback) {
+            RTMGetPushAttrsAnswer * model = [RTMGetPushAttrsAnswer new];
+            model.p2pAttrs = [data objectForKey:@"p2p"];
+            model.groupAttrs = [data objectForKey:@"group"];
+            successCallback(model);
+        }
+        
+       
+    }fail:^(FPNError * _Nullable error) {
+           
+        _failCallback(error);
+
+    }];
+           
+    handlerNetworkError;
+    
+    
+}
+-(RTMGetPushAttrsAnswer*)getPushAttrsWithTimeout:(int)timeout{
+    
+    RTMGetPushAttrsAnswer * model = [RTMGetPushAttrsAnswer new];
+    clientConnectStatueVerifySync
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getoption" message:nil twoWay:YES];
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
+                                            timeout:RTMClientSendQuestTimeout];
+    
+    if (answer.error == nil) {
+        model.p2pAttrs = [answer.responseData objectForKey:@"p2p"];
+        model.groupAttrs = [answer.responseData objectForKey:@"group"];
+    }else{
+        model.error = answer.error;
+    }
+    
+    return model;
+    
+}
 //
 //
 //-(void)setGeoWithLatitude:(double)latitude

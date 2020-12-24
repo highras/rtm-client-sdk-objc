@@ -43,15 +43,15 @@ static NSString *name2Key = @"nameKey2";
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         
-        @synchronized (self) {
-            NSLog(@"async offLineWithTimeoutoffLineWithTimeout");
-            [self setValue:@(YES) forKey:@"isOverlookFpnnCloseCallBack"];
-            [self setValue:@(NO) forKey:@"authFinish"];
-        }
-        if ([self.delegate respondsToSelector:@selector(rtmConnectClose:)]) {
-            [self.delegate rtmConnectClose:self];
-        }
-        
+//        @synchronized (self) {
+////            NSLog(@"async offLineWithTimeoutoffLineWithTimeout");
+//            [self setValue:@(YES) forKey:@"isOverlookFpnnCloseCallBack"];
+//            [self setValue:@(NO) forKey:@"authFinish"];
+//        }
+//        if ([self.delegate respondsToSelector:@selector(rtmConnectClose:)]) {
+//            [self.delegate rtmConnectClose:self];
+//        }
+        [self closeConnect];
         if (successCallback) {
             successCallback();
         }
@@ -62,6 +62,9 @@ static NSString *name2Key = @"nameKey2";
         
     }fail:^(FPNError * _Nullable error) {
         
+//        [self closeConnect];
+                
+        
           _failCallback(error);
 
     }];
@@ -69,6 +72,7 @@ static NSString *name2Key = @"nameKey2";
     handlerNetworkError;
 }
 -(RTMBaseAnswer*)offLineWithTimeout:(int)timeout{
+    
     
     RTMBaseAnswer * model = [RTMBaseAnswer new];
     clientConnectStatueVerifySync
@@ -78,19 +82,20 @@ static NSString *name2Key = @"nameKey2";
     
     
     if (answer.error == nil) {
-        
-        @synchronized (self) {
-            NSLog(@"sync offLineWithTimeoutoffLineWithTimeout");
-            [self setValue:@(YES) forKey:@"isOverlookFpnnCloseCallBack"];
-            [self setValue:@(NO) forKey:@"authFinish"];
-        }
-        
-        if ([self.delegate respondsToSelector:@selector(rtmConnectClose:)]) {
-            [self.delegate rtmConnectClose:self];
-        }
+        [self closeConnect];
+//        @synchronized (self) {
+////            NSLog(@"sync offLineWithTimeoutoffLineWithTimeout");
+//            [self setValue:@(YES) forKey:@"isOverlookFpnnCloseCallBack"];
+//            [self setValue:@(NO) forKey:@"authFinish"];
+//        }
+//
+//        if ([self.delegate respondsToSelector:@selector(rtmConnectClose:)]) {
+//            [self.delegate rtmConnectClose:self];
+//        }
         
     }else{
         
+//        [self closeConnect];
         model.error = answer.error;
         
     }

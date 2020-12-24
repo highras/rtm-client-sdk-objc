@@ -39,6 +39,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 @property(nonatomic,strong)RTMClientConfig * config;
 
 //login
+@property(nonatomic,strong)dispatch_source_t loginTimeoutTimer;
 @property(nonatomic,copy)NSString * whichEndpoint;
 @property (nonatomic,copy)NSString * token;
 @property (nonatomic,copy)NSString * language;
@@ -53,7 +54,6 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 
 //auth
 @property(nonatomic,strong)FPNNTCPClient * authClient;
-@property(nonatomic,strong)FPNNTCPClient * usingClient;
 @property(nonatomic,strong)NSString * authEndPoint;
 @property(nonatomic,assign)BOOL authFinish;//auth登录成功后 为YES
 
@@ -99,7 +99,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                                                     delegate:delegate
                                                       config:config
                                                  autoRelogin:autoRelogin];
-    
+   
     return client;
     
 }
@@ -199,6 +199,10 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                success:(RTMLoginSuccessCallBack)loginSuccess
            connectFail:(RTMLoginFailCallBack)loginFail{
     
+    if (self.connectStatus == RTMClientConnectStatusConnected) {
+        FPNSLog(@"rtm loginWithToken error , client is RTMClientConnectStatusConnected");
+        return;
+    }
     
     
     if ([self.delegate respondsToSelector:@selector(rtmReloginCompleted:reloginCount:reloginResult:error:)] == NO ||
@@ -232,7 +236,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 }
 -(void)_toLogin:(BOOL)isLogin{
     
-   
+    
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
@@ -244,250 +248,289 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
             [self _authRequest];
         }
         
-        if (isLogin) {
-            [self performSelector:@selector(_checkLoginIsFinish) withObject:nil afterDelay:self.loginTimeout];
-        }
-        
-        
     });
     
+    if (isLogin) {
+        
+        __block BOOL isImmediateRun = NO;
+        uint64_t interval = self.loginTimeout * NSEC_PER_SEC;
+        dispatch_queue_t loginTimeoutTimerQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+                if (self.loginTimeoutTimer == nil) {
+                    @synchronized (self) {
+                    
+                        self.loginTimeoutTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, loginTimeoutTimerQueue);
+                        dispatch_source_set_timer(self.loginTimeoutTimer, dispatch_time(DISPATCH_TIME_NOW, 0), interval, 0);
+                        __weak RTMClient *blockSelf = self;
+                        dispatch_source_set_event_handler(self.loginTimeoutTimer, ^(){
+                            if (isImmediateRun == NO) {
+                                isImmediateRun = YES;
+                            }else{
+                                [blockSelf _checkLoginIsFinish];
+                            }
+                            
+                        });
+                        dispatch_resume(self.loginTimeoutTimer);
+                        
+                    }
+                }
+                
+            }
+    
     
 }
+
 #pragma mark login
-- (void)_whichRequest{
-
-    NSMutableDictionary * whichQuestDic = [NSMutableDictionary dictionary];
-    [whichQuestDic setValue:@"rtmGated" forKey:@"what"];
-    if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
-        [whichQuestDic setValue:@"ipv6" forKey:@"addrType"];
-    }
-    
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"which"
-                                           message:whichQuestDic
-                                            twoWay:YES];
-    
-        @rtmWeakify(self);
-        BOOL result = [self.whichClient sendQuest:quest
-                                          timeout:self.loginTimeout
-                                          success:^(NSDictionary * _Nullable data) {
-            
-            @rtmStrongify(self);
-//            NSLog(@"which %@",data);
-            NSString * endPoint = data[@"endpoint"];
-            if (endPoint == nil || endPoint.length == 0) {
-                
-                
-                self.connectStatus = RTMClientConnectStatusConnectClosed;
-                if (self.loginFail) {
-                    self.loginFail([FPNError errorWithEx:@"RTM_EC_UNKNOWN_ERROR" code:200999]);
-                }
-                
-            }else{
-                
-                [self.whichClient closeConnect];
-                @synchronized (self) {
-                    self.whichClient = nil;
-                }
-                if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
-                    endPoint = [[RTMIPv6Adapter getInstance] handleIpv4Address:endPoint];
-                }
-                
-                @synchronized (self) {
-                    
-                    self.authEndPoint = endPoint;
-                    
-                }
-                [self _authRequest];
-                
-            }
-            
-        } fail:^(FPNError * _Nullable error) {
-            
-            @rtmStrongify(self);
-            
-            self.connectStatus = RTMClientConnectStatusConnectClosed;
-            [self.whichClient closeConnect];
-            if (self.loginFail) {
-                self.loginFail(error);
-            }
-            
-        }];
-        
-        //无网络
-        if (result == NO) {
-            
-            self.connectStatus = RTMClientConnectStatusConnectClosed;
-            [self.whichClient closeConnect];
-            
-            if (self.loginFail) {
-                self.loginFail([FPNError errorWithEx:@"FPNN_EC_CORE_INVALID_CONNECTION" code:20012]);
-            }
-            
-        }
-}
-- (void)_authRequest{
-
-    NSMutableDictionary * authQuestDic = [NSMutableDictionary dictionary];
-    [authQuestDic setValue:@(_projectId) forKey:@"pid"];
-    [authQuestDic setValue:@(_userId) forKey:@"uid"];
-    [authQuestDic setValue:_token forKey:@"token"];
-    [authQuestDic setValue:_language forKey:@"lang"];
-    [authQuestDic setValue:_attribute forKey:@"attrs"];
-    
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"auth"
-                                           message:authQuestDic
-                                            twoWay:YES];
-    @rtmWeakify(self);
-    BOOL result = [self.authClient sendQuest:quest
-                                     timeout:self.loginTimeout
-                                     success:^(NSDictionary * _Nullable data) {
-//        NSLog(@"auth %@",data);
-        @rtmStrongify(self);
-        
-            if ([data[@"ok"] boolValue]) {
-                
-                @synchronized (self) {
-                    self.connectStatus = RTMClientConnectStatusConnected;
-                }
-                
-                
-
-                if (self.authFinish) {//重连
-//                    NSLog(@"重连登录成功");
-
-                    [self _reloginComplete:nil];
-                    @synchronized (self) {
-                        self.lastPingTime = [NSDate date];
-                        self.authFinish = YES;
-                        self.usingClient = self.authClient;
-                    }
-                    
-                }else{//登录
-//                    NSLog(@"常规登录成功");
-                    @synchronized (self) {
-                        self.authFinish = YES;
-                        self.usingClient = self.authClient;
-                    }
-                    
-                    if (self.loginSuccess) {
-//
-                        self.loginSuccess();
-                    }
-                    
-                }
-                @synchronized (self) {
-                    self.reloginNum = 0;
-                }
-                
-        
-            }else{//多点登录
-                NSString * endPoint = data[@"gate"];
-                if (endPoint == nil || endPoint.length == 0) {//token invalid
-                   
-                    @synchronized (self) {
-                        self.connectStatus = RTMClientConnectStatusConnected;
-                    }
-
-                    
-                    if (self.authFinish) {//重连
-//                        NSLog(@"多点登录  重连");
-                        @synchronized (self) {
-                            self.authFinish = NO;
-                        }
-                        
-                        [self _closeConnectHandle:NO];
-                        [self _reloginComplete:[FPNError errorWithEx:@"RTM_EC_INVALID_AUTH_TOEKN" code:200027]];
-                        [self _byeCloseConnect:YES];
-                        
-                    }else{
-                        
-                        
-                        [self _closeConnectHandle:NO];
-                        if (self.loginFail) {
-                            self.loginFail([FPNError errorWithEx:@"RTM_EC_INVALID_AUTH_TOEKN" code:200027]);
-                        }
-                    }
-                                  
-                    
-                }else{
-//                    NSLog(@"多点登录  正常连");
-                    if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
-                        endPoint = [[RTMIPv6Adapter getInstance] handleIpv4Address:endPoint];
-                    }
-                    
-                    @synchronized (self) {
-                        self.authEndPoint = endPoint;
-                        [self.authClient closeConnect];
-//                        self.authClient = nil;
-//                        self.usingClient = nil;
-                    }
-                      
-                    [self _authRequest];
-                    
-                }
-                
-            }
-        
-    } fail:^(FPNError * _Nullable error) {
-
-        @rtmStrongify(self);
-        self.connectStatus = RTMClientConnectStatusConnectClosed;
-        [self.authClient closeConnect];//没有网络
-        
-        if (self.authFinish) {//重连
-            [self _reloginComplete:error];
-            [self _reLogin];
-            
-        }else{
-            if (self.loginFail) {
-                self.loginFail(error);
-            }
-        }
-        
-        
-    }];
-    
-    //无网络
-    if (result == NO) {
-        
-        self.connectStatus = RTMClientConnectStatusConnectClosed;
-        [self.authClient closeConnect];
-        
-        if (self.authFinish) {
-            //重连失败回调
-            [self _reloginComplete:[FPNError errorWithEx:@"FPNN_EC_CORE_INVALID_CONNECTION" code:20012]];
-            [self _reLogin];
-        }else{
-            if (self.loginFail) {
-                self.loginFail([FPNError errorWithEx:@"FPNN_EC_CORE_INVALID_CONNECTION" code:20012]);
-            }
-        }
-          
-        
-    }
-    
-}
 -(void)_checkLoginIsFinish{
-    
+    @synchronized (self) {
         if (self.authFinish == NO && self.connectStatus == RTMClientConnectStatusConnecting) {
-            @synchronized (self) {
-           
-                [self.whichClient closeConnect];
-                [self.authClient closeConnect];
-//                self.authClient = nil;
-//                self.usingClient = nil;
-//                self.whichClient = nil;
-                
-            }
+                [_whichClient closeConnect];
+                [_authClient closeConnect];
             if (self.loginFail) {
                 //超时
                 self.loginFail([FPNError errorWithEx:@"FPNN_EC_CORE_TIMEOUT" code:20003]);
             }
         
+        }
+    }
+}
+- (void)_whichRequest{
+
+    @synchronized (self) {
+        
+        NSMutableDictionary * whichQuestDic = [NSMutableDictionary dictionary];
+            [whichQuestDic setValue:@"rtmGated" forKey:@"what"];
+            if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
+                [whichQuestDic setValue:@"ipv6" forKey:@"addrType"];
+            }
+            
+            FPNNQuest * quest = [FPNNQuest questWithMethod:@"which"
+                                                   message:whichQuestDic
+                                                    twoWay:YES];
+            
+                @rtmWeakify(self);
+                BOOL result = [self.whichClient sendQuest:quest
+                                                  timeout:self.loginTimeout
+                                                  success:^(NSDictionary * _Nullable data) {
+                    
+                    @rtmStrongify(self);
+                    @synchronized (self) {
+                        
+                        NSString * endPoint = data[@"endpoint"];
+                        if (endPoint == nil || endPoint.length == 0) {
+                            
+                            
+                            self.connectStatus = RTMClientConnectStatusConnectClosed;
+                            if (self.loginFail) {
+                                self.loginFail([FPNError errorWithEx:@"RTM_EC_UNKNOWN_ERROR" code:200999]);
+                            }
+                            
+                        }else{
+                            
+                            
+                            @synchronized (self) {
+                                [self.whichClient closeConnect];
+                                self.whichClient = nil;
+                                if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
+                                    endPoint = [[RTMIPv6Adapter getInstance] handleIpv4Address:endPoint];
+                                }
+                                self.authEndPoint = endPoint;
+                                [self _authRequest];
+                            }
+                            
+                            
+                        }
+                        
+                    }
+        //            NSLog(@"which %@",data);
+                    
+                    
+                } fail:^(FPNError * _Nullable error) {
+                    
+                    @rtmStrongify(self);
+                    @synchronized (self) {
+                        self.connectStatus = RTMClientConnectStatusConnectClosed;
+                        [self.whichClient closeConnect];
+                        if (self.loginFail) {
+                            self.loginFail(error);
+                        }
+                    }
+                    
+                    
+                }];
+                
+                //无网络
+                if (result == NO) {
+                    
+                    self.connectStatus = RTMClientConnectStatusConnectClosed;
+                    [self.whichClient closeConnect];
+                    
+                    if (self.loginFail) {
+                        self.loginFail([FPNError errorWithEx:@"FPNN_EC_CORE_INVALID_CONNECTION" code:20012]);
+                    }
+                    
+                }
         
     }
     
 }
+- (void)_authRequest{
+
+    @synchronized (self) {
+        [_whichClient closeConnect];
+        _whichClient = nil;
+        NSMutableDictionary * authQuestDic = [NSMutableDictionary dictionary];
+            [authQuestDic setValue:@(_projectId) forKey:@"pid"];
+            [authQuestDic setValue:@(_userId) forKey:@"uid"];
+            [authQuestDic setValue:_token forKey:@"token"];
+            [authQuestDic setValue:_language forKey:@"lang"];
+            [authQuestDic setValue:_attribute forKey:@"attrs"];
+            
+            FPNNQuest * quest = [FPNNQuest questWithMethod:@"auth"
+                                                   message:authQuestDic
+                                                    twoWay:YES];
+            @rtmWeakify(self);
+            BOOL result = [self.authClient sendQuest:quest
+                                             timeout:self.loginTimeout
+                                             success:^(NSDictionary * _Nullable data) {
+        //        NSLog(@"auth %@",data);
+                @rtmStrongify(self);
+                
+                @synchronized (self) {
+                    
+                    if ([data[@"ok"] boolValue]) {
+                                    
+                                    @synchronized (self) {
+                                        self.connectStatus = RTMClientConnectStatusConnected;
+                                    }
+                                    
+                                    
+                                    if (self.authFinish) {//重连
+                    //                    NSLog(@"重连登录成功");
+
+                                        [self _reloginComplete:nil];
+                                        @synchronized (self) {
+                                            self.lastPingTime = [NSDate date];
+                                            self.authFinish = YES;
+                                        }
+                                        
+                                    }else{//登录
+                    //                    NSLog(@"常规登录成功");
+                                        @synchronized (self) {
+                                            self.authFinish = YES;
+                                            if (self.loginTimeoutTimer) {
+                                                @synchronized (self) {
+                                                    dispatch_cancel(self.loginTimeoutTimer);
+                                                    self.loginTimeoutTimer = nil;
+                                                }
+
+                                            }
+                                        }
+                                        
+                                        if (self.loginSuccess) {
+                                            self.loginSuccess();
+                                        }
+                                        
+                                    }
+                                    @synchronized (self) {
+                                        self.reloginNum = 0;
+                                    }
+                                    
+                            
+                                }else{//多点登录
+                                    NSString * endPoint = data[@"gate"];
+                                    if (endPoint == nil || endPoint.length == 0) {//token invalid
+                                       
+                                        @synchronized (self) {
+                                            self.connectStatus = RTMClientConnectStatusConnected;
+                                        }
+
+                                        
+                                        if (self.authFinish) {//重连
+                    //                        NSLog(@"多点登录  重连");
+                                            @synchronized (self) {
+                                                self.authFinish = NO;
+                                            }
+                                            
+                                            [self _closeConnectHandle:NO];
+                                            [self _reloginComplete:[FPNError errorWithEx:@"RTM_EC_INVALID_AUTH_TOEKN" code:200027]];
+                                            [self _byeCloseConnect:YES];
+                                            
+                                        }else{
+                                            
+                                            
+                                            [self _closeConnectHandle:NO];
+                                            if (self.loginFail) {
+                                                self.loginFail([FPNError errorWithEx:@"RTM_EC_INVALID_AUTH_TOEKN" code:200027]);
+                                            }
+                                        }
+                                                      
+                                        
+                                    }else{
+                    //                    NSLog(@"多点登录  正常连");
+                                        if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
+                                            endPoint = [[RTMIPv6Adapter getInstance] handleIpv4Address:endPoint];
+                                        }
+                                        
+                                        @synchronized (self) {
+                                            self.authEndPoint = endPoint;
+                                            [self.authClient closeConnect];
+                                        }
+                                          
+                                        [self _authRequest];
+                                        
+                                    }
+                                    
+                                }
+                    
+                }
+                    
+                
+            } fail:^(FPNError * _Nullable error) {
+
+                @rtmStrongify(self);
+                @synchronized (self) {
+                    self.connectStatus = RTMClientConnectStatusConnectClosed;
+                    [self.authClient closeConnect];//没有网络
+                    
+                    if (self.authFinish) {//重连
+                        [self _reloginComplete:error];
+                        [self _reLogin];
+                        
+                    }else{
+                        if (self.loginFail) {
+                            self.loginFail(error);
+                        }
+                    }
+                }
+                
+                
+                
+            }];
+            
+            //无网络
+            if (result == NO) {
+                
+                self.connectStatus = RTMClientConnectStatusConnectClosed;
+                [self.authClient closeConnect];
+                
+                if (self.authFinish) {
+                    //重连失败回调
+                    [self _reloginComplete:[FPNError errorWithEx:@"FPNN_EC_CORE_INVALID_CONNECTION" code:20012]];
+                    [self _reLogin];
+                }else{
+                    if (self.loginFail) {
+                        self.loginFail([FPNError errorWithEx:@"FPNN_EC_CORE_INVALID_CONNECTION" code:20012]);
+                    }
+                }
+                  
+                
+            }
+        
+    }
+    
+    
+}
+
 #pragma mark relogin
 -(void)_reLogin{
     if (self.autoRelogin && self.authFinish) {
@@ -501,7 +544,6 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                   
              if ([self.delegate respondsToSelector:@selector(rtmReloginWillStart:reloginCount:)] && (self.netStatus == RTMClientNetStatusReachableWifi || self.netStatus == RTMClientNetStatusReachableViaWWAN) && self.connectStatus == RTMClientConnectStatusConnectClosed) {
                              
-                            
                                  self.connectStatus = RTMClientConnectStatusConnecting;
                                  self.reloginNum = self.reloginNum + 1;
                                  
@@ -546,15 +588,16 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 
     @synchronized (self) {
         self.connectStatus = RTMClientConnectStatusConnectClosed;
+        if (needNotification == YES) {
+            self.authFinish = NO;
+        }
+        [self _notificationClose : needNotification];
     }
 //    FPNNQuest * quest = [FPNNQuest questWithMethod:@"bye" message:nil twoWay:YES];
 //    FPNNAnswer * an = [self.usingClient sendQuest:quest
 //                        timeout:2];
 
-    if (needNotification == YES) {
-        self.authFinish = NO;
-    }
-    [self _notificationClose : needNotification];
+    
     
     
     //    [self offLineWithTimeout:2 success:^{
@@ -577,10 +620,6 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                
                 [_whichClient closeConnect];
                 [_authClient closeConnect];
-                [_usingClient closeConnect];
-//                _whichClient = nil;
-//                _authClient = nil;
-//                _usingClient = nil;
             
             //offline
             self.connectStatus = RTMClientConnectStatusConnectClosed;
@@ -596,11 +635,16 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 }
 -(void)closeConnect{
 
-    @synchronized (self) {
-        self.isOverlookFpnnCloseCallBack = YES;
+    if (self.connectStatus != RTMClientConnectStatusConnectClosed) {
+        
+        @synchronized (self) {
+            
+            self.isOverlookFpnnCloseCallBack = YES;
+            [self _closeConnectHandle:YES];
+            
+        }
     }
     
-    [self _closeConnectHandle:YES];
     
 }
 -(void)_byeCloseConnect:(BOOL)updateAuthFinish{
@@ -617,6 +661,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 }
 #pragma mark net check
 - (void)_netChange:(NSNotification *)noti{
+//    NSLog(@"_netChange_netChange_netChange%@  %d  %ld",self,self.authFinish,(long)self.connectStatus);
     if ([noti.object intValue] == 0) {
         FPNSLog(@"未知网络");
         self.netStatus = RTMClientNetStatusNone;
@@ -742,9 +787,9 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 }
 
 #pragma mark get set
--(void)setUsingClient:(FPNNTCPClient *)usingClient{
-    _usingClient = usingClient;
-}
+//-(void)setUsingClient:(FPNNTCPClient *)usingClient{
+//    _usingClient = usingClient;
+//}
 -(void)setAuthFinish:(BOOL)authFinish{
     @synchronized (self) {
         _authFinish = authFinish;
@@ -773,7 +818,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
     
 //    NSLog(@"原网络%ld  现在网络%ld",(long)_netStatus,(long)netStatus);
         
-    if (_netStatus == RTMClientNetStatusNoDetection && netStatus != RTMClientNetStatusNoDetection) {
+    if (_netStatus == RTMClientNetStatusNoDetection && netStatus != RTMClientNetStatusNone) {
 //        NSLog(@"检测到网络");
         @synchronized (self) {
             _netStatus = netStatus;
@@ -782,7 +827,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
     }
     
     if (netStatus == RTMClientNetStatusNone) {
-//        NSLog(@"setNetStatus  无网络");
+//        NSLog(@"setNetStatus  无网络  %ld  %d",(long)self.connectStatus,self.authFinish);
         if (self.connectStatus != RTMClientConnectStatusConnectClosed && self.authFinish == YES) {
             @synchronized (self) {
                 self.isOverlookFpnnCloseCallBack = YES;
@@ -841,7 +886,6 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
             @synchronized (self) {
                 
                 _whichClient = [FPNNTCPClient clientWithEndpoint:self.whichEndpoint];
-               
             }
         }
         return _whichClient;
@@ -851,8 +895,6 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 }
 -(FPNNTCPClient*)authClient{
     
-    
-        
         if (_authClient == nil && self.authEndPoint != nil) {
             @synchronized (self) {
             _authClient = [FPNNTCPClient clientWithEndpoint:self.authEndPoint];
@@ -958,8 +1000,12 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
     
 }
 -(void)dealloc{
+    FPNSLog(@"RTMClient dealloc");
+    _authClient = nil;
+    _whichClient = nil;
     [self _cancelPingTimer];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [NSThread sleepForTimeInterval:0.2];
 }
 @end
 
