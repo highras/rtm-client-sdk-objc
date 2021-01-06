@@ -155,7 +155,7 @@
 
 //重连
 -(void)rtmReloginCompleted:(RTMClient *)client reloginCount:(int)reloginCount reloginResult:(BOOL)reloginResult error:(FPNError *)error{
-    NSLog(@"rtmReloginCompleted  uid = %lld reloginCount = %d reloginResult = %d",client.userId,reloginCount,reloginResult);
+    NSLog(@"rtmReloginCompleted  uid = %lld reloginCount = %d reloginResult = %d   %@",client.userId,reloginCount,reloginResult,error);
 }
 -(BOOL)rtmReloginWillStart:(RTMClient *)client reloginCount:(int)reloginCount{
 
@@ -184,39 +184,23 @@
         if (indexPath.row == 0) {//@[@"验证登录"]
         
             self.client = [RTMClient clientWithEndpoint:@""
-                                              projectId:90000014
+                                              projectId:0
                                                  userId:666
                                                delegate:self
                                                  config:nil
                                             autoRelogin:YES];
 
             if (self.client) {
-                [self.client loginWithToken:@"9FC45C79A9B34877F409306EF791A5AD"
+                [self.client loginWithToken:@""
                                    language:@"en"
                                   attribute:@{@"aaa":@"bbb"}
                                     timeout:30
                                     success:^{
 
 
-                    NSLog(@"66666login success  %@",[NSThread currentThread]);
+                    NSLog(@"login success  %@",[NSThread currentThread]);
 
-//                    for (int i = 0; i<200000; i++) {
-//
-//                            [NSThread sleepForTimeInterval:0.001];
-//                            [self.client sendP2PMessageToUserId:@(777)
-//                                                    messageType:@(80)
-//                                                        message:@"aaaaaaaaa"
-//                                                          attrs:@"attrs"
-//                                                        timeout:10 success:^(RTMSendAnswer * _Nonnull sendAnswer) {
-//
-//
-//                                NSLog(@"%@",sendAnswer.rtm_autoDescription);
-//                            } fail:^(FPNError * _Nullable error) {
-//
-//                            }];
-//                            NSLog(@"%d",i);
-//
-//                    }
+
 
 
                 } connectFail:^(FPNError * _Nullable error) {
@@ -227,31 +211,6 @@
             }
         
             
-//            self.client2 = [RTMClient clientWithEndpoint:@""
-//                                              projectId:90000014
-//                                                 userId:777
-//                                               delegate:self
-//                                                 config:nil
-//                                            autoRelogin:YES];
-//
-//            if (self.client2) {
-//                [self.client2 loginWithToken:@"20C084A0A015A1D798CC23A1C7E4C1CE"
-//                                   language:@"en"
-//                                  attribute:@{@"aaa":@"bbb"}
-//                                    timeout:30
-//                                    success:^{
-//
-//                    NSLog(@"7777login success  %@",[NSThread currentThread]);
-//
-//
-//
-//                } connectFail:^(FPNError * _Nullable error) {
-//
-//                    NSLog(@"login error %@",[NSThread currentThread]);
-//                }];
-//
-//            }
-//
         }
         
         
@@ -279,32 +238,6 @@
 
             }];
 
-            [self.client2 sendP2PMessageToUserId:@(666)
-                                    messageType:@(99)
-                                        message:@"bbbb"
-                                          attrs:@"attrs"
-                                        timeout:10
-                                        success:^(RTMSendAnswer * sendAnswer) {
-
-                NSLog(@"222222sendP2PMessageToUserId %@",sendAnswer.rtm_autoDescription);
-
-            }fail:^(FPNError * _Nullable error) {
-
-                NSLog(@"sendP2PMessageToUserId %@",error);
-
-            }];
-            
-            //同步接口
-//            RTMSendAnswer * answer = [self.client sendP2PMessageToUserId:@(777)
-//                                    messageType:@(80)
-//                                        message:@"message"
-//                                          attrs:@"attrs"
-//                                        timeout:10];
-//            if (answer.error) {
-//                NSLog(@"sendP2PMessageToUserId %@",answer.error);
-//            }else{
-//                NSLog(@"sendP2PMessageToUserId %lld",answer.mtime);
-//            }
             
             
         }else if (indexPath.row == 1){// 获取历史P2P消息（包括自己发送的消息）

@@ -143,7 +143,7 @@ NS_ASSUME_NONNULL_BEGIN
                                     timeout:(int)timeout;
 
 
-/// 进入某个房间或者频道
+/// 进入某个房间或者频道（不会持久化）
 /// @param roomId int64 房间频道id
 /// @param timeout 请求超时时间 秒
 /// @param successCallback 成功回调

@@ -378,7 +378,7 @@
 
 
 
--(void)addDeviceWithApptype:(NSString * _Nonnull)apptype
+-(void)addDeviceWithAppType:(NSString * _Nonnull)appType
                 deviceToken:(NSString * _Nonnull)deviceToken
                     timeout:(int)timeout
                     success:(void(^)(void))successCallback
@@ -387,7 +387,7 @@
     
     clientConnectStatueVerify
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    [dic setValue:apptype forKey:@"apptype"];
+    [dic setValue:appType forKey:@"apptype"];
     [dic setValue:deviceToken forKey:@"devicetoken"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"adddevice" message:dic twoWay:YES];
     BOOL result = [fpnnMainClient sendQuest:quest
@@ -407,7 +407,7 @@
     handlerNetworkError;
     
 }
--(RTMBaseAnswer*)addDeviceWithApptype:(NSString * _Nonnull)apptype
+-(RTMBaseAnswer*)addDeviceWithAppType:(NSString * _Nonnull)appType
                       deviceToken:(NSString * _Nonnull)deviceToken
                         timeout:(int)timeout{
     
@@ -415,7 +415,7 @@
     RTMBaseAnswer * model = [RTMBaseAnswer new];
     clientConnectStatueVerifySync
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    [dic setValue:apptype forKey:@"apptype"];
+    [dic setValue:appType forKey:@"apptype"];
     [dic setValue:deviceToken forKey:@"devicetoken"];
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"adddevice" message:dic twoWay:YES];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
@@ -485,12 +485,12 @@
 
 
 
--(void)addPushAttrsWithType:(int)type
-                        xid:(int64_t)xid
-                     mTypes:(NSArray <NSNumber*>* _Nullable)mTypes
-                    timeout:(int)timeout
-                    success:(void(^)(void))successCallback
-                       fail:(RTMAnswerFailCallBack)failCallback{
+-(void)addDevicePushOptionWithType:(int)type
+                               xid:(int64_t)xid
+                            mTypes:(NSArray <NSNumber*>* _Nonnull)mTypes
+                           timeout:(int)timeout
+                           success:(void(^)(void))successCallback
+                              fail:(RTMAnswerFailCallBack)failCallback{
     
     
     clientConnectStatueVerify
@@ -516,39 +516,39 @@
     handlerNetworkError;
     
 }
--(RTMBaseAnswer*)addPushAttrsWithType:(int)type
+-(RTMBaseAnswer*)addDevicePushOptionWithType:(int)type
+                                         xid:(int64_t)xid
+                                      mTypes:(NSArray <NSNumber*>* _Nonnull)mTypes
+                                     timeout:(int)timeout{
+    
+    RTMBaseAnswer * model = [RTMBaseAnswer new];
+    clientConnectStatueVerifySync
+    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+    [dic setValue:@(type) forKey:@"type"];
+    [dic setValue:@(xid) forKey:@"xid"];
+    [dic setValue:mTypes forKey:@"mtypes"];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"addoption" message:dic twoWay:YES];
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
+                                        timeout:RTMClientSendQuestTimeout];
+    
+    if (answer.error == nil) {
+        
+    }else{
+        model.error = answer.error;
+    }
+    
+    return model;
+    
+}
+
+
+
+-(void)removeDevicePushOptionWithType:(int)type
                                   xid:(int64_t)xid
-                               mTypes:(NSArray <NSNumber*>* _Nullable)mTypes
-                              timeout:(int)timeout{
-    
-    RTMBaseAnswer * model = [RTMBaseAnswer new];
-    clientConnectStatueVerifySync
-    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    [dic setValue:@(type) forKey:@"type"];
-    [dic setValue:@(xid) forKey:@"xid"];
-    [dic setValue:mTypes forKey:@"mtypes"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"addoption" message:dic twoWay:YES];
-    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
-                                        timeout:RTMClientSendQuestTimeout];
-    
-    if (answer.error == nil) {
-        
-    }else{
-        model.error = answer.error;
-    }
-    
-    return model;
-    
-}
-
-
-
--(void)removePushAttrsWithType:(int)type
-                           xid:(int64_t)xid
-                        mTypes:(NSArray <NSNumber*>* _Nullable)mTypes
-                       timeout:(int)timeout
-                       success:(void(^)(void))successCallback
-                          fail:(RTMAnswerFailCallBack)failCallback{
+                               mTypes:(NSArray <NSNumber*>* _Nonnull)mTypes
+                              timeout:(int)timeout
+                              success:(void(^)(void))successCallback
+                                 fail:(RTMAnswerFailCallBack)failCallback{
     
     clientConnectStatueVerify
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
@@ -573,10 +573,10 @@
     handlerNetworkError;
     
 }
--(RTMBaseAnswer*)removePushAttrsWithType:(int)type
-                                     xid:(int64_t)xid
-                                  mTypes:(NSArray<NSNumber*>* _Nullable)mTypes
-                                 timeout:(int)timeout{
+-(RTMBaseAnswer*)removeDevicePushOptionWithType:(int)type
+                                            xid:(int64_t)xid
+                                         mTypes:(NSArray<NSNumber*>* _Nonnull)mTypes
+                                        timeout:(int)timeout{
     
     RTMBaseAnswer * model = [RTMBaseAnswer new];
     clientConnectStatueVerifySync
@@ -599,9 +599,9 @@
 }
 
 
--(void)getPushAttrsWithTimeout:(int)timeout
-                       success:(void(^)(RTMGetPushAttrsAnswer *answer))successCallback
-                          fail:(RTMAnswerFailCallBack)failCallback{
+-(void)getDevicePushOptionWithTimeout:(int)timeout
+                              success:(void(^)(RTMGetPushAttrsAnswer *answer))successCallback
+                                 fail:(RTMAnswerFailCallBack)failCallback{
     
     
     clientConnectStatueVerify
@@ -609,11 +609,11 @@
     BOOL result = [fpnnMainClient sendQuest:quest
                                     timeout:RTMClientSendQuestTimeout
                                     success:^(NSDictionary * _Nullable data) {
-           
+        
         if (successCallback) {
             RTMGetPushAttrsAnswer * model = [RTMGetPushAttrsAnswer new];
-            model.p2pAttrs = [data objectForKey:@"p2p"];
-            model.groupAttrs = [data objectForKey:@"group"];
+            model.p2p = [data objectForKey:@"p2p"];
+            model.group = [data objectForKey:@"group"];
             successCallback(model);
         }
         
@@ -628,7 +628,7 @@
     
     
 }
--(RTMGetPushAttrsAnswer*)getPushAttrsWithTimeout:(int)timeout{
+-(RTMGetPushAttrsAnswer*)getDevicePushOptionWithTimeout:(int)timeout{
     
     RTMGetPushAttrsAnswer * model = [RTMGetPushAttrsAnswer new];
     clientConnectStatueVerifySync
@@ -637,8 +637,8 @@
                                             timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
-        model.p2pAttrs = [answer.responseData objectForKey:@"p2p"];
-        model.groupAttrs = [answer.responseData objectForKey:@"group"];
+        model.p2p = [answer.responseData objectForKey:@"p2p"];
+        model.group = [answer.responseData objectForKey:@"group"];
     }else{
         model.error = answer.error;
     }

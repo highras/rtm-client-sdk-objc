@@ -87,17 +87,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /// 添加设备，应用信息
-/// @param apptype app类型
+/// @param appType app类型   iOS ：apns   android ：fcm
 /// @param deviceToken token
 /// @param timeout 请求超时时间 秒
 /// @param successCallback 成功回调
 /// @param failCallback 失败回调
--(void)addDeviceWithApptype:(NSString * _Nonnull)apptype
+-(void)addDeviceWithAppType:(NSString * _Nonnull)appType
                 deviceToken:(NSString * _Nonnull)deviceToken
                     timeout:(int)timeout
                     success:(void(^)(void))successCallback
                        fail:(RTMAnswerFailCallBack)failCallback;
--(RTMBaseAnswer*)addDeviceWithApptype:(NSString * _Nonnull)apptype
+-(RTMBaseAnswer*)addDeviceWithAppType:(NSString * _Nonnull)appType
                           deviceToken:(NSString * _Nonnull)deviceToken
                               timeout:(int)timeout;
 
@@ -115,52 +115,54 @@ NS_ASSUME_NONNULL_BEGIN
                                timeout:(int)timeout;
 
 
-///// 添加设备推送属性
-///// @param type type=0, 设置某个p2p 不推送    type=1, 设置某个group不推送
-///// @param xid type=0,对应fromUserId  type=1,对应groupId
-///// @param mTypes 消息类型数组  为空，则所有mtype均不推送，其他值，则指定mtype不推送
-///// @param timeout 请求超时时间 秒
-///// @param successCallback 成功回调
-///// @param failCallback 失败回调
-//-(void)addPushAttrsWithType:(int)type
-//                        xid:(int64_t)xid
-//                     mTypes:(NSArray <NSNumber*>* _Nullable)mTypes
-//                    timeout:(int)timeout
-//                    success:(void(^)(void))successCallback
-//                       fail:(RTMAnswerFailCallBack)failCallback;
-//-(RTMBaseAnswer*)addPushAttrsWithType:(int)type
-//                                  xid:(int64_t)xid
-//                               mTypes:(NSArray<NSNumber*>* _Nullable)mTypes
-//                              timeout:(int)timeout;
-//
-//
-///// 移除设备推送属性
-///// @param type type=0, 设置某个p2p 不推送    type=1, 设置某个group不推送
-///// @param xid type=0,对应fromUserId  type=1,对应groupId
-///// @param mTypes 消息类型数组  为空，则所有mtype均不推送，其他值，则指定mtype不推送
-///// @param timeout 请求超时时间 秒
-///// @param successCallback 成功回调
-///// @param failCallback 失败回调
-//-(void)removePushAttrsWithType:(int)type
-//                           xid:(int64_t)xid
-//                        mTypes:(NSArray <NSNumber*>* _Nullable)mTypes
-//                       timeout:(int)timeout
-//                       success:(void(^)(void))successCallback
-//                          fail:(RTMAnswerFailCallBack)failCallback;
-//-(RTMBaseAnswer*)removePushAttrsWithType:(int)type
-//                                     xid:(int64_t)xid
-//                                  mTypes:(NSArray<NSNumber*>* _Nullable)mTypes
-//                                 timeout:(int)timeout;
-//
-//
-///// 获取推送属性
-///// @param timeout 请求超时时间 秒
-///// @param successCallback 成功回调
-///// @param failCallback 失败回调
-//-(void)getPushAttrsWithTimeout:(int)timeout
-//                       success:(void(^)(RTMGetPushAttrsAnswer *answer))successCallback
-//                          fail:(RTMAnswerFailCallBack)failCallback;
-//-(RTMGetPushAttrsAnswer*)getPushAttrsWithTimeout:(int)timeout;
+
+
+/// 设置设备推送属性(注意此接口是设置个人或群组某个类型的type不推送的设置)
+/// @param type type=0, 设置某个p2p 不推送    type=1, 设置某个group不推送
+/// @param xid type=0,对应userId  type=1,对应groupId
+/// @param mTypes 为空数组，则所有mtype均不推送;否则表示指定mtype不推送
+/// @param timeout 请求超时时间 秒
+/// @param successCallback 成功回调
+/// @param failCallback 失败回调
+-(void)addDevicePushOptionWithType:(int)type
+                               xid:(int64_t)xid
+                            mTypes:(NSArray <NSNumber*>* _Nonnull)mTypes
+                           timeout:(int)timeout
+                           success:(void(^)(void))successCallback
+                              fail:(RTMAnswerFailCallBack)failCallback;
+-(RTMBaseAnswer*)addDevicePushOptionWithType:(int)type
+                                         xid:(int64_t)xid
+                                      mTypes:(NSArray<NSNumber*>* _Nonnull)mTypes
+                                     timeout:(int)timeout;
+
+
+/// 取消设备推送属性(和addDevicePushOptionWithType对应)
+/// @param type type=0, 设置某个p2p   type=1, 设置某个group
+/// @param xid type=0,对应fromUserId  type=1,对应groupId
+/// @param mTypes  需要取消设置的messagetype数组(如果为空数组表示什么都不做)
+/// @param timeout 请求超时时间 秒
+/// @param successCallback 成功回调
+/// @param failCallback 失败回调
+-(void)removeDevicePushOptionWithType:(int)type
+                                  xid:(int64_t)xid
+                               mTypes:(NSArray <NSNumber*>* _Nonnull)mTypes
+                              timeout:(int)timeout
+                              success:(void(^)(void))successCallback
+                                 fail:(RTMAnswerFailCallBack)failCallback;
+-(RTMBaseAnswer*)removeDevicePushOptionWithType:(int)type
+                                            xid:(int64_t)xid
+                                         mTypes:(NSArray<NSNumber*>* _Nonnull)mTypes
+                                        timeout:(int)timeout;
+
+
+/// 获取设备推送属性(addDevicePushOptionWithType的结果)
+/// @param timeout 请求超时时间 秒
+/// @param successCallback 成功回调
+/// @param failCallback 失败回调
+-(void)getDevicePushOptionWithTimeout:(int)timeout
+                              success:(void(^)(RTMGetPushAttrsAnswer *answer))successCallback
+                                 fail:(RTMAnswerFailCallBack)failCallback;
+-(RTMGetPushAttrsAnswer*)getDevicePushOptionWithTimeout:(int)timeout;
 
 
 
