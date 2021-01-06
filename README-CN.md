@@ -654,7 +654,7 @@ self.client = [RTMClient clientWithEndpoint:
                                     timeout:(int)timeout;
 
 
-/// 进入某个房间或者频道
+/// 进入某个房间或者频道（不会持久化）
 /// @param roomId int64 房间频道id
 /// @param timeout 请求超时时间 秒
 /// @param successCallback 成功回调
@@ -1374,12 +1374,12 @@ self.client = [RTMClient clientWithEndpoint:
 
 
 /// 添加设备，应用信息
-/// @param apptype app类型
+/// @param appType app类型   iOS ：apns   android ：fcm
 /// @param deviceToken token
 /// @param timeout 请求超时时间 秒
 /// @param successCallback 成功回调
 /// @param failCallback 失败回调
--(void)addDeviceWithApptype:(NSString * _Nonnull)apptype
+-(void)addDeviceWithAppType:(NSString * _Nonnull)appType
                 deviceToken:(NSString * _Nonnull)deviceToken
                     timeout:(int)timeout
                     success:(void(^)(void))successCallback
@@ -1397,6 +1397,48 @@ self.client = [RTMClient clientWithEndpoint:
                      success:(void(^)(void))successCallback
                         fail:(RTMAnswerFailCallBack)failCallback;
 
+
+
+
+/// 设置设备推送属性(注意此接口是设置个人或群组某个类型的type不推送的设置)
+/// @param type type=0, 设置某个p2p 不推送    type=1, 设置某个group不推送
+/// @param xid type=0,对应userId  type=1,对应groupId
+/// @param mTypes 为空数组，则所有mtype均不推送;否则表示指定mtype不推送
+/// @param timeout 请求超时时间 秒
+/// @param successCallback 成功回调
+/// @param failCallback 失败回调
+-(void)addDevicePushOptionWithType:(int)type
+                               xid:(int64_t)xid
+                            mTypes:(NSArray <NSNumber*>* _Nonnull)mTypes
+                           timeout:(int)timeout
+                           success:(void(^)(void))successCallback
+                              fail:(RTMAnswerFailCallBack)failCallback;
+
+
+
+/// 取消设备推送属性(和addDevicePushOptionWithType对应)
+/// @param type type=0, 设置某个p2p 不推送    type=1, 设置某个group不推送
+/// @param xid type=0,对应fromUserId  type=1,对应groupId
+/// @param mTypes  需要取消设置的messagetype数组(如果为空数组表示什么都不做)
+/// @param timeout 请求超时时间 秒
+/// @param successCallback 成功回调
+/// @param failCallback 失败回调
+-(void)removeDevicePushOptionWithType:(int)type
+                                  xid:(int64_t)xid
+                               mTypes:(NSArray <NSNumber*>* _Nonnull)mTypes
+                              timeout:(int)timeout
+                              success:(void(^)(void))successCallback
+                                 fail:(RTMAnswerFailCallBack)failCallback;
+
+
+
+/// 获取设备推送属性(addDevicePushOptionWithType的结果)
+/// @param timeout 请求超时时间 秒
+/// @param successCallback 成功回调
+/// @param failCallback 失败回调
+-(void)getDevicePushOptionWithTimeout:(int)timeout
+                              success:(void(^)(RTMGetPushAttrsAnswer *answer))successCallback
+                                 fail:(RTMAnswerFailCallBack)failCallback;
 
 ```
 
