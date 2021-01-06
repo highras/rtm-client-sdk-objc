@@ -1076,6 +1076,10 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
     _authClient = nil;
     _whichClient = nil;
     [self _cancelPingTimer];
+    if (self.loginTimeoutTimer) {
+        dispatch_cancel(self.loginTimeoutTimer);
+        self.loginTimeoutTimer = nil;
+    }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [NSThread sleepForTimeInterval:0.2];
 }
