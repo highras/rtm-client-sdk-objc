@@ -1417,7 +1417,7 @@ self.client = [RTMClient clientWithEndpoint:
 
 
 /// 取消设备推送属性(和addDevicePushOptionWithType对应)
-/// @param type type=0, 设置某个p2p 不推送    type=1, 设置某个group不推送
+/// @param type  type=0, 设置某个p2p    type=1, 设置某个group
 /// @param xid type=0,对应fromUserId  type=1,对应groupId
 /// @param mTypes  需要取消设置的messagetype数组(如果为空数组表示什么都不做)
 /// @param timeout 请求超时时间 秒
