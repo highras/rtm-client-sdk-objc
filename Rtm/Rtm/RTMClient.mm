@@ -1073,6 +1073,8 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 }
 -(void)dealloc{
     FPNSLog(@"RTMClient dealloc");
+    [_authClient closeConnect];
+    [_whichClient closeConnect];
     _authClient = nil;
     _whichClient = nil;
     [self _cancelPingTimer];
