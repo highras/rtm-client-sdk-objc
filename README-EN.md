@@ -657,7 +657,7 @@ self.client = [RTMClient clientWithEndpoint:
                                     timeout:(int)timeout;
 
 
-/// join room
+/// join room （no persistence）
 /// @param roomId int64 
 /// @param timeout Request timeout seconds
 /// @param successCallback 
@@ -672,7 +672,7 @@ self.client = [RTMClient clientWithEndpoint:
 
 
 
-/// leave room
+/// leave room  (no persistence）
 /// @param roomId int64 
 /// @param timeout Request timeout seconds
 /// @param successCallback 
@@ -1366,13 +1366,13 @@ self.client = [RTMClient clientWithEndpoint:
 
 
 
-/// add device info，add app info
-/// @param apptype 
+/// add device token
+/// @param apptype   iOS ：apns   android ：fcm
 /// @param deviceToken token
 /// @param timeout Request timeout seconds
 /// @param successCallback 
 /// @param failCallback
--(void)addDeviceWithApptype:(NSString * _Nonnull)apptype
+-(void)addDeviceWithAppType:(NSString * _Nonnull)appType
                 deviceToken:(NSString * _Nonnull)deviceToken
                     timeout:(int)timeout
                     success:(void(^)(void))successCallback
@@ -1390,6 +1390,47 @@ self.client = [RTMClient clientWithEndpoint:
                      success:(void(^)(void))successCallback
                         fail:(RTMAnswerFailCallBack)failCallback;
 
+
+
+/// Set the properties of device push (note that this interface is to set the type of a certain type of individual or group not to push)
+/// @param typeType = 0, set a P2P not to push, type = 1, set a group not to push
+/// @param xid Type = 0, corresponding to userid, type = 1, corresponding to groupid
+/// @param mTypes If the array is empty, all mtypes will not be pushed; otherwise, the specified mtype will not be pushed
+/// @param timeout timeout Request timeout seconds
+/// @param successCallback 
+/// @param failCallback 
+-(void)addDevicePushOptionWithType:(int)type
+                               xid:(int64_t)xid
+                            mTypes:(NSArray <NSNumber*>* _Nonnull)mTypes
+                           timeout:(int)timeout
+                           success:(void(^)(void))successCallback
+                              fail:(RTMAnswerFailCallBack)failCallback;
+
+
+
+/// Cancel the device push property (corresponding to adddevicepushoptionwithtype)
+/// @param type Type = 0, set a P2P type = 1, set a group
+/// @param xid Type = 0, corresponding to fromuserid, type = 1, corresponding to groupid
+/// @param mTypes. The message type array that needs to be unset (if the array is empty, it means that nothing will be done)
+/// @param timeout timeout Request timeout seconds
+/// @param successCallback 
+/// @param failCallback 
+-(void)removeDevicePushOptionWithType:(int)type
+                                  xid:(int64_t)xid
+                               mTypes:(NSArray <NSNumber*>* _Nonnull)mTypes
+                              timeout:(int)timeout
+                              success:(void(^)(void))successCallback
+                                 fail:(RTMAnswerFailCallBack)failCallback;
+
+
+
+/// Get device push property (result of adddevicepushoptionwithtype)
+/// @param timeout timeout Request timeout seconds
+/// @param successCallback 
+/// @param failCallback 
+-(void)getDevicePushOptionWithTimeout:(int)timeout
+                              success:(void(^)(RTMGetPushAttrsAnswer *answer))successCallback
+                                 fail:(RTMAnswerFailCallBack)failCallback;
 
 ```
 
