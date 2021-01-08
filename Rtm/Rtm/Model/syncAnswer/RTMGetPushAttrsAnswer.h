@@ -12,8 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface RTMGetPushAttrsAnswer : RTMBaseAnswer
 
-@property(nonatomic,strong)NSDictionary < NSNumber* , NSArray<NSNumber *> *> * p2p;//@{ userId : @[mtype] }
-@property(nonatomic,strong)NSDictionary < NSNumber* , NSArray<NSNumber *> *> * group;//@{ groupId : @[mtype] }
+@property(nonatomic,strong)NSDictionary * p2p;//@{ userId : @[mtype] }
+@property(nonatomic,strong)NSDictionary * group;//@{ groupId : @[mtype] }
 @end
 
 NS_ASSUME_NONNULL_END

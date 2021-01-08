@@ -406,16 +406,17 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                                     
                                     @synchronized (self) {
                                         self.connectStatus = RTMClientConnectStatusConnected;
+                                        self.reloginNum = 0;
                                     }
 //                        NSLog(@"self.authFinishself.authFinish   %d",self.authFinish);
                                     if (self.authFinish) {//重连
 //                                        NSLog(@"重连登录成功");
-
-                                        [self _reloginComplete:nil];
                                         @synchronized (self) {
                                             self.lastPingTime = [NSDate date];
                                             self.authFinish = YES;
+                                            [self _reloginComplete:nil];
                                         }
+                                        
                                         
                                     }else{//登录
 //                                        NSLog(@"常规登录成功");
@@ -428,16 +429,15 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                                             }
                                             if (self.loginSuccess) {
                                                 self.loginSuccess();
+                                                self.loginSuccess = nil;
                                             }
                                         }
                                         
                                         
                                         
                                     }
-                                    @synchronized (self) {
-                                        self.reloginNum = 0;
-                                    }
                                     
+                                
                             
                                 }else{//多点登录
                                     NSString * endPoint = data[@"gate"];
@@ -1086,6 +1086,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
     [NSThread sleepForTimeInterval:0.2];
 }
 @end
+
 
 
 
