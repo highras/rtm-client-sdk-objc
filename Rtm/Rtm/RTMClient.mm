@@ -120,7 +120,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
         _userId = userId;
         _config = config;
         _autoRelogin = autoRelogin;
-        _sdkVersion = @"2.0.9";
+        _sdkVersion = @"2.1.0";
         _apiVersion = @"2.5.0";
         _reloginNum = 0;
         _connectStatus = RTMClientConnectStatusConnectClosed;
@@ -293,6 +293,12 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
             if (self.loginFail) {
                 //超时
                 self.loginFail([FPNError errorWithEx:@"FPNN_EC_CORE_TIMEOUT" code:20003]);
+                self.loginFail = nil;
+                if (self.loginTimeoutTimer) {
+                    dispatch_cancel(self.loginTimeoutTimer);
+                    self.loginTimeoutTimer = nil;
+                }
+                
             }
         
         }
@@ -327,6 +333,11 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                             self.connectStatus = RTMClientConnectStatusConnectClosed;
                             if (self.loginFail) {
                                 self.loginFail([FPNError errorWithEx:@"RTM_EC_UNKNOWN_ERROR" code:200999]);
+                                self.loginFail = nil;
+                                if (self.loginTimeoutTimer) {
+                                    dispatch_cancel(self.loginTimeoutTimer);
+                                    self.loginTimeoutTimer = nil;
+                                }
                             }
                             
                         }else{
@@ -353,6 +364,11 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                         [self.whichClient closeConnect];
                         if (self.loginFail) {
                             self.loginFail(error);
+                            self.loginFail = nil;
+                            if (self.loginTimeoutTimer) {
+                                dispatch_cancel(self.loginTimeoutTimer);
+                                self.loginTimeoutTimer = nil;
+                            }
                         }
                     }
                     
@@ -367,6 +383,11 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                     
                     if (self.loginFail) {
                         self.loginFail([FPNError errorWithEx:@"FPNN_EC_CORE_INVALID_CONNECTION" code:20012]);
+                        self.loginFail = nil;
+                        if (self.loginTimeoutTimer) {
+                            dispatch_cancel(self.loginTimeoutTimer);
+                            self.loginTimeoutTimer = nil;
+                        }
                     }
                     
                 }
@@ -430,6 +451,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                                             if (self.loginSuccess) {
                                                 self.loginSuccess();
                                                 self.loginSuccess = nil;
+                                                
                                             }
                                         }
                                         
@@ -467,6 +489,11 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                                             if (self.loginFail) {
 //                                                NSLog(@"多点登录  重连2222222");
                                                 self.loginFail([FPNError errorWithEx:@"RTM_EC_INVALID_AUTH_TOEKN" code:200027]);
+                                                self.loginFail = nil;
+                                                if (self.loginTimeoutTimer) {
+                                                    dispatch_cancel(self.loginTimeoutTimer);
+                                                    self.loginTimeoutTimer = nil;
+                                                }
                                             }
                                         }
                                                       
@@ -515,8 +542,8 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                         
                     }else{
 
-                        if (self.loginTimeoutTimer) {
-                            @synchronized (self) {
+                        @synchronized (self) {
+                            if (self.loginTimeoutTimer) {
                                 dispatch_cancel(self.loginTimeoutTimer);
                                 self.loginTimeoutTimer = nil;
                             }
@@ -525,6 +552,11 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                         if (self.loginFail) {
 
                             self.loginFail(error);
+                            self.loginFail = nil;
+                            if (self.loginTimeoutTimer) {
+                                dispatch_cancel(self.loginTimeoutTimer);
+                                self.loginTimeoutTimer = nil;
+                            }
                         }
                     }
                 }
@@ -556,6 +588,11 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                     }
                     if (self.loginFail) {
                         self.loginFail([FPNError errorWithEx:@"FPNN_EC_CORE_INVALID_CONNECTION" code:20012]);
+                        self.loginFail = nil;
+                        if (self.loginTimeoutTimer) {
+                            dispatch_cancel(self.loginTimeoutTimer);
+                            self.loginTimeoutTimer = nil;
+                        }
                     }
                 }
                   
