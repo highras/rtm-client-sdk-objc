@@ -48,7 +48,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 @property (nonatomic,copy)RTMLoginFailCallBack loginFail;
 @property(nonatomic,assign)RTMClientConnectStatus connectStatus;
 @property(nonatomic,assign)int loginTimeout;//which + auth 总计  超过则fail回调
-@property(nonatomic,assign)BOOL isKickout;
+
 //which
 @property (nonatomic,strong)FPNNTCPClient * whichClient;
 
@@ -353,7 +353,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                         }
                         
                     }
-        //            NSLog(@"which %@",data);
+//                    NSLog(@"which %@",data);
                     
                     
                 } fail:^(FPNError * _Nullable error) {
@@ -414,10 +414,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
             BOOL result = [self.authClient sendQuest:quest
                                              timeout:self.loginTimeout
                                              success:^(NSDictionary * _Nullable data) {
-                if (self.isKickout) {
-                    self.isKickout = NO;
-                    return;
-                }
+                
         //        NSLog(@"auth %@",data);
                 @rtmStrongify(self);
                 
@@ -523,11 +520,6 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                 
 //                NSLog(@"ail:^(FPNError * _Nullable error) {ail:^(FPNError * _Nullable error) {");
                 @rtmStrongify(self);
-                
-                if (self.isKickout) {
-                    self.isKickout = NO;
-                    return;
-                }
                 
                 @synchronized (self) {
                     
@@ -1067,18 +1059,23 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                 if ([method isEqualToString:@"kickout"]) {
                     
                     @synchronized (self) {
-                        self.isKickout = YES;
-                        self.isOverlookFpnnCloseCallBack = YES;
-                        self.authFinish = NO;
-                        self.connectStatus = RTMClientConnectStatusConnectClosed;
+//                        NSLog(@"kickoutkickoutkickout");
+
+                        if (self.connectStatus == RTMClientConnectStatusConnected) {
+                            self.isOverlookFpnnCloseCallBack = YES;
+                            self.authFinish = NO;
+                            self.connectStatus = RTMClientConnectStatusConnectClosed;
+                            
+                            if ([self.delegate respondsToSelector:@selector(rtmKickout:)]) {
+                                [self.delegate rtmKickout:self];
+                            }
+                            
+                            
+                            [self _byeCloseConnect:YES];
+                        }
                     }
                     
-                    if ([self.delegate respondsToSelector:@selector(rtmKickout:)]) {
-                        [self.delegate rtmKickout:self];
-                    }
                     
-                    
-                    [self _byeCloseConnect:YES];
                     
                     return nil;//one way
                 }

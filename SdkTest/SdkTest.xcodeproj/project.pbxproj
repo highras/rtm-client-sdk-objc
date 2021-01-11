@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		563B173825AB64FD00D30980 /* Rtm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 563B173725AB64FD00D30980 /* Rtm.framework */; };
+		563B173B25AB657A00D30980 /* TestVc.m in Sources */ = {isa = PBXBuildFile; fileRef = 563B173A25AB657A00D30980 /* TestVc.m */; };
 		568A8F34255BE12B008805B3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 568A8F32255BE12B008805B3 /* Main.storyboard */; };
 		568A8F37255BE12B008805B3 /* SdkTest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 568A8F35255BE12B008805B3 /* SdkTest.xcdatamodeld */; };
 		568A8F3C255BE12D008805B3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 568A8F3A255BE12D008805B3 /* LaunchScreen.storyboard */; };
@@ -30,7 +32,6 @@
 		568A8FD2255BE2FB008805B3 /* RTMAudioplayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 568A8FC4255BE2FA008805B3 /* RTMAudioplayer.m */; };
 		568A8FD3255BE2FB008805B3 /* RtmVoiceConverterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 568A8FC8255BE2FA008805B3 /* RtmVoiceConverterManager.m */; };
 		568A8FD5255BE35E008805B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 568A8FD4255BE35E008805B3 /* Assets.xcassets */; };
-		569C94AC259DA71900FC67DE /* Rtm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 569C94AB259DA71900FC67DE /* Rtm.framework */; };
 		56CE7DBB2567A884001AA5F7 /* text.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 56CE7DBA2567A884001AA5F7 /* text.mp3 */; };
 		56D6E1BD256CFA05001FC8BC /* yy.png in Resources */ = {isa = PBXBuildFile; fileRef = 56D6E1BC256CFA05001FC8BC /* yy.png */; };
 		56D6E1BF256CFACF001FC8BC /* bizhi.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 56D6E1BE256CFACF001FC8BC /* bizhi.jpeg */; };
@@ -54,6 +55,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		563B173725AB64FD00D30980 /* Rtm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Rtm.framework; path = "../../../Library/Developer/Xcode/DerivedData/RtmWorkSpace-afslpiavtyaddsbnnuspddvkeeaf/Build/Products/Release-iphoneos/Rtm.framework"; sourceTree = "<group>"; };
+		563B173925AB657A00D30980 /* TestVc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestVc.h; sourceTree = "<group>"; };
+		563B173A25AB657A00D30980 /* TestVc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestVc.m; sourceTree = "<group>"; };
 		568A8F26255BE12B008805B3 /* SdkTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SdkTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		568A8F33255BE12B008805B3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		568A8F36255BE12B008805B3 /* SdkTest.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SdkTest.xcdatamodel; sourceTree = "<group>"; };
@@ -105,7 +109,6 @@
 		568A8FC7255BE2FA008805B3 /* interf_enc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = interf_enc.h; sourceTree = "<group>"; };
 		568A8FC8255BE2FA008805B3 /* RtmVoiceConverterManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RtmVoiceConverterManager.m; sourceTree = "<group>"; };
 		568A8FD4255BE35E008805B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		569C94AB259DA71900FC67DE /* Rtm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Rtm.framework; path = "../../../Library/Developer/Xcode/DerivedData/RtmWorkSpace-afslpiavtyaddsbnnuspddvkeeaf/Build/Products/Release-iphoneos/Rtm.framework"; sourceTree = "<group>"; };
 		56CE7DBA2567A884001AA5F7 /* text.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = text.mp3; sourceTree = "<group>"; };
 		56D6E1B9256CEFFD001FC8BC /* mp4Test.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = mp4Test.mp4; sourceTree = "<group>"; };
 		56D6E1BC256CFA05001FC8BC /* yy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yy.png; sourceTree = "<group>"; };
@@ -119,7 +122,7 @@
 			files = (
 				568A8FA0255BE18A008805B3 /* libresolv.tbd in Frameworks */,
 				568A8FD1255BE2FB008805B3 /* libvo-amrwbenc.a in Frameworks */,
-				569C94AC259DA71900FC67DE /* Rtm.framework in Frameworks */,
+				563B173825AB64FD00D30980 /* Rtm.framework in Frameworks */,
 				568A8F9E255BE17F008805B3 /* libresolv.9.tbd in Frameworks */,
 				568A8FCF255BE2FB008805B3 /* libopencore-amrwb.a in Frameworks */,
 				568A8FD0255BE2FB008805B3 /* libopencore-amrnb.a in Frameworks */,
@@ -146,7 +149,7 @@
 		568A8F1D255BE12B008805B3 = {
 			isa = PBXGroup;
 			children = (
-				569C94AB259DA71900FC67DE /* Rtm.framework */,
+				563B173725AB64FD00D30980 /* Rtm.framework */,
 				568A8FAB255BE2FA008805B3 /* RTMAudioManager */,
 				568A8F28255BE12B008805B3 /* SdkTest */,
 				568A8F47255BE12D008805B3 /* SdkTestTests */,
@@ -185,6 +188,8 @@
 				568A8F63255BE146008805B3 /* AppDelegate.mm */,
 				568A8F61255BE146008805B3 /* MainViewController.h */,
 				568A8F64255BE147008805B3 /* MainViewController.mm */,
+				563B173925AB657A00D30980 /* TestVc.h */,
+				563B173A25AB657A00D30980 /* TestVc.m */,
 				568A8FD4255BE35E008805B3 /* Assets.xcassets */,
 				568A8F32255BE12B008805B3 /* Main.storyboard */,
 				568A8F3A255BE12D008805B3 /* LaunchScreen.storyboard */,
@@ -434,6 +439,7 @@
 				568A8F66255BE147008805B3 /* AppDelegate.mm in Sources */,
 				568A8FCD255BE2FB008805B3 /* WidthBandWavToAmr.mm in Sources */,
 				568A8FD3255BE2FB008805B3 /* RtmVoiceConverterManager.m in Sources */,
+				563B173B25AB657A00D30980 /* TestVc.m in Sources */,
 				568A8F37255BE12B008805B3 /* SdkTest.xcdatamodeld in Sources */,
 				568A8FCB255BE2FB008805B3 /* wavreader.c in Sources */,
 				568A8FCC255BE2FB008805B3 /* NarrowBandWavToAmr.mm in Sources */,

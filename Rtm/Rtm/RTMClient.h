@@ -46,7 +46,7 @@ typedef void (^RTMLoginFailCallBack)(FPNError * _Nullable error);
 @property (nonatomic,readonly,strong)NSString * sdkVersion;
 @property (nonatomic,readonly,strong)NSString * apiVersion;
 @property (nonatomic,readonly,assign)RTMClientConnectStatus currentConnectStatus;
-@property (nonatomic,assign)id <RTMProtocol> delegate;
+@property (nonatomic,assign,nullable)id <RTMProtocol> delegate;
 @property(nonatomic,readonly,assign)int64_t projectId;
 @property(nonatomic,readonly,assign)int64_t userId;
 

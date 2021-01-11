@@ -11,6 +11,7 @@
 #import "RTMRecordManager.h"
 #import "RTMAudioplayer.h"
 #import <Rtm/Rtm.h>
+#import "TestVc.h"
 #import "NSObject+Description.h"
 #define NSAllLog(FORMAT, ...) fprintf(stderr, "%s:%zd\t%s\n", [[[NSString stringWithUTF8String: __FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat: FORMAT, ## __VA_ARGS__] UTF8String]);
 
@@ -182,7 +183,9 @@
         
         
         if (indexPath.row == 0) {//@[@"验证登录"]
-        
+//            TestVc * vc = [[TestVc alloc] init];
+//            [self presentViewController:vc animated:YES completion:nil];
+            
             self.client = [RTMClient clientWithEndpoint:@""
                                               projectId:0
                                                  userId:666
@@ -191,7 +194,7 @@
                                             autoRelogin:YES];
 
             if (self.client) {
-                [self.client loginWithToken:@""
+                [self.client loginWithToken:@"token"
                                    language:@"en"
                                   attribute:@{@"aaa":@"bbb"}
                                     timeout:30
@@ -209,7 +212,7 @@
                 }];
 
             }
-        
+////
             
         }
         
@@ -1121,18 +1124,18 @@
                    
                     }else if (indexPath.row == 1){//添加设备，应用信息
                     
-                        [self.client addDeviceWithApptype:@"iphone11"
-                                              deviceToken:@"token"
-                                                  timeout:10
-                                                  success:^{
-                            
-                            NSLog(@"addDeviceWithApptype success");
-                            
-                        } fail:^(FPNError * _Nullable error) {
-                            
-                            NSLog(@"%@",error);
-                            
-                        }];
+//                        [self.client addDeviceWithApptype:@"iphone11"
+//                                              deviceToken:@"token"
+//                                                  timeout:10
+//                                                  success:^{
+//                            
+//                            NSLog(@"addDeviceWithApptype success");
+//                            
+//                        } fail:^(FPNError * _Nullable error) {
+//                            
+//                            NSLog(@"%@",error);
+//                            
+//                        }];
                                 
                     
                            
@@ -1771,7 +1774,7 @@
     self.view = self.listView;
 
 //点击一下  登录验证
-    [self tableView:self.listView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+//    [self tableView:self.listView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
 //    [self test];
 
 }
