@@ -26,7 +26,7 @@ iOS RTM Usage document (integration + interface description)
 <a id="versionsupport">version support</a>
 ================
 * language:Objective-C  
-* minimum system iOS 8 
+* minimum system iOS 9 
 
 
 
