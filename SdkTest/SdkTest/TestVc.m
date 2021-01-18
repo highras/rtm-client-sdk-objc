@@ -51,15 +51,15 @@
 //            dispatch_async(dispatch_get_main_queue(), ^{
 //                NSLog(@"===== %d =====",i);
     
-//                self.client = [RTMClient clientWithEndpoint:@"161.189.171.91:13325"
-//                                                  projectId:90000014
+//                self.client = [RTMClient clientWithEndpoint:@"0"
+//                                                  projectId:0
 //                                                     userId:666
 //                                                   delegate:self
 //                                                     config:nil
 //                                                autoRelogin:YES];
 //
 //                if (self.client) {
-//                    [self.client loginWithToken:@"4D730BF4F8CD11106663D2E40682C952"
+//                    [self.client loginWithToken:@"0"
 //                                       language:@"en"
 //                                      attribute:@{@"aaa":@"bbb"}
 //                                        timeout:30
@@ -91,15 +91,15 @@
 //                }
 //
 //
-//    self.client2 = [RTMClient clientWithEndpoint:@"161.189.171.91:13325"
-//                                      projectId:90000014
+//    self.client2 = [RTMClient clientWithEndpoint:@"0"
+//                                      projectId:0
 //                                         userId:777
 //                                       delegate:self
 //                                         config:nil
 //                                    autoRelogin:YES];
 //
 //    if (self.client2) {
-//        [self.client2 loginWithToken:@"ABA9498553DEFB7492ABC0CC9AA01711"
+//        [self.client2 loginWithToken:@"0"
 //                           language:@"en"
 //                          attribute:@{@"aaa":@"bbb"}
 //                            timeout:30
@@ -130,15 +130,15 @@
 //    }
 //
 //
-//    self.client3 = [RTMClient clientWithEndpoint:@"161.189.171.91:13325"
-//                                      projectId:90000014
+//    self.client3 = [RTMClient clientWithEndpoint:@"0"
+//                                      projectId:0
 //                                         userId:888
 //                                       delegate:self
 //                                         config:nil
 //                                    autoRelogin:YES];
 //
 //    if (self.client3) {
-//        [self.client3 loginWithToken:@"4388644428DA18C6D857D97299C45BCC"
+//        [self.client3 loginWithToken:@"0"
 //                           language:@"en"
 //                          attribute:@{@"aaa":@"bbb"}
 //                            timeout:30

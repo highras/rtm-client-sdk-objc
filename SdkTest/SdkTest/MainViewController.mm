@@ -189,15 +189,15 @@
 //            TestVc * vc = [[TestVc alloc] init];
 //            [self presentViewController:vc animated:YES completion:nil];
 
-            self.client = [RTMClient clientWithEndpoint:@"rtm-nx-front.ilivedata.com:13325"
-                                              projectId:80000071
+            self.client = [RTMClient clientWithEndpoint:@""
+                                              projectId:0
                                                  userId:666
                                                delegate:self
                                                  config:nil
                                             autoRelogin:YES];
 
             if (self.client) {
-                [self.client loginWithToken:@"AAFC108A65A5DC62E1BC64FA06BB82FD"
+                [self.client loginWithToken:@"0"
                                    language:@"en"
                                   attribute:@{@"aaa":@"bbb"}
                                     timeout:30
@@ -228,84 +228,7 @@
 
                 
             }
-//            
-//            
-//            self.client2 = [RTMClient clientWithEndpoint:@"161.189.171.91:13325"
-//                                              projectId:90000014
-//                                                 userId:777
-//                                               delegate:self
-//                                                 config:nil
-//                                            autoRelogin:YES];
-//
-//            if (self.client2) {
-//                [self.client2 loginWithToken:@"9A460A48F8B64DD6FB399A7F048DA3BC"
-//                                   language:@"en"
-//                                  attribute:@{@"aaa":@"bbb"}
-//                                    timeout:30
-//                                    success:^{
-//
-//
-//                    NSLog(@"login success  %@",[NSThread currentThread]);
-//
-//                    [self.client2 enterRoomWithId:[NSNumber numberWithLongLong:666]
-//                                         timeout:10
-//                                         success:^{
-//
-//                        NSLog(@"enterRoomWithId success");
-//
-//                    } fail:^(FPNError * _Nullable error) {
-//
-//                        NSLog(@"%@",error);
-//
-//                    }];
-//
-//
-//
-//                } connectFail:^(FPNError * _Nullable error) {
-//
-//                    NSLog(@"login error %@ %@",[NSThread currentThread],error);
-//                }];
-//
-//            }
-//
-//            
-//            self.client3 = [RTMClient clientWithEndpoint:@"161.189.171.91:13325"
-//                                              projectId:90000014
-//                                                 userId:888
-//                                               delegate:self
-//                                                 config:nil
-//                                            autoRelogin:YES];
-//
-//            if (self.client3) {
-//                [self.client3 loginWithToken:@"71E78C2A9842569F208D8833BE8C0167"
-//                                   language:@"en"
-//                                  attribute:@{@"aaa":@"bbb"}
-//                                    timeout:30
-//                                    success:^{
-//
-//
-//                    NSLog(@"login success  %@",[NSThread currentThread]);
-//
-//                    [self.client3 enterRoomWithId:[NSNumber numberWithLongLong:666]
-//                                         timeout:10
-//                                         success:^{
-//
-//                        NSLog(@"enterRoomWithId success");
-//
-//                    } fail:^(FPNError * _Nullable error) {
-//
-//                        NSLog(@"%@",error);
-//
-//                    }];
-//
-//
-//
-//                } connectFail:^(FPNError * _Nullable error) {
-//
-//                    NSLog(@"login error %@ %@",[NSThread currentThread],error);
-//                }];
-//
-//            }
+
         }
 
 

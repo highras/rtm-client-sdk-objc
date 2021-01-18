@@ -714,16 +714,16 @@ self.client = [RTMClient clientWithEndpoint:
 
 
 /// Gets the number of users in the room
-/// @param roomId int64
+/// @param roomIds int64
 /// @param timeout Request timeout seconds
 /// @param successCallback 
 /// @param failCallback 
--(void)getRoomMemberCountWithId:(NSNumber * _Nonnull)roomId
+-(void)getRoomMemberCountWithId:(NSArray <NSNumber*>* _Nonnull)roomIds
                         timeout:(int)timeout
-                        success:(void(^)(int64_t count))successCallback
+                        success:(void(^)(RTMRoomMemberCountAnswer * answer))successCallback
                            fail:(RTMAnswerFailCallBack)failCallback;
--(RTMCountAnswer*)getRoomMemberCountWithId:(NSNumber * _Nonnull)roomId
-                                   timeout:(int)timeout;
+-(RTMRoomMemberCountAnswer*)getRoomMemberCountWithId:(NSArray <NSNumber*>*)roomIds
+                                             timeout:(int)timeout;
 
 
 /// set the open or private information of the room will check whether the user is in the room (openInfo,privateInfo 最长 65535)
