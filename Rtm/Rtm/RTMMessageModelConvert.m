@@ -197,184 +197,215 @@
 
 +(RTMHistoryMessage*)p2pHistoryMessageModelConvert:(NSArray*)itemArray toUserId:(int64_t)toUserId myUserId:(int64_t)myUserId{
     
-//    NSLog(@"%@",itemArray);
-    RTMHistoryMessage * msgOb = [RTMHistoryMessage new];
-    if ([[itemArray objectAtIndex:1] intValue] == 1) {//1是我发的  2不是
-        msgOb.fromUid = myUserId;
-        msgOb.toId = toUserId;
-    }else{
-        msgOb.fromUid = toUserId;
-        msgOb.toId = myUserId;
-    }
-    msgOb.cursorId = [[itemArray objectAtIndex:0] longLongValue];
-    msgOb.messageType = [[itemArray objectAtIndex:2] intValue];
-    msgOb.messageId = [[itemArray objectAtIndex:3] longLongValue];
-    msgOb.modifiedTime = [[itemArray objectAtIndex:7] longLongValue];
-    msgOb.attrs = [itemArray objectAtIndex:6];
-    
-    if (msgOb.messageType == 30) {//chat msg
-        
-        RTMTranslatedInfo * translatedInfo = [RTMTranslatedInfo new];
-        translatedInfo.sourceText = [itemArray objectAtIndex:5];
-        msgOb.translatedInfo = translatedInfo;
-        msgOb.stringMessage = translatedInfo.sourceText;
-        
-    }else if (msgOb.messageType == 40  || msgOb.messageType == 41 || msgOb.messageType == 42 || msgOb.messageType == 50){//chat audio
-        
-        if ([[itemArray objectAtIndex:5] isKindOfClass:[NSString class]]) {
-
-            RTMFileInfo * fileInfo = [RTMFileInfo fileModelConvert:[itemArray objectAtIndex:5] attrs:msgOb.attrs];
-            msgOb.fileInfo = fileInfo;
-            msgOb.attrs = [RTMMessageModelConvert handleAttrsWithAttrsString:[itemArray objectAtIndex:6]];
+    if (itemArray.count >= 8) {
+        //    NSLog(@"%@",itemArray);
+            RTMHistoryMessage * msgOb = [RTMHistoryMessage new];
+            if ([[itemArray objectAtIndex:1] intValue] == 1) {//1是我发的  2不是
+                msgOb.fromUid = myUserId;
+                msgOb.toId = toUserId;
+            }else{
+                msgOb.fromUid = toUserId;
+                msgOb.toId = myUserId;
+            }
+            msgOb.cursorId = [[itemArray objectAtIndex:0] longLongValue];
+            msgOb.messageType = [[itemArray objectAtIndex:2] intValue];
+            msgOb.messageId = [[itemArray objectAtIndex:3] longLongValue];
+            msgOb.modifiedTime = [[itemArray objectAtIndex:7] longLongValue];
+            msgOb.attrs = [itemArray objectAtIndex:6];
             
-        }
-        
-    
+            if (msgOb.messageType == 30) {//chat msg
+                
+                RTMTranslatedInfo * translatedInfo = [RTMTranslatedInfo new];
+                translatedInfo.sourceText = [itemArray objectAtIndex:5];
+                msgOb.translatedInfo = translatedInfo;
+                msgOb.stringMessage = translatedInfo.sourceText;
+                
+            }else if (msgOb.messageType == 40  || msgOb.messageType == 41 || msgOb.messageType == 42 || msgOb.messageType == 50){//chat audio
+                
+                if ([[itemArray objectAtIndex:5] isKindOfClass:[NSString class]]) {
+
+                    RTMFileInfo * fileInfo = [RTMFileInfo fileModelConvert:[itemArray objectAtIndex:5] attrs:msgOb.attrs];
+                    msgOb.fileInfo = fileInfo;
+                    msgOb.attrs = [RTMMessageModelConvert handleAttrsWithAttrsString:[itemArray objectAtIndex:6]];
+                    
+                }
+                
+            
+            }else{
+                
+                id msg = [itemArray objectAtIndex:5];
+                if ([msg isKindOfClass:[NSData class]]) {
+                    msgOb.binaryMessage = msg;
+                }else if ([msg isKindOfClass:[NSString class]]){
+                    msgOb.stringMessage = msg;
+                }
+                
+            }
+                
+            
+            
+            return msgOb;
     }else{
-        
-        id msg = [itemArray objectAtIndex:5];
-        if ([msg isKindOfClass:[NSData class]]) {
-            msgOb.binaryMessage = msg;
-        }else if ([msg isKindOfClass:[NSString class]]){
-            msgOb.stringMessage = msg;
-        }
-        
+        return nil;
     }
-        
-    
-    
-    return msgOb;
+
 }
 
 +(RTMHistoryMessage*)groupHistoryMessageModelConvert:(NSArray*)itemArray{
     
-    
-    RTMHistoryMessage * msgOb = [RTMHistoryMessage new];
-    msgOb.cursorId = [[itemArray objectAtIndex:0] longLongValue];
-    msgOb.fromUid = [[itemArray objectAtIndex:1] longLongValue];
-    msgOb.messageType = [[itemArray objectAtIndex:2] intValue];
-    msgOb.messageId = [[itemArray objectAtIndex:3] longLongValue];
-    msgOb.attrs = [itemArray objectAtIndex:6];
-    msgOb.modifiedTime = [[itemArray objectAtIndex:7] longLongValue];
-    
-    if (msgOb.messageType == 30) {//chat msg
+    if (itemArray.count >= 8) {
         
-        RTMTranslatedInfo * translatedInfo = [RTMTranslatedInfo new];
-        translatedInfo.sourceText = [itemArray objectAtIndex:5];
-        msgOb.translatedInfo = translatedInfo;
-        msgOb.stringMessage = translatedInfo.sourceText;
+        RTMHistoryMessage * msgOb = [RTMHistoryMessage new];
+        msgOb.cursorId = [[itemArray objectAtIndex:0] longLongValue];
+        msgOb.fromUid = [[itemArray objectAtIndex:1] longLongValue];
+        msgOb.messageType = [[itemArray objectAtIndex:2] intValue];
+        msgOb.messageId = [[itemArray objectAtIndex:3] longLongValue];
+        msgOb.attrs = [itemArray objectAtIndex:6];
+        msgOb.modifiedTime = [[itemArray objectAtIndex:7] longLongValue];
         
-    }else if (msgOb.messageType == 40  || msgOb.messageType == 41 || msgOb.messageType == 42 || msgOb.messageType == 50){//chat audio
-        
-        if ([[itemArray objectAtIndex:5] isKindOfClass:[NSString class]]) {
+        if (msgOb.messageType == 30) {//chat msg
+            
+            RTMTranslatedInfo * translatedInfo = [RTMTranslatedInfo new];
+            translatedInfo.sourceText = [itemArray objectAtIndex:5];
+            msgOb.translatedInfo = translatedInfo;
+            msgOb.stringMessage = translatedInfo.sourceText;
+            
+        }else if (msgOb.messageType == 40  || msgOb.messageType == 41 || msgOb.messageType == 42 || msgOb.messageType == 50){//chat audio
+            
+            if ([[itemArray objectAtIndex:5] isKindOfClass:[NSString class]]) {
 
-            RTMFileInfo * fileInfo = [RTMFileInfo fileModelConvert:[itemArray objectAtIndex:5] attrs:msgOb.attrs];
-            msgOb.fileInfo = fileInfo;
-            msgOb.attrs = [RTMMessageModelConvert handleAttrsWithAttrsString:[itemArray objectAtIndex:6]];
-        }
+                RTMFileInfo * fileInfo = [RTMFileInfo fileModelConvert:[itemArray objectAtIndex:5] attrs:msgOb.attrs];
+                msgOb.fileInfo = fileInfo;
+                msgOb.attrs = [RTMMessageModelConvert handleAttrsWithAttrsString:[itemArray objectAtIndex:6]];
+            }
+            
         
+        }else{
+            
+            id msg = [itemArray objectAtIndex:5];
+            if ([msg isKindOfClass:[NSData class]]) {
+                msgOb.binaryMessage = msg;
+            }else if ([msg isKindOfClass:[NSString class]]){
+                msgOb.stringMessage = msg;
+            }
+            
+        }
+            
+        
+        
+        return msgOb;
     
+        
     }else{
-        
-        id msg = [itemArray objectAtIndex:5];
-        if ([msg isKindOfClass:[NSData class]]) {
-            msgOb.binaryMessage = msg;
-        }else if ([msg isKindOfClass:[NSString class]]){
-            msgOb.stringMessage = msg;
-        }
-        
+        return nil;
     }
-        
-    
-    
-    return msgOb;
     
     
 }
 +(RTMHistoryMessage*)roomHistoryMessageModelConvert:(NSArray*)itemArray{
     
-    RTMHistoryMessage * msgOb = [RTMHistoryMessage new];
-    msgOb.cursorId = [[itemArray objectAtIndex:0] longLongValue];
-    msgOb.fromUid = [[itemArray objectAtIndex:1] longLongValue];
-    msgOb.messageType = [[itemArray objectAtIndex:2] intValue];
-    msgOb.messageId = [[itemArray objectAtIndex:3] longLongValue];
-    msgOb.attrs = [itemArray objectAtIndex:6];
-    msgOb.modifiedTime = [[itemArray objectAtIndex:7] longLongValue];
     
-    if (msgOb.messageType == 30) {//chat msg
+    if (itemArray.count >= 8) {
         
-        RTMTranslatedInfo * translatedInfo = [RTMTranslatedInfo new];
-        translatedInfo.sourceText = [itemArray objectAtIndex:5];
-        msgOb.translatedInfo = translatedInfo;
-        msgOb.stringMessage = translatedInfo.sourceText;
+        RTMHistoryMessage * msgOb = [RTMHistoryMessage new];
+        msgOb.cursorId = [[itemArray objectAtIndex:0] longLongValue];
+        msgOb.fromUid = [[itemArray objectAtIndex:1] longLongValue];
+        msgOb.messageType = [[itemArray objectAtIndex:2] intValue];
+        msgOb.messageId = [[itemArray objectAtIndex:3] longLongValue];
+        msgOb.attrs = [itemArray objectAtIndex:6];
+        msgOb.modifiedTime = [[itemArray objectAtIndex:7] longLongValue];
         
-    }else if (msgOb.messageType == 40  || msgOb.messageType == 41 || msgOb.messageType == 42 || msgOb.messageType == 50){//chat audio
-        
-        if ([[itemArray objectAtIndex:5] isKindOfClass:[NSString class]]) {
+        if (msgOb.messageType == 30) {//chat msg
+            
+            RTMTranslatedInfo * translatedInfo = [RTMTranslatedInfo new];
+            translatedInfo.sourceText = [itemArray objectAtIndex:5];
+            msgOb.translatedInfo = translatedInfo;
+            msgOb.stringMessage = translatedInfo.sourceText;
+            
+        }else if (msgOb.messageType == 40  || msgOb.messageType == 41 || msgOb.messageType == 42 || msgOb.messageType == 50){//chat audio
+            
+            if ([[itemArray objectAtIndex:5] isKindOfClass:[NSString class]]) {
 
-            RTMFileInfo * fileInfo = [RTMFileInfo fileModelConvert:[itemArray objectAtIndex:5] attrs:msgOb.attrs];
-            msgOb.fileInfo = fileInfo;
-            msgOb.attrs = [RTMMessageModelConvert handleAttrsWithAttrsString:[itemArray objectAtIndex:6]];
-        }
+                RTMFileInfo * fileInfo = [RTMFileInfo fileModelConvert:[itemArray objectAtIndex:5] attrs:msgOb.attrs];
+                msgOb.fileInfo = fileInfo;
+                msgOb.attrs = [RTMMessageModelConvert handleAttrsWithAttrsString:[itemArray objectAtIndex:6]];
+            }
+            
         
-    
+        }else{
+            
+            id msg = [itemArray objectAtIndex:5];
+            if ([msg isKindOfClass:[NSData class]]) {
+                msgOb.binaryMessage = msg;
+            }else if ([msg isKindOfClass:[NSString class]]){
+                msgOb.stringMessage = msg;
+            }
+            
+        }
+            
+        
+        
+        return msgOb;
+        
     }else{
         
-        id msg = [itemArray objectAtIndex:5];
-        if ([msg isKindOfClass:[NSData class]]) {
-            msgOb.binaryMessage = msg;
-        }else if ([msg isKindOfClass:[NSString class]]){
-            msgOb.stringMessage = msg;
-        }
+        
+        return nil;
         
     }
-        
     
-    
-    return msgOb;
     
 }
 +(RTMHistoryMessage*)broadcastHistoryMessageModelConvert:(NSArray*)itemArray{
     
-    RTMHistoryMessage * msgOb = [RTMHistoryMessage new];
-    msgOb.cursorId = [[itemArray objectAtIndex:0] longLongValue];
-    msgOb.fromUid = [[itemArray objectAtIndex:1] longLongValue];
-    msgOb.messageType = [[itemArray objectAtIndex:2] intValue];
-    msgOb.messageId = [[itemArray objectAtIndex:3] longLongValue];
-    msgOb.attrs = [itemArray objectAtIndex:6];
-    msgOb.modifiedTime = [[itemArray objectAtIndex:7] longLongValue];
-    
-    if (msgOb.messageType == 30) {//chat msg
+    if (itemArray.count >= 8) {
         
-        RTMTranslatedInfo * translatedInfo = [RTMTranslatedInfo new];
-        translatedInfo.sourceText = [itemArray objectAtIndex:5];
-        msgOb.translatedInfo = translatedInfo;
-        msgOb.stringMessage = translatedInfo.sourceText;
+        RTMHistoryMessage * msgOb = [RTMHistoryMessage new];
+        msgOb.cursorId = [[itemArray objectAtIndex:0] longLongValue];
+        msgOb.fromUid = [[itemArray objectAtIndex:1] longLongValue];
+        msgOb.messageType = [[itemArray objectAtIndex:2] intValue];
+        msgOb.messageId = [[itemArray objectAtIndex:3] longLongValue];
+        msgOb.attrs = [itemArray objectAtIndex:6];
+        msgOb.modifiedTime = [[itemArray objectAtIndex:7] longLongValue];
         
-    }else if (msgOb.messageType == 40  || msgOb.messageType == 41 || msgOb.messageType == 42 || msgOb.messageType == 50){//chat audio
-        
-        if ([[itemArray objectAtIndex:5] isKindOfClass:[NSString class]]) {
+        if (msgOb.messageType == 30) {//chat msg
+            
+            RTMTranslatedInfo * translatedInfo = [RTMTranslatedInfo new];
+            translatedInfo.sourceText = [itemArray objectAtIndex:5];
+            msgOb.translatedInfo = translatedInfo;
+            msgOb.stringMessage = translatedInfo.sourceText;
+            
+        }else if (msgOb.messageType == 40  || msgOb.messageType == 41 || msgOb.messageType == 42 || msgOb.messageType == 50){//chat audio
+            
+            if ([[itemArray objectAtIndex:5] isKindOfClass:[NSString class]]) {
 
-            RTMFileInfo * fileInfo = [RTMFileInfo fileModelConvert:[itemArray objectAtIndex:5] attrs:msgOb.attrs];
-            msgOb.fileInfo = fileInfo;
-            msgOb.attrs = [RTMMessageModelConvert handleAttrsWithAttrsString:[itemArray objectAtIndex:6]];
+                RTMFileInfo * fileInfo = [RTMFileInfo fileModelConvert:[itemArray objectAtIndex:5] attrs:msgOb.attrs];
+                msgOb.fileInfo = fileInfo;
+                msgOb.attrs = [RTMMessageModelConvert handleAttrsWithAttrsString:[itemArray objectAtIndex:6]];
+                
+            }
+            
+        
+        }else{
+            
+            id msg = [itemArray objectAtIndex:5];
+            if ([msg isKindOfClass:[NSData class]]) {
+                msgOb.binaryMessage = msg;
+            }else if ([msg isKindOfClass:[NSString class]]){
+                msgOb.stringMessage = msg;
+            }
+            
             
         }
+            
+        return msgOb;
         
-    
     }else{
         
-        id msg = [itemArray objectAtIndex:5];
-        if ([msg isKindOfClass:[NSData class]]) {
-            msgOb.binaryMessage = msg;
-        }else if ([msg isKindOfClass:[NSString class]]){
-            msgOb.stringMessage = msg;
-        }
-        
+        return nil;
         
     }
-        
-    return msgOb;
+    
     
 }
 

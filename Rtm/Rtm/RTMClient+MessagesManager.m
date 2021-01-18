@@ -34,6 +34,7 @@
         [self _pushbroadcastmsg:data method:method];
     }
     
+    
 }
 
 #pragma mark p2p msg

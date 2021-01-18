@@ -278,7 +278,9 @@
         [array enumerateObjectsUsingBlock:^(NSArray *  _Nonnull itemArray, NSUInteger idx, BOOL * _Nonnull stop) {
             
             RTMHistoryMessage * msgOb = [RTMMessageModelConvert p2pHistoryMessageModelConvert:itemArray toUserId:userId.longLongValue myUserId:self.userId];
-            [resultArray addObject:msgOb];
+            if (msgOb != nil) {
+                [resultArray addObject:msgOb];
+            }
             
         }];
         
@@ -339,7 +341,9 @@
         [array enumerateObjectsUsingBlock:^(NSArray *  _Nonnull itemArray, NSUInteger idx, BOOL * _Nonnull stop) {
             
             RTMHistoryMessage * msgOb = [RTMMessageModelConvert p2pHistoryMessageModelConvert:itemArray toUserId:userId.longLongValue myUserId:self.userId];
-            [resultArray addObject:msgOb];
+            if (msgOb != nil) {
+                [resultArray addObject:msgOb];
+            }
             
         }];
         

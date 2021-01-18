@@ -18,6 +18,7 @@
 #import "RTMSpeechRecognitionAnswer.h"
 #import "RTMAttriAnswer.h"
 #import "RTMCountAnswer.h"
+#import "RTMRoomMemberCountAnswer.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface RTMClient (Room)
@@ -200,16 +201,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /// 获取房间中的用户数量
-/// @param roomId 房间ID int64
+/// @param roomIds 房间ID数组 int64
 /// @param timeout 请求超时时间 秒
 /// @param successCallback 成功回调
 /// @param failCallback 失败回调
--(void)getRoomMemberCountWithId:(NSNumber * _Nonnull)roomId
+-(void)getRoomMemberCountWithId:(NSArray <NSNumber*>* _Nonnull)roomIds
                         timeout:(int)timeout
-                        success:(void(^)(int64_t count))successCallback
+                        success:(void(^)(RTMRoomMemberCountAnswer * answer))successCallback
                            fail:(RTMAnswerFailCallBack)failCallback;
--(RTMCountAnswer*)getRoomMemberCountWithId:(NSNumber * _Nonnull)roomId
-                                   timeout:(int)timeout;
+-(RTMRoomMemberCountAnswer*)getRoomMemberCountWithId:(NSArray <NSNumber*>*)roomIds
+                                             timeout:(int)timeout;
 
 
 

@@ -203,7 +203,9 @@
         [array enumerateObjectsUsingBlock:^(NSArray *  _Nonnull itemArray, NSUInteger idx, BOOL * _Nonnull stop) {
 
             RTMHistoryMessage * msgOb = [RTMMessageModelConvert roomHistoryMessageModelConvert:itemArray];
-            [resultArray addObject:msgOb];
+            if (msgOb != nil) {
+                [resultArray addObject:msgOb];
+            }
 
         }];
         
@@ -263,7 +265,9 @@
         [array enumerateObjectsUsingBlock:^(NSArray *  _Nonnull itemArray, NSUInteger idx, BOOL * _Nonnull stop) {
             
             RTMHistoryMessage * msgOb = [RTMMessageModelConvert roomHistoryMessageModelConvert:itemArray];
-            [resultArray addObject:msgOb];
+            if (msgOb != nil) {
+                [resultArray addObject:msgOb];
+            }
             
         }];
         
@@ -623,20 +627,21 @@
 
 
 
-
--(void)getRoomMemberCountWithId:(NSNumber * _Nonnull)roomId
+-(void)getRoomMemberCountWithId:(NSArray <NSNumber*>* _Nonnull)roomIds
                         timeout:(int)timeout
-                        success:(void(^)(int64_t count))successCallback
+                        success:(void(^)(RTMRoomMemberCountAnswer * answer))successCallback
                            fail:(RTMAnswerFailCallBack)failCallback{
     
     clientConnectStatueVerify
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroomcount" message:@{@"rid":roomId} twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroomcount" message:@{@"rids":roomIds} twoWay:YES];
        BOOL result = [fpnnMainClient sendQuest:quest
                                    timeout:RTMClientSendQuestTimeout
                                    success:^(NSDictionary * _Nullable data) {
            
            if (successCallback) {
-               successCallback([[data objectForKey:@"cn"] longLongValue]);
+               RTMRoomMemberCountAnswer * model = [[RTMRoomMemberCountAnswer alloc] init];
+               model.countDictionary = [data objectForKey:@"cn"];
+               successCallback(model);
            }
        
        }fail:^(FPNError * _Nullable error) {
@@ -648,20 +653,19 @@
        handlerNetworkError;
     
 }
--(RTMCountAnswer*)getRoomMemberCountWithId:(NSNumber * _Nonnull)roomId
-                           timeout:(int)timeout{
+-(RTMRoomMemberCountAnswer*)getRoomMemberCountWithId:(NSArray <NSNumber*>*)roomIds
+                                             timeout:(int)timeout{
     
     
-    RTMCountAnswer * model = [RTMCountAnswer new];
+    RTMRoomMemberCountAnswer * model = [RTMRoomMemberCountAnswer new];
     clientConnectStatueVerifySync
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroomcount" message:@{@"rid":roomId} twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroomcount" message:@{@"rids":roomIds} twoWay:YES];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                        timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
-        model.count = [[answer.responseData objectForKey:@"cn"] longLongValue];
-        
+        model.countDictionary = [answer.responseData objectForKey:@"cn"];
     }else{
         model.error = answer.error;
     }
@@ -669,13 +673,6 @@
     return model;
     
 }
-
-
-
-
-
-
-
 
 
 

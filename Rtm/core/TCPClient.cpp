@@ -70,6 +70,7 @@ TCPClient::TCPClient(const std::string& host, int port, bool autoReconnect): _co
 
 TCPClient::~TCPClient()
 {
+//    std::cout << "TCPClient::~TCPClient()TCPClient::~TCPClient()" << std::endl;
 	if (_connected)
 	{
 		_autoReconnect = false;

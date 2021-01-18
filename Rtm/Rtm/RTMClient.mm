@@ -114,14 +114,15 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
     
    
     if (self) {
+        
         _netStatus = RTMClientNetStatusNoDetection;
         _whichEndpoint = endpoint;
         _projectId = projectId;
         _userId = userId;
         _config = config;
         _autoRelogin = autoRelogin;
-        _sdkVersion = @"2.1.0";
-        _apiVersion = @"2.5.0";
+        _sdkVersion = @"2.1.1";
+        _apiVersion = @"2.6.1";
         _reloginNum = 0;
         _connectStatus = RTMClientConnectStatusConnectClosed;
         _delegate = delegate;
@@ -200,69 +201,72 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                timeout:(int)timeout
                success:(RTMLoginSuccessCallBack)loginSuccess
            connectFail:(RTMLoginFailCallBack)loginFail{
-    
-    if (self.connectStatus == RTMClientConnectStatusConnected) {
-        FPNSLog(@"rtm loginWithToken error , client is RTMClientConnectStatusConnected");
-        return;
-    }
-    
-    
-    if ([self.delegate respondsToSelector:@selector(rtmReloginCompleted:reloginCount:reloginResult:error:)] == NO ||
-        [self.delegate respondsToSelector:@selector(rtmReloginWillStart:reloginCount:)] == NO)  {
-        FPNSLog(@"rtm loginWithToken error , no implement RTMProtocol required delegate methods");
-        return;
-    }
-    
-    if (token == nil || token.length == 0) {
-        FPNSLog(@"rtm loginWithToken error , invalid token");
-        return;
-    }
-    
-    
-    self.token = token;
-    self.language = language;
-    self.loginSuccess = loginSuccess;
-    self.loginFail = loginFail;
-    self.loginTimeout = timeout;
-    self.attribute = attribute;
-    
-    if (self.loginTimeout <= 0) {
-        self.loginTimeout = 30;
-    }
+   
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         
+        if (self.connectStatus != RTMClientConnectStatusConnectClosed) {
+                FPNSLog(@"rtm loginWithToken error , client is connected or connecting");
+                return;
+            }
+            
+            
+            if ([self.delegate respondsToSelector:@selector(rtmReloginCompleted:reloginCount:reloginResult:error:)] == NO ||
+                [self.delegate respondsToSelector:@selector(rtmReloginWillStart:reloginCount:)] == NO)  {
+                FPNSLog(@"rtm loginWithToken error , no implement RTMProtocol required delegate methods");
+                return;
+            }
+            
+            if (token == nil || token.length == 0) {
+                FPNSLog(@"rtm loginWithToken error , invalid token");
+                return;
+            }
+            
+            
+            self.token = token;
+            self.language = language;
+            self.loginSuccess = loginSuccess;
+            self.loginFail = loginFail;
+            self.loginTimeout = timeout;
+            self.attribute = attribute;
+            self.authFinish = NO;
+                
+            if (self.loginTimeout <= 0) {
+                self.loginTimeout = 30;
+            }
+                
 
-    [self _toLogin:YES];
+            [self _toLogin:YES];
+        
+    });
 
     
         
 }
 -(void)_toLogin:(BOOL)isLogin{
     
-    
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
+//        NSLog(@"%s  %@",__FUNCTION__ ,[NSThread currentThread]);
         @synchronized (self) {
             self.connectStatus = RTMClientConnectStatusConnecting;
+        }
 //            NSLog(@"_toLogin_toLogin");
             if (self.authEndPoint == nil) {
                 [self _whichRequest];
             }else{
                 [self _authRequest];
             }
-        }
-        
+       // }
         
     });
     
     if (isLogin) {
-        
+
         __block BOOL isImmediateRun = NO;
         uint64_t interval = self.loginTimeout * NSEC_PER_SEC;
         dispatch_queue_t loginTimeoutTimerQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
                 if (self.loginTimeoutTimer == nil) {
                     @synchronized (self) {
-                    
+
                         self.loginTimeoutTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, loginTimeoutTimerQueue);
                         dispatch_source_set_timer(self.loginTimeoutTimer, dispatch_time(DISPATCH_TIME_NOW, 0), interval, 0);
                         __weak RTMClient *blockSelf = self;
@@ -272,13 +276,13 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                             }else{
                                 [blockSelf _checkLoginIsFinish];
                             }
-                            
+
                         });
                         dispatch_resume(self.loginTimeoutTimer);
-                        
+
                     }
                 }
-                
+
             }
     
     
@@ -294,6 +298,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                 //超时
                 self.loginFail([FPNError errorWithEx:@"FPNN_EC_CORE_TIMEOUT" code:20003]);
                 self.loginFail = nil;
+                self.loginSuccess = nil;
                 if (self.loginTimeoutTimer) {
                     dispatch_cancel(self.loginTimeoutTimer);
                     self.loginTimeoutTimer = nil;
@@ -305,8 +310,6 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
     }
 }
 - (void)_whichRequest{
-
-    @synchronized (self) {
         
         NSMutableDictionary * whichQuestDic = [NSMutableDictionary dictionary];
             [whichQuestDic setValue:@"rtmGated" forKey:@"what"];
@@ -324,26 +327,29 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                                                   success:^(NSDictionary * _Nullable data) {
                     
                     @rtmStrongify(self);
-                    @synchronized (self) {
+//                    @synchronized (self) {
                         
                         NSString * endPoint = data[@"endpoint"];
                         if (endPoint == nil || endPoint.length == 0) {
                             
-                            
-                            self.connectStatus = RTMClientConnectStatusConnectClosed;
-                            if (self.loginFail) {
-                                self.loginFail([FPNError errorWithEx:@"RTM_EC_UNKNOWN_ERROR" code:200999]);
-                                self.loginFail = nil;
-                                if (self.loginTimeoutTimer) {
-                                    dispatch_cancel(self.loginTimeoutTimer);
-                                    self.loginTimeoutTimer = nil;
+                            @synchronized (self) {
+                                self.connectStatus = RTMClientConnectStatusConnectClosed;
+                                if (self.loginFail) {
+                                    self.loginFail([FPNError errorWithEx:@"RTM_EC_UNKNOWN_ERROR" code:200999]);
+                                    self.loginFail = nil;
+                                    self.loginSuccess = nil;
+                                    if (self.loginTimeoutTimer) {
+                                        dispatch_cancel(self.loginTimeoutTimer);
+                                        self.loginTimeoutTimer = nil;
+                                    }
                                 }
                             }
                             
+                            
                         }else{
                             
-                            [self.whichClient closeConnect];
-                            self.whichClient = nil;
+//                            [self.whichClient closeConnect];
+//                            self.whichClient = nil;
                             if ([[RTMIPv6Adapter getInstance] isIPv6OnlyNetwork]) {
                                 endPoint = [[RTMIPv6Adapter getInstance] handleIpv4Address:endPoint];
                             }
@@ -352,7 +358,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                             
                         }
                         
-                    }
+//                    }
 //                    NSLog(@"which %@",data);
                     
                     
@@ -361,10 +367,11 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                     @rtmStrongify(self);
                     @synchronized (self) {
                         self.connectStatus = RTMClientConnectStatusConnectClosed;
-                        [self.whichClient closeConnect];
+//                        [self.whichClient closeConnect];
                         if (self.loginFail) {
                             self.loginFail(error);
                             self.loginFail = nil;
+                            self.loginSuccess = nil;
                             if (self.loginTimeoutTimer) {
                                 dispatch_cancel(self.loginTimeoutTimer);
                                 self.loginTimeoutTimer = nil;
@@ -375,32 +382,32 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                     
                 }];
                 
+                
                 //无网络
                 if (result == NO) {
-                    
+//                    NSLog(@"无网络which %@",[NSThread currentThread]);
                     self.connectStatus = RTMClientConnectStatusConnectClosed;
-                    [self.whichClient closeConnect];
+//                    [self.whichClient closeConnect];
                     
-                    if (self.loginFail) {
-                        self.loginFail([FPNError errorWithEx:@"FPNN_EC_CORE_INVALID_CONNECTION" code:20012]);
-                        self.loginFail = nil;
-                        if (self.loginTimeoutTimer) {
-                            dispatch_cancel(self.loginTimeoutTimer);
-                            self.loginTimeoutTimer = nil;
+                    @synchronized (self) {
+                        if (self.loginFail) {
+                            self.loginFail([FPNError errorWithEx:@"FPNN_EC_CORE_INVALID_CONNECTION" code:20012]);
+                            self.loginFail = nil;
+                            self.loginSuccess = nil;
+                            if (self.loginTimeoutTimer) {
+                                dispatch_cancel(self.loginTimeoutTimer);
+                                self.loginTimeoutTimer = nil;
+                            }
                         }
                     }
                     
+                    
                 }
-        
-    }
     
 }
 - (void)_authRequest{
-//        NSLog(@"_authRequest_authRequest_authRequest");
-    @synchronized (self) {
-        [_whichClient closeConnect];
-        _whichClient = nil;
-        NSMutableDictionary * authQuestDic = [NSMutableDictionary dictionary];
+
+            NSMutableDictionary * authQuestDic = [NSMutableDictionary dictionary];
             [authQuestDic setValue:@(_projectId) forKey:@"pid"];
             [authQuestDic setValue:@(_userId) forKey:@"uid"];
             [authQuestDic setValue:_token forKey:@"token"];
@@ -448,7 +455,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                                             if (self.loginSuccess) {
                                                 self.loginSuccess();
                                                 self.loginSuccess = nil;
-                                                
+                                                self.loginFail = nil;
                                             }
                                         }
                                         
@@ -483,15 +490,19 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                                             
                                             
                                             [self _closeConnectHandle:NO];
-                                            if (self.loginFail) {
-//                                                NSLog(@"多点登录  重连2222222");
-                                                self.loginFail([FPNError errorWithEx:@"RTM_EC_INVALID_AUTH_TOEKN" code:200027]);
-                                                self.loginFail = nil;
-                                                if (self.loginTimeoutTimer) {
-                                                    dispatch_cancel(self.loginTimeoutTimer);
-                                                    self.loginTimeoutTimer = nil;
+                                            @synchronized (self) {
+                                                if (self.loginFail) {
+    //                                                NSLog(@"多点登录  重连2222222");
+                                                    self.loginFail([FPNError errorWithEx:@"RTM_EC_INVALID_AUTH_TOEKN" code:200027]);
+                                                    self.loginFail = nil;
+                                                    self.loginSuccess = nil;
+                                                    if (self.loginTimeoutTimer) {
+                                                        dispatch_cancel(self.loginTimeoutTimer);
+                                                        self.loginTimeoutTimer = nil;
+                                                    }
                                                 }
                                             }
+                                            
                                         }
                                                       
                                         
@@ -504,6 +515,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                                         @synchronized (self) {
                                             self.authEndPoint = endPoint;
                                             [self.authClient closeConnect];
+                                            self.authClient = nil;
                                         }
                                           
                                         [self _authRequest];
@@ -527,9 +539,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                     [self.authClient closeConnect];//没有网络
                     
                     if (self.authFinish) {//重连
-//                        NSLog(@"bbbbbbbbbb");
                         [self _reloginComplete:error];
-                        [NSThread sleepForTimeInterval:2];
                         [self _reLogin];
                         
                     }else{
@@ -539,17 +549,18 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                                 dispatch_cancel(self.loginTimeoutTimer);
                                 self.loginTimeoutTimer = nil;
                             }
+                            if (self.loginFail) {
 
-                        }
-                        if (self.loginFail) {
-
-                            self.loginFail(error);
-                            self.loginFail = nil;
-                            if (self.loginTimeoutTimer) {
-                                dispatch_cancel(self.loginTimeoutTimer);
-                                self.loginTimeoutTimer = nil;
+                                self.loginFail(error);
+                                self.loginFail = nil;
+                                self.loginSuccess = nil;
+                                if (self.loginTimeoutTimer) {
+                                    dispatch_cancel(self.loginTimeoutTimer);
+                                    self.loginTimeoutTimer = nil;
+                                }
                             }
                         }
+                        
                     }
                 }
                 
@@ -581,6 +592,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                     if (self.loginFail) {
                         self.loginFail([FPNError errorWithEx:@"FPNN_EC_CORE_INVALID_CONNECTION" code:20012]);
                         self.loginFail = nil;
+                        self.loginSuccess = nil;
                         if (self.loginTimeoutTimer) {
                             dispatch_cancel(self.loginTimeoutTimer);
                             self.loginTimeoutTimer = nil;
@@ -591,8 +603,6 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                 }
                 
             }
-        
-    }
     
     
 }
@@ -607,50 +617,44 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 }
 -(void)_getDelegateToRelogin{
     
-//     NSLog(@"_getDelegateToRelogin %@",[NSThread currentThread]);
-     @synchronized (self) {
-//         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                  
-             // gai && self.connectStatus == RTMClientConnectStatusConnectClosed
-             if (self.netStatus != RTMClientNetStatusNone) {
-                 @synchronized (self) {
-//                     NSLog(@"[self.delegate rtmReloginWillStart:self reloginCount:self.reloginNum];");
-                     self.reloginNum = self.reloginNum + 1;
-                     BOOL result = [self.delegate rtmReloginWillStart:self reloginCount:self.reloginNum];
-                     if (result) {
-                         [self _toLogin:NO];
-                     }else{
-                         @synchronized (self) {
-                             self.authFinish = NO;
-                             self.connectStatus = RTMClientConnectStatusConnectClosed;
-                         }
-                         if ([self.delegate respondsToSelector:@selector(rtmConnectClose:)]) {
-                             [self.delegate rtmConnectClose:self];
-                         }
-                     
-                     }
-                 
-                    
-                     
-                 }
-                         
-             }else{
-                 
-                 @synchronized (self) {
-                     self.connectStatus = RTMClientConnectStatusConnectClosed;
-                     if ([self.delegate respondsToSelector:@selector(rtmConnectClose:)]) {
-                         [self.delegate rtmConnectClose:self];
-                     }
+         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+             
+             @synchronized (self) {
+             
+                 if (self.netStatus != RTMClientNetStatusNone) {
+                          self.reloginNum = self.reloginNum + 1;
+                          BOOL result = [self.delegate rtmReloginWillStart:self reloginCount:self.reloginNum];
+                          if (result) {
+                              self.connectStatus = RTMClientConnectStatusConnecting;
+                              if (self.reloginNum != 1) {
+                                  [NSThread sleepForTimeInterval:1];
+                              }
+                              [self _toLogin:NO];
+                          }else{
+                              self.authFinish = NO;
+                              self.connectStatus = RTMClientConnectStatusConnectClosed;
+                              if ([self.delegate respondsToSelector:@selector(rtmConnectClose:)]) {
+                                  [self.delegate rtmConnectClose:self];
+                              }
+                          
+                          }
+                  }else{
+                      
+                      if (self.authFinish == YES) {
+                          self.connectStatus = RTMClientConnectStatusConnectClosed;
+                          if ([self.delegate respondsToSelector:@selector(rtmConnectClose:)]) {
+                              [self.delegate rtmConnectClose:self];
+                          }
+                      }
+                          
                  }
                 
+            
              }
             
             
-//         });
-    
-         
-     }
-    
+         });
+
     
 
 }
@@ -740,22 +744,25 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 }
 
 - (void)_netChange:(NSNotification *)noti{
-//    NSLog(@"_netChange_netChange_netChange%@  %d  %ld",self,self.authFinish,(long)self.connectStatus);
-    if ([noti.object intValue] == 0) {
-        FPNSLog(@"未知网络");
-        self.netStatus = RTMClientNetStatusNone;
-    }else if ([noti.object intValue] == 1){
-        FPNSLog(@"没有网络");
-        self.netStatus = RTMClientNetStatusNone;
-    }else if ([noti.object intValue] == 2){
-        FPNSLog(@"蜂窝网络");
-        self.netStatus = RTMClientNetStatusReachableViaWWAN;
-    }else if ([noti.object intValue] == 3){
-        FPNSLog(@"WIFI网络");
-        self.wifiAddress = [self getIPAddress];
-        self.netStatus = RTMClientNetStatusReachableWifi;
-    }
-    
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        if ([noti.object intValue] == 0) {
+            FPNSLog(@"未知网络");
+            self.netStatus = RTMClientNetStatusNone;
+        }else if ([noti.object intValue] == 1){
+            FPNSLog(@"没有网络");
+            self.netStatus = RTMClientNetStatusNone;
+        }else if ([noti.object intValue] == 2){
+            FPNSLog(@"蜂窝网络");
+            self.netStatus = RTMClientNetStatusReachableViaWWAN;
+        }else if ([noti.object intValue] == 3){
+            FPNSLog(@"WIFI网络");
+            self.wifiAddress = [self getIPAddress];
+            self.netStatus = RTMClientNetStatusReachableWifi;
+        }
+        
+    });
 }
 -(void)_startNetMonitor{
     [RTMNetworkReachabilityShare sharedManager];
@@ -896,6 +903,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 }
 -(void)setNetStatus:(RTMClientNetStatus)netStatus{
     
+//    NSLog(@"%s  %@",__FUNCTION__,[NSThread currentThread]);
 //    NSLog(@"原网络%ld  现在网络%ld",(long)_netStatus,(long)netStatus);
     @synchronized (self) {
         
@@ -946,6 +954,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
         }
         [self _reLogin];
     }
+        
     @synchronized (self) {
                       
         _netStatus = netStatus;
@@ -972,10 +981,10 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
     
         
         if (_whichClient == nil && self.whichEndpoint != nil) {
-            @synchronized (self) {
+//            @synchronized (self) {
                 
                 _whichClient = [FPNNTCPClient clientWithEndpoint:self.whichEndpoint];
-            }
+//            }
         }
         return _whichClient;
         
@@ -994,6 +1003,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
             };
             
             _authClient.connectionCloseCallBack = ^{
+//                NSLog(@"connectionCloseCallBackconnectionCloseCallBack%@",[NSThread currentThread]);
                 @rtmStrongify(self);
                 @synchronized (self) {
 //                    NSLog(@"connectionCloseCallBackconnectionCloseCallBackconnectionCloseCallBack  %@  %ld",[NSThread currentThread],(long)self.currentConnectStatus);
@@ -1107,10 +1117,10 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 }
 -(void)dealloc{
     FPNSLog(@"RTMClient dealloc");
-    [_authClient closeConnect];
-    [_whichClient closeConnect];
-    _authClient = nil;
-    _whichClient = nil;
+//    [_authClient closeConnect];
+//    [_whichClient closeConnect];
+//    _authClient = nil;
+//    _whichClient = nil;
     [self _cancelPingTimer];
     if (self.loginTimeoutTimer) {
         dispatch_cancel(self.loginTimeoutTimer);
@@ -1120,6 +1130,8 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
     [NSThread sleepForTimeInterval:0.2];
 }
 @end
+
+
 
 
 

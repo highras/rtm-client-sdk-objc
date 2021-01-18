@@ -812,6 +812,8 @@
 		563BD391243DAE4C00C6AC11 /* MidGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 563BD082243DAE4B00C6AC11 /* MidGenerator.cpp */; };
 		563BD392243DAE4C00C6AC11 /* MidGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 563BD083243DAE4B00C6AC11 /* MidGenerator.h */; };
 		563BD393243DAE4C00C6AC11 /* queue.h in Headers */ = {isa = PBXBuildFile; fileRef = 563BD084243DAE4B00C6AC11 /* queue.h */; };
+		5647F0F925AD825C007A4414 /* RTMRoomMemberCountAnswer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5647F0F725AD825C007A4414 /* RTMRoomMemberCountAnswer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5647F0FA25AD825C007A4414 /* RTMRoomMemberCountAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5647F0F825AD825C007A4414 /* RTMRoomMemberCountAnswer.m */; };
 		5651BF15256E7F68006CD0D2 /* RTMUnreadAnswer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5651BF13256E7F68006CD0D2 /* RTMUnreadAnswer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5651BF16256E7F68006CD0D2 /* RTMUnreadAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5651BF14256E7F68006CD0D2 /* RTMUnreadAnswer.m */; };
 		566319E22418B90000072479 /* RTMAudioTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 566319E02418B90000072479 /* RTMAudioTools.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1774,6 +1776,8 @@
 		563BD082243DAE4B00C6AC11 /* MidGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MidGenerator.cpp; sourceTree = "<group>"; };
 		563BD083243DAE4B00C6AC11 /* MidGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MidGenerator.h; sourceTree = "<group>"; };
 		563BD084243DAE4B00C6AC11 /* queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = queue.h; sourceTree = "<group>"; };
+		5647F0F725AD825C007A4414 /* RTMRoomMemberCountAnswer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTMRoomMemberCountAnswer.h; sourceTree = "<group>"; };
+		5647F0F825AD825C007A4414 /* RTMRoomMemberCountAnswer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RTMRoomMemberCountAnswer.m; sourceTree = "<group>"; };
 		5651BF13256E7F68006CD0D2 /* RTMUnreadAnswer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMUnreadAnswer.h; sourceTree = "<group>"; };
 		5651BF14256E7F68006CD0D2 /* RTMUnreadAnswer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMUnreadAnswer.m; sourceTree = "<group>"; };
 		566319E02418B90000072479 /* RTMAudioTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMAudioTools.h; sourceTree = "<group>"; };
@@ -3706,6 +3710,8 @@
 				56E045E2257F2FF0007BC8CA /* RTMCountAnswer.m */,
 				56DA3F5B2594716B001926C2 /* RTMGetPushAttrsAnswer.h */,
 				56DA3F5C2594716B001926C2 /* RTMGetPushAttrsAnswer.m */,
+				5647F0F725AD825C007A4414 /* RTMRoomMemberCountAnswer.h */,
+				5647F0F825AD825C007A4414 /* RTMRoomMemberCountAnswer.m */,
 			);
 			path = syncAnswer;
 			sourceTree = "<group>";
@@ -3732,6 +3738,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5647F0F925AD825C007A4414 /* RTMRoomMemberCountAnswer.h in Headers */,
 				56DA3F5D2594716B001926C2 /* RTMGetPushAttrsAnswer.h in Headers */,
 				56E045E3257F2FF0007BC8CA /* RTMCountAnswer.h in Headers */,
 				56C8DD6725778133000CBA19 /* RTMNetworkReachabilityShare.h in Headers */,
@@ -4733,6 +4740,7 @@
 				56E045E4257F2FF0007BC8CA /* RTMCountAnswer.m in Sources */,
 				563BD362243DAE4C00C6AC11 /* FPReader.cpp in Sources */,
 				56EA006423B23A09002B5B77 /* RTMClient+Broadcast_Chat.m in Sources */,
+				5647F0FA25AD825C007A4414 /* RTMRoomMemberCountAnswer.m in Sources */,
 				563BD0A8243DAE4B00C6AC11 /* uECC.c in Sources */,
 				563BD374243DAE4C00C6AC11 /* sha1.c in Sources */,
 				56E664D123FD3F1300C680BC /* IPV4HandleTools.cpp in Sources */,

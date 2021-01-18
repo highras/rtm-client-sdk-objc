@@ -583,7 +583,9 @@
         [array enumerateObjectsUsingBlock:^(NSArray *  _Nonnull itemArray, NSUInteger idx, BOOL * _Nonnull stop) {
             
             RTMHistoryMessage * msgOb = [RTMMessageModelConvert roomHistoryMessageModelConvert:itemArray];
-            [resultArray addObject:msgOb];
+            if (msgOb != nil) {
+                [resultArray addObject:msgOb];
+            }
             
         }];
         
@@ -640,7 +642,9 @@
         [array enumerateObjectsUsingBlock:^(NSArray *  _Nonnull itemArray, NSUInteger idx, BOOL * _Nonnull stop) {
             
             RTMHistoryMessage * msgOb = [RTMMessageModelConvert roomHistoryMessageModelConvert:itemArray ];
-            [resultArray addObject:msgOb];
+            if (msgOb != nil) {
+                [resultArray addObject:msgOb];
+            }
             
         }];
         
