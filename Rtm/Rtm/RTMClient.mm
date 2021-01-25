@@ -121,7 +121,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
         _userId = userId;
         _config = config;
         _autoRelogin = autoRelogin;
-        _sdkVersion = @"2.1.1";
+        _sdkVersion = @"2.1.2";
         _apiVersion = @"2.6.1";
         _reloginNum = 0;
         _connectStatus = RTMClientConnectStatusConnectClosed;
@@ -229,12 +229,12 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
             self.loginTimeout = timeout;
             self.attribute = attribute;
             self.authFinish = NO;
-                
+            self.isOverlookFpnnCloseCallBack = NO;
+        
             if (self.loginTimeout <= 0) {
                 self.loginTimeout = 30;
             }
                 
-
             [self _toLogin:YES];
         
     });
@@ -640,7 +640,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                           }
                   }else{
                       
-                      if (self.authFinish == YES) {
+                      if (self.authFinish == YES && self.connectStatus != RTMClientConnectStatusConnectClosed) {
                           self.connectStatus = RTMClientConnectStatusConnectClosed;
                           if ([self.delegate respondsToSelector:@selector(rtmConnectClose:)]) {
                               [self.delegate rtmConnectClose:self];

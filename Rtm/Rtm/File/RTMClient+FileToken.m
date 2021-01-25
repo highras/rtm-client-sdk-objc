@@ -20,6 +20,7 @@
                      success:(RTMAnswerSuccessCallBack)successCallback
                         fail:(RTMAnswerFailCallBack)failCallback{
     
+    clientConnectStatueVerify
     
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:userId forKey:@"to"];
@@ -41,21 +42,21 @@
     handlerNetworkError;
     
 }
--(FPNNAnswer*)getP2PFileTokenWithId:(NSNumber*)userId
-                              timeout:(int)timeout{
-    
-    
-    FPNNAnswer * model = [FPNNAnswer new];
-    clientConnectStatueVerifySync
-    
-    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    [dic setValue:userId forKey:@"to"];
-    [dic setValue:@"sendfile" forKey:@"cmd"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
-    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest timeout:RTMClientSendQuestTimeout];
-    return answer;
-    
-}
+//-(FPNNAnswer*)getP2PFileTokenWithId:(NSNumber*)userId
+//                              timeout:(int)timeout{
+//
+//
+//    FPNNAnswer * model = [FPNNAnswer new];
+//    clientConnectStatueVerifySync
+//
+//    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+//    [dic setValue:userId forKey:@"to"];
+//    [dic setValue:@"sendfile" forKey:@"cmd"];
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
+//    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest timeout:RTMClientSendQuestTimeout];
+//    return answer;
+//
+//}
 
 
 
@@ -64,6 +65,8 @@
                        timeout:(int)timeout
                        success:(RTMAnswerSuccessCallBack)successCallback
                           fail:(RTMAnswerFailCallBack)failCallback{
+    
+    clientConnectStatueVerify
     
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:groupId forKey:@"gid"];
@@ -86,26 +89,28 @@
     handlerNetworkError;
     
 }
--(FPNNAnswer*)getGroupFileTokenWithId:(NSNumber*)groupId
-                              timeout:(int)timeout{
-    
-    FPNNAnswer * model = [FPNNAnswer new];
-    clientConnectStatueVerifySync
-    
-    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    [dic setValue:groupId forKey:@"gid"];
-    [dic setValue:@"sendfile" forKey:@"cmd"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
-    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest timeout:RTMClientSendQuestTimeout];
-    return answer;
-    
-}
+//-(FPNNAnswer*)getGroupFileTokenWithId:(NSNumber*)groupId
+//                              timeout:(int)timeout{
+//
+//    FPNNAnswer * model = [FPNNAnswer new];
+//    clientConnectStatueVerifySync
+//
+//    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+//    [dic setValue:groupId forKey:@"gid"];
+//    [dic setValue:@"sendfile" forKey:@"cmd"];
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
+//    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest timeout:RTMClientSendQuestTimeout];
+//    return answer;
+//
+//}
 
 -(void)getRoomFileTokenWithId:(NSNumber*)roomId
                   timeout:(int)timeout
                   success:(RTMAnswerSuccessCallBack)successCallback
                          fail:(RTMAnswerFailCallBack)failCallback{
     
+    
+    clientConnectStatueVerify
     
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:roomId forKey:@"rid"];
@@ -128,20 +133,20 @@
     handlerNetworkError;
     
 }
--(FPNNAnswer*)getRoomFileTokenWithId:(NSNumber*)roomId
-                             timeout:(int)timeout{
-    
-    FPNNAnswer * model = [FPNNAnswer new];
-    clientConnectStatueVerifySync
-    
-    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    [dic setValue:roomId forKey:@"rid"];
-    [dic setValue:@"sendfile" forKey:@"cmd"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
-    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest timeout:RTMClientSendQuestTimeout];
-    return answer;
-    
-}
+//-(FPNNAnswer*)getRoomFileTokenWithId:(NSNumber*)roomId
+//                             timeout:(int)timeout{
+//    
+//    FPNNAnswer * model = [FPNNAnswer new];
+//    clientConnectStatueVerifySync
+//    
+//    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+//    [dic setValue:roomId forKey:@"rid"];
+//    [dic setValue:@"sendfile" forKey:@"cmd"];
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
+//    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest timeout:RTMClientSendQuestTimeout];
+//    return answer;
+//    
+//}
 
 
 

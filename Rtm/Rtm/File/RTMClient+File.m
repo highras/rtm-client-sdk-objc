@@ -99,9 +99,9 @@
         }
         FPNNTCPClient * fileClient = [self getFileClient:endPoint];
         FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendfile" message:resultBody twoWay:YES];
-        [fileClient sendQuest:quest
-                      timeout:RTMClientSendQuestTimeout
-                      success:^(NSDictionary * _Nullable data) {
+        BOOL result = [fileClient sendQuest:quest
+                                    timeout:RTMClientSendQuestTimeout
+                                    success:^(NSDictionary * _Nullable data) {
 
             if (successCallback) {
                 
@@ -112,9 +112,12 @@
             }
 
         } fail:^(FPNError * _Nullable error) {
+            
             _failCallback(error);
+            
         }];
         
+        handlerNetworkError
        
     } fail:^(FPNError * _Nullable error) {
         
@@ -142,7 +145,7 @@
     if (audioModel.audioFilePath.length > 0 && audioModel.duration > 0  && audioModel.lang.length > 0 && groupId != 0){
         isAudio = YES;
     }
-    NSLog(@"%@  %@  %@  %@",groupId,fileData,fileName,fileSuffix);
+//    NSLog(@"%@  %@  %@  %@",groupId,fileData,fileName,fileSuffix);
     if (groupId != 0 && fileData != nil && fileName.length > 0 && fileSuffix.length > 0) {
         isFile = YES;
     }
@@ -208,9 +211,9 @@
         
         FPNNTCPClient * fileClient = [self getFileClient:endPoint];
         FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendgroupfile" message:resultBody twoWay:YES];
-        [fileClient sendQuest:quest
-                      timeout:RTMClientSendQuestTimeout
-                      success:^(NSDictionary * _Nullable data) {
+        BOOL result = [fileClient sendQuest:quest
+                                    timeout:RTMClientSendQuestTimeout
+                                    success:^(NSDictionary * _Nullable data) {
             
             if (successCallback) {
                 RTMSendAnswer* sendAnswer  = [RTMSendAnswer new];
@@ -224,6 +227,8 @@
             _failCallback(error);
             
         }];
+        
+        handlerNetworkError
 
        
     } fail:^(FPNError * _Nullable error) {
@@ -314,9 +319,9 @@
         
         FPNNTCPClient * fileClient = [self getFileClient:endPoint];
         FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroomfile" message:resultBody twoWay:YES];
-        [fileClient sendQuest:quest
-                      timeout:RTMClientSendQuestTimeout
-                      success:^(NSDictionary * _Nullable data) {
+        BOOL result = [fileClient sendQuest:quest
+                                    timeout:RTMClientSendQuestTimeout
+                                    success:^(NSDictionary * _Nullable data) {
             
             if (successCallback) {
                 RTMSendAnswer* sendAnswer  = [RTMSendAnswer new];
@@ -331,9 +336,12 @@
             
         }];
 
+        handlerNetworkError
        
     } fail:^(FPNError * _Nullable error) {
+        
         _failCallback(error);
+        
     }];
     
 }
