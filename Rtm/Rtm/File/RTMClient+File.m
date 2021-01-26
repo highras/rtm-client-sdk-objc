@@ -100,7 +100,7 @@
         FPNNTCPClient * fileClient = [self getFileClient:endPoint];
         FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendfile" message:resultBody twoWay:YES];
         BOOL result = [fileClient sendQuest:quest
-                                    timeout:RTMClientSendQuestTimeout
+                                    timeout:RTMClientFileQuestTimeout
                                     success:^(NSDictionary * _Nullable data) {
 
             if (successCallback) {
@@ -212,7 +212,7 @@
         FPNNTCPClient * fileClient = [self getFileClient:endPoint];
         FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendgroupfile" message:resultBody twoWay:YES];
         BOOL result = [fileClient sendQuest:quest
-                                    timeout:RTMClientSendQuestTimeout
+                                    timeout:RTMClientFileQuestTimeout
                                     success:^(NSDictionary * _Nullable data) {
             
             if (successCallback) {
@@ -320,7 +320,7 @@
         FPNNTCPClient * fileClient = [self getFileClient:endPoint];
         FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroomfile" message:resultBody twoWay:YES];
         BOOL result = [fileClient sendQuest:quest
-                                    timeout:RTMClientSendQuestTimeout
+                                    timeout:RTMClientFileQuestTimeout
                                     success:^(NSDictionary * _Nullable data) {
             
             if (successCallback) {

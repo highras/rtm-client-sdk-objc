@@ -128,7 +128,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
         _delegate = delegate;
         _messageId = 0;
         _fileClientCache = [[NSCache alloc]init];
-        _fileClientCache.countLimit = 5;
+        _fileClientCache.countLimit = 10;
         
         if (config == nil) {
             
@@ -204,7 +204,9 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         
-        if (self.connectStatus != RTMClientConnectStatusConnectClosed) {
+        @synchronized (self) {
+            
+            if (self.connectStatus != RTMClientConnectStatusConnectClosed) {
                 FPNSLog(@"rtm loginWithToken error , client is connected or connecting");
                 return;
             }
@@ -221,7 +223,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                 return;
             }
             
-            
+        
             self.token = token;
             self.language = language;
             self.loginSuccess = loginSuccess;
@@ -230,11 +232,12 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
             self.attribute = attribute;
             self.authFinish = NO;
             self.isOverlookFpnnCloseCallBack = NO;
-        
             if (self.loginTimeout <= 0) {
                 self.loginTimeout = 30;
             }
                 
+        }
+        
             [self _toLogin:YES];
         
     });
@@ -939,6 +942,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                 [self _closeConnectHandle:NO];
 //                NSLog(@"4G <=> WIFI");
                 [self _getDelegateToRelogin];
+                
             }
              
         }

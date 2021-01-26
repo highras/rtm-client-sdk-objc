@@ -163,9 +163,8 @@
                 return newClient;
             }
         }else{
-            FPNNTCPClient * newClient = [FPNNTCPClient clientWithEndpoint:endPoint];
-            [fileClientCache setObject:newClient forKey:endPoint];
-            return newClient;
+            FPNSLog(@"getFileClient is error");
+            return nil;
         }
     }
 }

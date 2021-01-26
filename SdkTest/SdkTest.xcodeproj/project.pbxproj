@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		563B173825AB64FD00D30980 /* Rtm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 563B173725AB64FD00D30980 /* Rtm.framework */; };
+		561074F025BE60DD00AE553D /* Rtm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 561074EF25BE60DD00AE553D /* Rtm.framework */; };
 		563B173B25AB657A00D30980 /* TestVc.m in Sources */ = {isa = PBXBuildFile; fileRef = 563B173A25AB657A00D30980 /* TestVc.m */; };
 		568A8F34255BE12B008805B3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 568A8F32255BE12B008805B3 /* Main.storyboard */; };
 		568A8F37255BE12B008805B3 /* SdkTest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 568A8F35255BE12B008805B3 /* SdkTest.xcdatamodeld */; };
@@ -55,7 +55,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		563B173725AB64FD00D30980 /* Rtm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Rtm.framework; path = "../../../Library/Developer/Xcode/DerivedData/RtmWorkSpace-afslpiavtyaddsbnnuspddvkeeaf/Build/Products/Release-iphoneos/Rtm.framework"; sourceTree = "<group>"; };
+		561074EF25BE60DD00AE553D /* Rtm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Rtm.framework; path = "../../../Library/Developer/Xcode/DerivedData/RtmWorkSpace-afslpiavtyaddsbnnuspddvkeeaf/Build/Products/Release-iphoneos/Rtm.framework"; sourceTree = "<group>"; };
 		563B173925AB657A00D30980 /* TestVc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestVc.h; sourceTree = "<group>"; };
 		563B173A25AB657A00D30980 /* TestVc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestVc.m; sourceTree = "<group>"; };
 		568A8F26255BE12B008805B3 /* SdkTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SdkTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -122,7 +122,7 @@
 			files = (
 				568A8FA0255BE18A008805B3 /* libresolv.tbd in Frameworks */,
 				568A8FD1255BE2FB008805B3 /* libvo-amrwbenc.a in Frameworks */,
-				563B173825AB64FD00D30980 /* Rtm.framework in Frameworks */,
+				561074F025BE60DD00AE553D /* Rtm.framework in Frameworks */,
 				568A8F9E255BE17F008805B3 /* libresolv.9.tbd in Frameworks */,
 				568A8FCF255BE2FB008805B3 /* libopencore-amrwb.a in Frameworks */,
 				568A8FD0255BE2FB008805B3 /* libopencore-amrnb.a in Frameworks */,
@@ -149,7 +149,7 @@
 		568A8F1D255BE12B008805B3 = {
 			isa = PBXGroup;
 			children = (
-				563B173725AB64FD00D30980 /* Rtm.framework */,
+				561074EF25BE60DD00AE553D /* Rtm.framework */,
 				568A8FAB255BE2FA008805B3 /* RTMAudioManager */,
 				568A8F28255BE12B008805B3 /* SdkTest */,
 				568A8F47255BE12D008805B3 /* SdkTestTests */,
