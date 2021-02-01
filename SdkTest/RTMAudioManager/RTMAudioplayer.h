@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface RTMAudioplayer : NSObject
 
 +(instancetype)shareInstance;
+@property(nonatomic,copy) void(^playFinish)(void);
 -(void)playWithAudioModel:(RTMAudioModel*)audioModel;//audioFilePath is not nil
 -(void)playWithAmrData:(NSData*)amrData;//通过音频url获取的二进制数据
 -(void)stop;

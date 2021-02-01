@@ -121,7 +121,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
         _userId = userId;
         _config = config;
         _autoRelogin = autoRelogin;
-        _sdkVersion = @"2.1.2";
+        _sdkVersion = @"iOS_2.1.2";
         _apiVersion = @"2.6.1";
         _reloginNum = 0;
         _connectStatus = RTMClientConnectStatusConnectClosed;
@@ -171,6 +171,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
         NSString * currentWifiAddress = [self getIPAddress];
         if ([self.wifiAddress isEqualToString:currentWifiAddress] == NO && [currentWifiAddress isEqualToString:@"error"] == NO) {
 //                NSLog(@"wifi 切换  %@",currentWifiAddress);
+                [self.fileClientCache removeAllObjects];
                 self.isOverlookFpnnCloseCallBack = YES;
                 self.wifiAddress =  currentWifiAddress;
                 [self _closeConnectHandle:NO];
@@ -211,7 +212,6 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                 return;
             }
             
-            
             if ([self.delegate respondsToSelector:@selector(rtmReloginCompleted:reloginCount:reloginResult:error:)] == NO ||
                 [self.delegate respondsToSelector:@selector(rtmReloginWillStart:reloginCount:)] == NO)  {
                 FPNSLog(@"rtm loginWithToken error , no implement RTMProtocol required delegate methods");
@@ -219,6 +219,9 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
             }
             
             if (token == nil || token.length == 0) {
+                if (loginFail) {
+                    loginFail([FPNError errorWithEx:@"RTM_EC_INVALID_AUTH_TOEKN" code:200027]);
+                }
                 FPNSLog(@"rtm loginWithToken error , invalid token");
                 return;
             }
@@ -416,6 +419,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
             [authQuestDic setValue:_token forKey:@"token"];
             [authQuestDic setValue:_language forKey:@"lang"];
             [authQuestDic setValue:_attribute forKey:@"attrs"];
+            [authQuestDic setValue:_sdkVersion forKey:@"version"];
             
             FPNNQuest * quest = [FPNNQuest questWithMethod:@"auth"
                                                    message:authQuestDic
@@ -1010,6 +1014,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 //                NSLog(@"connectionCloseCallBackconnectionCloseCallBack%@",[NSThread currentThread]);
                 @rtmStrongify(self);
                 @synchronized (self) {
+                    [self.fileClientCache removeAllObjects];
 //                    NSLog(@"connectionCloseCallBackconnectionCloseCallBackconnectionCloseCallBack  %@  %ld",[NSThread currentThread],(long)self.currentConnectStatus);
                     if (self.connectStatus == RTMClientConnectStatusConnected) {
 //                        NSLog(@"connectionCloseCallBack RTMClientConnectStatusConnected");

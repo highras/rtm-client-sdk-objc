@@ -232,6 +232,7 @@
 			children = (
 				568A8FAC255BE2FA008805B3 /* opencore-amrwb */,
 				568A8FAF255BE2FA008805B3 /* RTMAudioplayer.h */,
+				568A8FC4255BE2FA008805B3 /* RTMAudioplayer.m */,
 				568A8FB0255BE2FA008805B3 /* vo-amrwbenc */,
 				568A8FB2255BE2FA008805B3 /* amrTools */,
 				568A8FBD255BE2FA008805B3 /* RTMRecordManager.h */,
@@ -239,7 +240,6 @@
 				568A8FBE255BE2FA008805B3 /* RtmVoiceConverterManager.h */,
 				568A8FC8255BE2FA008805B3 /* RtmVoiceConverterManager.m */,
 				568A8FC0255BE2FA008805B3 /* lib */,
-				568A8FC4255BE2FA008805B3 /* RTMAudioplayer.m */,
 				568A8FC5255BE2FA008805B3 /* opencore-amrnb */,
 			);
 			path = RTMAudioManager;

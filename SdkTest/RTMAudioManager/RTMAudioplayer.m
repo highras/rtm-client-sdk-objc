@@ -109,6 +109,13 @@
     }
     return NO;
 }
+- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag{
+    if (player == self.audioPlayer) {
+        if (self.playFinish) {
+            self.playFinish();
+        }
+    }
+}
 -(void)_initAudioPlayer:(NSData*)audioData{
     self.audioPlayer = nil;
     self.audioPlayer = [[AVAudioPlayer alloc] initWithData:audioData error:nil];
