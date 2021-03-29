@@ -3497,13 +3497,6 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		5667F118259C670E00AD73CB /* Rtv */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Rtv;
-			sourceTree = "<group>";
-		};
 		566F073B23A0914C00D1D949 = {
 			isa = PBXGroup;
 			children = (
@@ -3512,7 +3505,6 @@
 				563BCD47243DAE4700C6AC11 /* proto */,
 				56D2B08623B9A0E200491DF7 /* MpMessagePack */,
 				566F078923A0917500D1D949 /* Fpnn */,
-				5667F118259C670E00AD73CB /* Rtv */,
 				566F074723A0914D00D1D949 /* Rtm */,
 				566F075223A0914D00D1D949 /* RtmTests */,
 				566F074623A0914D00D1D949 /* Products */,
@@ -4950,12 +4942,7 @@
 		566F075A23A0914D00D1D949 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					armv7,
-					armv7s,
-					armv64,
-				);
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_STYLE = Automatic;
@@ -4965,6 +4952,8 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EXCLUDED_ARCHS = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Rtm/RtmPrefixHeader.pch";
 				HEADER_SEARCH_PATHS = proto/msgpack;
@@ -4996,12 +4985,7 @@
 		566F075B23A0914D00D1D949 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					armv7,
-					armv7s,
-					armv64,
-				);
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_STYLE = Automatic;
@@ -5011,6 +4995,8 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EXCLUDED_ARCHS = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/Rtm/RtmPrefixHeader.pch";
 				HEADER_SEARCH_PATHS = proto/msgpack;

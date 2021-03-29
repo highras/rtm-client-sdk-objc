@@ -397,7 +397,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                     
                     @synchronized (self) {
                         if (self.loginFail) {
-                            self.loginFail([FPNError errorWithEx:@"FPNN_EC_CORE_INVALID_CONNECTION" code:20012]);
+                            self.loginFail([FPNError errorWithEx:@"whichRequest FPNN_EC_CORE_INVALID_CONNECTION" code:20012]);
                             self.loginFail = nil;
                             self.loginSuccess = nil;
                             if (self.loginTimeoutTimer) {
@@ -585,7 +585,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                 
                 if (self.authFinish) {
                     //重连失败回调
-                    [self _reloginComplete:[FPNError errorWithEx:@"FPNN_EC_CORE_INVALID_CONNECTION" code:20012]];
+                    [self _reloginComplete:[FPNError errorWithEx:@"authRequest FPNN_EC_CORE_INVALID_CONNECTION" code:20012]];
                     [self _reLogin];
                 }else{
                     
@@ -597,7 +597,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 
                     }
                     if (self.loginFail) {
-                        self.loginFail([FPNError errorWithEx:@"FPNN_EC_CORE_INVALID_CONNECTION" code:20012]);
+                        self.loginFail([FPNError errorWithEx:@"authRequest FPNN_EC_CORE_INVALID_CONNECTION" code:20012]);
                         self.loginFail = nil;
                         self.loginSuccess = nil;
                         if (self.loginTimeoutTimer) {

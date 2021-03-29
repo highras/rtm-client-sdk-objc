@@ -11,7 +11,6 @@
 #import "RTMRecordManager.h"
 #import "RTMAudioplayer.h"
 #import <Rtm/Rtm.h>
-#import "TestVc.h"
 #import "NSObject+Description.h"
 #define NSAllLog(FORMAT, ...) fprintf(stderr, "%s:%zd\t%s\n", [[[NSString stringWithUTF8String: __FILE__] lastPathComponent] UTF8String], __LINE__, [[NSString stringWithFormat: FORMAT, ## __VA_ARGS__] UTF8String]);
 
@@ -43,14 +42,8 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
 }
-//-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-//    TestVc * VC = [[TestVc alloc] init];
-//    [self presentViewController:VC animated:YES completion:nil];
-//}
+
 #pragma mark push delegate
-
-
-
 //被踢下线
 -(void)rtmKickout:(RTMClient *)client
 {
@@ -157,13 +150,13 @@
 }
 
 //重连
+#pragma mark 重连 delegate
 -(void)rtmReloginCompleted:(RTMClient *)client reloginCount:(int)reloginCount reloginResult:(BOOL)reloginResult error:(FPNError *)error{
     NSLog(@"rtmReloginCompleted  uid = %lld reloginCount = %d reloginResult = %d   %@",client.userId,reloginCount,reloginResult,error);
 }
 -(BOOL)rtmReloginWillStart:(RTMClient *)client reloginCount:(int)reloginCount{
 
     NSLog(@"rtmReloginWillStart  reloginCount = %d  uid = %lld",reloginCount,client.userId);
-    NSLog(@"=====%@",[NSThread currentThread]);
     return YES;
 }
 -(void)rtmConnectClose:(RTMClient *)client{
@@ -183,11 +176,7 @@
 #pragma mark 验证登录
     if (indexPath.section == 0) {
 
-
-
         if (indexPath.row == 0) {//@[@"验证登录"]
-//            TestVc * vc = [[TestVc alloc] init];
-//            [self presentViewController:vc animated:YES completion:nil];
 
             self.client = [RTMClient clientWithEndpoint:@""
                                               projectId:0
@@ -199,26 +188,12 @@
             if (self.client) {
                 [self.client loginWithToken:@"0"
                                    language:@"en"
-                                  attribute:@{@"aaa":@"bbb"}
+                                  attribute:@{@"key":@"value"}
                                     timeout:30
                                     success:^{
 
 
                     NSLog(@"login success  %@",[NSThread currentThread]);
-
-                    [self.client enterRoomWithId:[NSNumber numberWithLongLong:666]
-                                         timeout:10
-                                         success:^{
-
-                        NSLog(@"enterRoomWithId success");
-
-                    } fail:^(FPNError * _Nullable error) {
-
-                        NSLog(@"%@",error);
-
-                    }];
-
-                    
 
 
                 } connectFail:^(FPNError * _Nullable error) {
@@ -239,8 +214,6 @@
     }else if (indexPath.section == 1){
 
         if (indexPath.row == 0) {//发送P2P消息
-//            TestVc * VC = [[TestVc alloc] init];
-//            [self presentViewController:VC animated:YES completion:nil];
 
             [self.client sendP2PMessageToUserId:@(777)
                                     messageType:@(99)
@@ -249,7 +222,7 @@
                                         timeout:10
                                         success:^(RTMSendAnswer * sendAnswer) {
 
-                NSLog(@"111111sendP2PMessageToUserId %@",sendAnswer.rtm_autoDescription);
+                NSLog(@"sendP2PMessageToUserId %@",sendAnswer.rtm_autoDescription);
 
             }fail:^(FPNError * _Nullable error) {
 
@@ -1791,7 +1764,7 @@
 
 //点击一下  登录验证
 //    [self tableView:self.listView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-//    [self test];
+
 
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
