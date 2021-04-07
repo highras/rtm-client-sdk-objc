@@ -68,7 +68,7 @@ namespace fpnn
 	{
 		if (!quest)
 			return false;
-
+        
 		if (quest->isTwoWay() && !callback)
 			return false;
 
@@ -78,12 +78,12 @@ namespace fpnn
 			raw = quest->raw();
 		}
 		catch (const FpnnError& ex){
-			LOG_ERROR("Quest Raw Exception:(%d)%s", ex.code(), ex.what());
+            LOG_ERROR("Quest Raw Exception:(%d)%s  (pid:%s)", ex.code(), ex.what(),quest->_pid.c_str());
 			return false;
 		}
 		catch (...)
 		{
-			LOG_ERROR("Quest Raw Exception.");
+			LOG_ERROR("Quest Raw Exception.  (pid:%s)",quest->_pid.c_str());
 			return false;
 		}
 

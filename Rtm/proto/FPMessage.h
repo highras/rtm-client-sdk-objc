@@ -95,6 +95,7 @@ namespace fpnn{
 			void setPayloadSize(uint32_t size)	{ _hdr.psize = htole32(size); }
 			void setSeqNum(uint32_t seqNum)		{ _seqNum = htole32(seqNum); }
 
+            void setPid(const std::string& pid)            { _pid = pid; }
 			void setPayload(const std::string& payload)			{ _payload = payload; }
 			void setPayload(const char* payload, size_t len)	{ _payload = std::string(payload,len); }
 
@@ -165,6 +166,8 @@ namespace fpnn{
 			}
 
 		public:
+        
+            
 			const std::string& http_uri(const std::string& u)		{ return http_infos(std::string("u_")+u); }
 			const std::string& http_cookie(const std::string& c)	{ return http_infos(std::string("c_")+c);}
 			const std::string& http_header(const std::string& h)	{ return http_infos(std::string("h_")+h);}
@@ -204,7 +207,7 @@ namespace fpnn{
 			static std::string _emptyString;
 			static const int16_t _MagicFieldLength;
 			static const int16_t _HeaderLength;
-
+            std::string _pid;
 			Header _hdr;
 		protected:
 			FPMessage():_ctime(0), _seqNum(0), _httpInfos(NULL) {}
@@ -214,6 +217,7 @@ namespace fpnn{
 			int64_t _ctime;
 			uint32_t _seqNum;
 			std::string _payload;
+            
 			//for HTTP, cookie, header, uri
 			//key will be add c_, h_, u_
 			StringMap* _httpInfos;

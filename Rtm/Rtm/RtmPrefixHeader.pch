@@ -43,6 +43,8 @@
 
 #define RTMNullString(string) ([string isKindOfClass:[NSNull class]] || string == nil || [string length] < 1 ? YES : NO )
 
+#define RtmFpnnErrorLog(log)  [RtmErrorLog exportErrorLog:log];
+
 #ifndef rtmWeakify
     #if DEBUG
         #if __has_feature(objc_arc)
@@ -75,10 +77,10 @@
     #endif
 #endif
 
-
+//NSLog(__VA_ARGS__)
 #ifdef DEBUG
 
-#define FPNSLog(...) NSLog(__VA_ARGS__)
+#define FPNSLog(...)
 
 #else
 

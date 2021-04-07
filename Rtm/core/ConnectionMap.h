@@ -56,7 +56,7 @@ namespace fpnn
 			}
 			return NULL;
 		}
-
+        
 		TCPClientConnection* takeConnection(const ConnectionInfo* ci)
 		{
 			std::unique_lock<std::mutex> lck(_mutex);
@@ -127,6 +127,8 @@ namespace fpnn
 				if (token == (uint64_t)connection)
 					return sendData(connection, data);
 			}
+            
+            
 			return false;
 		}
 

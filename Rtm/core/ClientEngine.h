@@ -94,7 +94,7 @@ namespace fpnn
 			return _connectionMap.takeCallback(socket, seqNum);
 		}
 
-		bool join(const TCPClientConnection* connection);
+        bool join(const TCPClientConnection* connection);
 		bool waitSendEvent(const TCPClientConnection* connection);
 		void quit(const TCPClientConnection* connection);
 

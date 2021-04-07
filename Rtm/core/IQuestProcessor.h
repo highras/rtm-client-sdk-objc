@@ -34,18 +34,21 @@ namespace fpnn
 		std::mutex* _mutex;		//-- only for sync quest to set answer map.
 		bool _isIPv4;
 		bool _encrypted;
-
+        
 		ConnectionInfo(int socket_, int port_, const std::string& ip_, bool isIPv4): _mutex(0), _isIPv4(isIPv4),
 			_encrypted(false), token(0), socket(socket_), port(port_), ip(ip_)
 		{
 		}
 
 	public:
+        
 		uint64_t token;
 		int socket;
 		int port;
 		std::string ip;
 
+        std::string pid;
+        
 		std::string str() const {
 			std::stringstream ss;
 			ss << "Socket: " << socket << ", address: " << ip << ":" <<port;

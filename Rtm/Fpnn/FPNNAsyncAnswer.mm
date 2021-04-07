@@ -11,7 +11,7 @@
 #import "FPNNCallBackHandler.h"
 #import "NSDictionary+MsgPack.h"
 #import "FPNError.h"
-
+#import "RtmErrorLog.h"
 
 #define ListenWithClient(client) *(FPNNCppConnectionListenPtr*)((void* (*)(id, SEL))[client methodForSelector:NSSelectorFromString(@"getPrivatelistenCall")])(client, NSSelectorFromString(@"getPrivatelistenCall"))
 
@@ -45,7 +45,10 @@ FPNNCppConnectionListen * tl_processor;
 
 - (instancetype)initWithClient:(FPNNTCPClient * _Nonnull)client answerMessage:(NSDictionary*)message{
     if (client == nil) {
+        
         FPNSLog(@"fpnn FPNNAsyncAnswer init error. Please input valid client");
+        RtmFpnnErrorLog(@"fpnn FPNNAsyncAnswer init error. Please input valid client")
+        
         return nil;
     }
     self = [super init];
@@ -61,7 +64,10 @@ FPNNCppConnectionListen * tl_processor;
 
 - (instancetype)initWithClient:(FPNNTCPClient * _Nonnull)client answer:(FPNNAnswer*)answer{
     if (client == nil) {
+        
         FPNSLog(@"fpnn FPNNAsyncAnswer init error. Please input valid client");
+        RtmFpnnErrorLog(@"fpnn FPNNAsyncAnswer init error. Please input valid client")
+        
         return nil;
     }
     self = [super init];
@@ -77,7 +83,10 @@ FPNNCppConnectionListen * tl_processor;
 
 - (instancetype)initWithClient:(FPNNTCPClient * _Nonnull)client error:(nonnull FPNError *)error{
     if (client == nil) {
+        
         FPNSLog(@"fpnn FPNNAsyncAnswer init error. Please input valid client");
+        RtmFpnnErrorLog(@"fpnn FPNNAsyncAnswer init error. Please input valid client")
+        
         return nil;
     }
     self = [super init];
@@ -112,7 +121,10 @@ FPNNCppConnectionListen * tl_processor;
     tl_processor = listen.get();
     _asynAnswer = tl_processor->genAsyncAnswer();
     if (_asynAnswer == nullptr) {
+        
         FPNSLog(@"fpnn get listenProcessor is fail");
+        RtmFpnnErrorLog(@"fpnn get listenProcessor is fail")
+        
         return NO;
     }else{
         return YES;
@@ -126,12 +138,15 @@ FPNNCppConnectionListen * tl_processor;
     }
     fpnn::FPAnswerPtr answer = fpnn::FPAWriter::emptyAnswer(_asynAnswer->getQuest());
 
-    std::string msgPackResult = _answerMessage.msgPack;
+    std::string msgPackResult = [_answerMessage toMsgPack:nil];
     if (!msgPackResult.empty()) {
         answer->setPayload(msgPackResult);
         answer->setPayloadSize((uint32_t)msgPackResult.length());
     }else{
+        
         FPNSLog(@"fpnn oc AsyncAnswer encode to cppAnswer is fail");
+        RtmFpnnErrorLog(@"fpnn oc AsyncAnswer encode to cppAnswer is fail")
+        
         return NO;
     }
     

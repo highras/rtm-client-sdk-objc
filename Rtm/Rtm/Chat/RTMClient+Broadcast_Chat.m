@@ -32,7 +32,7 @@
     [dic setValue:lastid forKey:@"lastid"];
     [dic setValue:@[@(30),@(32),@(40),@(41),@(42),@(50)] forKey:@"mtypes"];
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getbroadcastmsg" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getbroadcastmsg" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
 //    BOOL result = [fpnnMainClient sendQuest:quest
 //                                timeout:(timeout <= 0 ? self.sendQuestTimeout : timeout)
 //                                success:^(NSDictionary * _Nullable data) {
@@ -113,7 +113,7 @@
     [dic setValue:lastid forKey:@"lastid"];
     [dic setValue:@[@(30),@(32),@(40),@(41),@(42),@(50)] forKey:@"mtypes"];
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getbroadcastmsg" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getbroadcastmsg" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                        timeout:RTMClientSendQuestTimeout];
     

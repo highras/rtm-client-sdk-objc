@@ -34,7 +34,7 @@
     [dic setValue:lastid forKey:@"lastid"];
     [dic setValue:mtypes forKey:@"mtypes"];
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getbroadcastmsg" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getbroadcastmsg" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
@@ -92,7 +92,7 @@
     [dic setValue:lastid forKey:@"lastid"];
     [dic setValue:mtypes forKey:@"mtypes"];
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getbroadcastmsg" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getbroadcastmsg" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                        timeout:RTMClientSendQuestTimeout];
@@ -145,7 +145,7 @@
     [dic setValue:@(0) forKey:@"from"];
     // type: 1,p2p; 2,group; 3, room
         
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getmsg" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getmsg" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
         
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
@@ -185,7 +185,7 @@
     [dic setValue:@(0) forKey:@"from"];
     // type: 1,p2p; 2,group; 3, room
         
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getmsg" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getmsg" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
@@ -219,7 +219,7 @@
 //    
 //    // type: 1,p2p; 2,group; 3, room
 //    
-//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"stranscribe" message:dic twoWay:YES];
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"stranscribe" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
 //    
 //    BOOL result = [fpnnMainClient sendQuest:quest
 //                                timeout:RTMClientSendQuestTimeout
@@ -263,7 +263,7 @@
 //    
 //    // type: 1,p2p; 2,group; 3, room
 //    
-//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"stranscribe" message:dic twoWay:YES];
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"stranscribe" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
 //    
 //    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
 //                                        timeout:RTMClientSendQuestTimeout];

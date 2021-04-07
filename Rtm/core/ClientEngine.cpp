@@ -85,7 +85,7 @@ bool ClientEngine::join(const TCPClientConnection* connection)
 	int socket = connection->socket();
 	if (!nonblockedFd(socket))
 	{
-		LOG_ERROR("Change socket to non-blocked failed. %s", connection->_connectionInfo->str().c_str());
+		LOG_ERROR("Change socket to non-blocked failed. %s    (pid:%s)", connection->_connectionInfo->str().c_str(),connection->_connectionInfo->pid.c_str());
 		return false;
 	}
 	_connectionMap.insert(socket, (TCPClientConnection*)connection);
@@ -146,7 +146,7 @@ void ClientEngine::sendData(int socket, uint64_t token, std::string* data)
 	if (!_connectionMap.sendData(socket, token, data))
 	{
 		delete data;
-		LOG_ERROR("Data not send at socket %d. socket maybe closed.", socket);
+        LOG_ERROR("Data not send at socket %d. socket maybe closed.", socket);
 	}
 }
 
@@ -418,10 +418,10 @@ void CloseErrorTask::run()
 		_connection->_questProcessor->connectionWillClose(*(_connection->_connectionInfo), _error);
 	}
 	catch (const FpnnError& ex){
-		LOG_ERROR("CloseErrorTask::run() function.(%d)%s, connection:%s", ex.code(), ex.what(), _connection->_connectionInfo->str().c_str());
+		LOG_ERROR("CloseErrorTask::run() function.(%d)%s, connection:%s   (pid:%s)", ex.code(), ex.what(), _connection->_connectionInfo->str().c_str(),_connection->_connectionInfo->pid.c_str());
 	}
 	catch (...)
 	{
-		LOG_ERROR("Unknown error when calling CloseErrorTask::run() function. %s", _connection->_connectionInfo->str().c_str());
+		LOG_ERROR("Unknown error when calling CloseErrorTask::run() function. %s   (pid:%s)", _connection->_connectionInfo->str().c_str(),_connection->_connectionInfo->pid.c_str());
 	}
 }

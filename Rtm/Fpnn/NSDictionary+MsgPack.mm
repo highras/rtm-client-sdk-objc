@@ -10,13 +10,16 @@
 #import "NSDictionary+MsgPack.h"
 #import "MPMessagePackReader.h"
 #import "MPMessagePackWriter.h"
-
+#import "RtmErrorLog.h"
 @implementation NSDictionary (MsgPack)
 
--(std::string)msgPack{
-    
-    return [[[FPNNMessageEncoder alloc]init] initWithMessage:self].encodeResult;
-    
+//-(std::string)msgPack{
+//    
+//    return [[[FPNNMessageEncoder alloc]init] initWithMessage:self].encodeResult;
+//    
+//}
+-(std::string)toMsgPack:(NSString*)pid{
+    return [[[FPNNMessageEncoder alloc]init] initWithMessage:self pid:pid].encodeResult;
 }
 -(void)setMsgPack:(std::string)msgPack{
     
@@ -219,11 +222,18 @@
 //    delete _packer;
 //    FPNSLog(@"FPNNMessageEncoder dealloc");
 }
-- (instancetype)initWithMessage:(NSDictionary*)message{
+- (instancetype)initWithMessage:(NSDictionary*)message pid:(NSString * _Nullable)pid{
     
     @autoreleasepool {
         if (message == nil) {
-                FPNSLog(@"fpnn FPNNMessageEncoder init error.  Please input valid message");
+                
+            FPNSLog(@"fpnn FPNNMessageEncoder init error.  Please input valid message");
+            if (pid != nil) {
+                RtmFpnnErrorLog(([NSString stringWithFormat:@"fpnn FPNNMessageEncoder init error.  Please input valid message  (pid:%@)",pid]))
+            }else{
+                RtmFpnnErrorLog(@"fpnn FPNNMessageEncoder init error.  Please input valid message")
+            }
+                
                 return nil;
             }
             self = [super init];
@@ -242,6 +252,12 @@
                     _encodeResult = resultStr;
                 }else{
                     FPNSLog(@"fpnn MPMessagePackWriter error.");
+                    if (pid != nil) {
+                        RtmFpnnErrorLog(([NSString stringWithFormat:@"fpnn MPMessagePackWriter error.  (pid:%@)",pid]))
+                    }else{
+                        RtmFpnnErrorLog(@"fpnn MPMessagePackWriter error.")
+                    }
+                   
                     return nil;
                 }
             }

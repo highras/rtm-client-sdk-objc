@@ -16,8 +16,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,readonly,strong)NSString * method;
 
 
-- (instancetype _Nullable)initWithMethod:(NSString * _Nonnull)method message:(NSDictionary * _Nullable)message twoWay:(BOOL)isTwoWay;
-+ (instancetype _Nullable)questWithMethod:(NSString * _Nonnull)method message:(NSDictionary * _Nullable)message twoWay:(BOOL)isTwoWay;
+- (instancetype _Nullable)initWithMethod:(NSString * _Nonnull)method
+                                 message:(NSDictionary * _Nullable)message
+                                  twoWay:(BOOL)isTwoWay
+                                     pid:(NSString * _Nullable)pid;//Rtm专用 传pid
+
++ (instancetype _Nullable)questWithMethod:(NSString * _Nonnull)method
+                                  message:(NSDictionary * _Nullable)message
+                                   twoWay:(BOOL)isTwoWay
+                                      pid:(NSString * _Nullable)pid;//Rtm专用 传pid
+
++ (instancetype _Nullable)questWithMethod:(NSString * _Nonnull)method
+                                  message:(NSDictionary * _Nullable)message
+                                   twoWay:(BOOL)isTwoWay;
 
 
 - (instancetype)init NS_UNAVAILABLE;

@@ -58,7 +58,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)rtmPushRoomChatCmd:(RTMClient *)client message:(RTMMessage * _Nullable)message;
 -(void)rtmPushBroadcastChatCmd:(RTMClient *)client message:(RTMMessage * _Nullable)message;
 
-
+//error log
+-(void)rtmErrorLog:(NSString*)errorLog;
 @end
 
 NS_ASSUME_NONNULL_END

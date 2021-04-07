@@ -1,11 +1,6 @@
 #include "time.h"
 #include "TaskThreadPool.h"
-#include <iostream>
 using namespace fpnn;
-
-pthread_key_t AnswerStatusKey;
-pthread_once_t init_done = PTHREAD_ONCE_INIT;
-
 
 /*===============================================================================
 FUNCTION DEFINITIONS: Thread Pool Functions: Class CThreadPool
@@ -184,11 +179,6 @@ bool TaskThreadPool::append()
 	return true;
 }
 
-void once_run(void)
-{
-    pthread_key_create(&AnswerStatusKey, NULL);
-}
-
 /*===========================================================================
 
 FUNCTION: ThreadPool::Process
@@ -204,7 +194,6 @@ RETURN VALUE:
 ===========================================================================*/
 void TaskThreadPool::process()
 {
-	pthread_once(&init_done, once_run);
 	while (true)
 	{
 		ITaskPtr task;
@@ -374,6 +363,5 @@ void TaskThreadPool::release()
 	while (_tempThreadCount)
 		 _detachCondition.wait(lck);
 
-	pthread_key_delete(AnswerStatusKey);
 	_inited = false;
 }

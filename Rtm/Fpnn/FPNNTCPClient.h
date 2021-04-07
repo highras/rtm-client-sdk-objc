@@ -24,17 +24,18 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,readonly,strong) NSString * connectedHost;
 @property (nonatomic,readonly,assign) int connectedPort;
 
+@property (nonatomic,readonly,strong)NSString *  _Nullable pid;//Rtm专用 传pid
 //两种使用方式 同时使用block会在delegate前调用
 @property (nonatomic,assign)id <FPNNProtocol> _Nullable delegate;
 @property (nonatomic,copy)FPNNConnectionSuccessCallBack connectionSuccessCallBack;
 @property (nonatomic,copy)FPNNConnectionCloseCallBack connectionCloseCallBack;
 @property (nonatomic,copy)FPNNListenAndReplyCallBack listenAndReplyCallBack;
 
-- (instancetype _Nullable)initWithEndpoint:(NSString * _Nonnull)endpoint;
-- (instancetype _Nullable)initWithHost:(NSString * _Nonnull)host port:(int)port;
+- (instancetype _Nullable)initWithEndpoint:(NSString * _Nonnull)endpoint pid:(NSString *)pid;
+//- (instancetype _Nullable)initWithHost:(NSString * _Nonnull)host port:(int)port;
 
-+ (instancetype _Nullable)clientWithEndpoint:(NSString * _Nonnull)endpoint;
-+ (instancetype _Nullable)clientWithHost:(NSString * _Nonnull)host port:(int)port;
++ (instancetype _Nullable)clientWithEndpoint:(NSString * _Nonnull)endpoint pid:(NSString *)pid;;
+//+ (instancetype _Nullable)clientWithHost:(NSString * _Nonnull)host port:(int)port;
 
 
 - (instancetype)init NS_UNAVAILABLE;
@@ -88,8 +89,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FPNNTCPClient (Connect)
 
-- (void)connect;
-- (void)reconnect;
+- (BOOL)connect;
+- (BOOL)reconnect;
 - (void)closeConnect;
 
 @end

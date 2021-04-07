@@ -21,7 +21,9 @@ bool TCPClientIOProcessor::read(TCPClientConnection * connection, bool& closed)
 		if (connection->recvPackage(needNextEvent, closed) == false)
 		{
 			connection->_recvBuffer.returnToken();
-			LOG_ERROR("Error occurred when client receiving. Connection will be closed soon. %s", connection->_connectionInfo->str().c_str());
+            LOG_ERROR("Error occurred when client receiving. Connection will be closed soon. %s   (pid:%s)", connection->_connectionInfo->str().c_str(),connection->_connectionInfo->pid.c_str());
+			
+            
 			return false;
 		}
 		if (closed)
@@ -41,7 +43,7 @@ bool TCPClientIOProcessor::read(TCPClientConnection * connection, bool& closed)
 		bool status = connection->_recvBuffer.fetch(quest, answer);
 		if (status == false)
 		{
-			LOG_ERROR("Client receiving & decoding data error. Connection will be closed soon. %s", connection->_connectionInfo->str().c_str());
+			LOG_ERROR("Client receiving & decoding data error. Connection will be closed soon. %s  (pid:%s)", connection->_connectionInfo->str().c_str(),connection->_connectionInfo->pid.c_str());
 			return false;
 		}
 		if (quest)
@@ -89,7 +91,7 @@ bool TCPClientIOProcessor::deliverQuest(TCPClientConnection * connection, FPQues
 	}
 	else
 	{
-		LOG_ERROR("Duplex client is destroyed. Connection will be closed. %s", connection->_connectionInfo->str().c_str());
+		LOG_ERROR("Duplex client is destroyed. Connection will be closed. %s   (pid:%s)", connection->_connectionInfo->str().c_str(),connection->_connectionInfo->pid.c_str());
 		return false;
 	}
 }
@@ -122,7 +124,7 @@ void TCPClientIOProcessor::processConnectionIO(TCPClientConnection * connection,
 		case EINVAL:
 		default:
 			fdInvalid = true;
-			LOG_ERROR("Client connection sending error. Connection will be closed soon. %s", connection->_connectionInfo->str().c_str());
+			LOG_ERROR("Client connection sending error. Connection will be closed soon. %s   (pid:%s)", connection->_connectionInfo->str().c_str(),connection->_connectionInfo->pid.c_str());
 		}
 	}
 	

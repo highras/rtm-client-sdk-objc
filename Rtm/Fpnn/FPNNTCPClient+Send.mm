@@ -21,6 +21,7 @@
 #import "FPNNCallBackDefinition.h"
 
 #import "FpnnDefine.h"
+#import "RtmErrorLog.h"
 
 @implementation FPNNTCPClient (Send)
 
@@ -29,7 +30,11 @@
 -(void)_setConnectionStatusAndReplyListen:(fpnn::TCPClientPtr)client{
     if (Listen == nil || Listen == nullptr) {
         @synchronized (self) {
-            Listen = FPNNCppConnectionListen::createCppConnectionListen(self.connectionSuccessCallBack, self.connectionCloseCallBack, self.listenAndReplyCallBack,self);
+            Listen = FPNNCppConnectionListen::createCppConnectionListen(self.connectionSuccessCallBack,
+                                                                        self.connectionCloseCallBack,
+                                                                        self.listenAndReplyCallBack,
+                                                                        self,
+                                                                        self.pid);
             client->setQuestProcessor(Listen);
         }
     }
@@ -40,12 +45,27 @@
 -(fpnn::FPAnswerPtr)_send:(FPNNQuest *)quest timeout:(int)timeout{
     if (quest == nil) {
         FPNSLog(@"fpnn FPNNTCPClient send error. quest is nil");
+        
+        if (self.pid != nil) {
+            RtmFpnnErrorLog(([NSString stringWithFormat:@"fpnn FPNNTCPClient send error. quest is nil  (pid:%@)",self.pid]))
+        }else{
+            RtmFpnnErrorLog(@"fpnn FPNNTCPClient send error. quest is nil")
+        }
+        
+        
+       
         return nil;
     }
     fpnn::TCPClientPtr client = Client;
     fpnn::FPQuestPtr cppQuest = Quest(quest);
     if (client == nil || cppQuest  == nil) {
         FPNSLog(@"fpnn FPNNTCPClient send error. getCpp client or quest is nil");
+        if (self.pid != nil ) {
+            RtmFpnnErrorLog(([NSString stringWithFormat:@"fpnn FPNNTCPClient send error. getCpp client or quest is nil  (pid:%@)",self.pid]))
+        }else{
+            RtmFpnnErrorLog(@"fpnn FPNNTCPClient send error. getCpp client or quest is nil")
+        }
+        
         return nil;
     }
     [self _setConnectionStatusAndReplyListen:client];
@@ -150,7 +170,6 @@
      timeout:(int)timeout{
     
     
-       
         if (quest == nil) {
             return NO;
         }
@@ -158,18 +177,41 @@
         fpnn::TCPClientPtr client = Client;
         [self _setConnectionStatusAndReplyListen:client];
         fpnn::FPQuestPtr cppQuest = Quest(quest);
-        FPNNCppAnswerCallback * call = new FPNNCppAnswerCallback(successCallback,failCallback,self,quest);
         
         if (client == nil || cppQuest  == nil) {
             FPNSLog(@"fpnn FPNNTCPClient send callback error. getCpp client or quest is nil");
+            
+            if (self.pid != nil ) {
+                RtmFpnnErrorLog(([NSString stringWithFormat:@"fpnn FPNNTCPClient send callback error. getCpp client or quest is nil  (pid:%@)",self.pid]))
+            }else{
+                RtmFpnnErrorLog(@"fpnn FPNNTCPClient send callback error. getCpp client or quest is nil")
+            }
+            
+            
             return NO;
         }
-        
+    
+        FPNNCppAnswerCallback * call;
         bool status;
         if (timeout <= 0) {
-            status = client->sendQuest(cppQuest,call);
+            
+            if (quest.twoWay == YES) {
+                call = new FPNNCppAnswerCallback(successCallback,failCallback,self,quest);
+                status = client->sendQuest(cppQuest,call);
+            }else{
+                status = client->sendQuest(cppQuest,nil);
+            }
+            
         }else{
-            status = client->sendQuest(cppQuest,call,timeout);
+            
+            if (quest.twoWay == YES) {
+                call = new FPNNCppAnswerCallback(successCallback,failCallback,self,quest);
+                status = client->sendQuest(cppQuest,call,timeout);
+            }else{
+                status = client->sendQuest(cppQuest,nil,timeout);
+            }
+            
+            
         }
         return status == true ? YES : NO;
         
@@ -177,3 +219,4 @@
     
 }
 @end
+

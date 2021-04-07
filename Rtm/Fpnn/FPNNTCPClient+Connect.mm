@@ -11,20 +11,40 @@
 #import "FpnnDefine.h"
 
 @implementation FPNNTCPClient (Connect)
-- (void)connect{
+- (BOOL)connect{
     fpnn::TCPClientPtr client = Client;
     if (Listen == nil || Listen == nullptr) {
-        Listen = FPNNCppConnectionListen::createCppConnectionListen(self.connectionSuccessCallBack, self.connectionCloseCallBack, self.listenAndReplyCallBack,self);
+        Listen = FPNNCppConnectionListen::createCppConnectionListen(self.connectionSuccessCallBack,
+                                                                    self.connectionCloseCallBack,
+                                                                    self.listenAndReplyCallBack,
+                                                                    self,
+                                                                    self.pid);
         client->setQuestProcessor(Listen);
     }
     if (client) {
-        client->connect();
+        if (client->connect() == true) {
+            
+            return YES;
+            
+        }else{
+            return NO;
+        }
+        
+    }else{
+        return NO;
     }
+    
 }
-- (void)reconnect{
+- (BOOL)reconnect{
     fpnn::TCPClientPtr client = Client;
     if (client) {
-        client->reconnect();
+        if (client->reconnect() == true) {
+            return YES;
+        }else{
+            return NO;
+        }
+    }else{
+        return NO;
     }
 }
 - (void)closeConnect{
@@ -34,3 +54,4 @@
     }
 }
 @end
+

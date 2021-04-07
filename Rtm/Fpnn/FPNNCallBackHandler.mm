@@ -8,6 +8,7 @@
 
 #import "FPNNCallBackHandler.h"
 #import "NSDictionary+MsgPack.h"
+#import "RtmErrorLog.h"
 @implementation FPNNCallBackHandler
 
 @end
@@ -151,13 +152,29 @@ fpnn::FPAnswerPtr FPNNCppConnectionListen::processQuest(const fpnn::FPReaderPtr 
                 }
             
             if (method == nil) {
+                
                 FPNSLog(@"fpnn processQuest get method is nil");
+                if (_pid != nil) {
+                    RtmFpnnErrorLog(([NSString stringWithFormat:@"fpnn processQuest get method is nil  (pid:%@)",_pid]))
+                }else{
+                    RtmFpnnErrorLog(@"fpnn processQuest get method is nil")
+                }
+                
+                
+                
                 return nullptr;
             }
             
         }else{
             
             FPNSLog(@"fpnn processQuest get quest is nil");
+            if (_pid != nil) {
+                RtmFpnnErrorLog(([NSString stringWithFormat:@"fpnn processQuest get quest is nil  (pid:%@)",_pid]))
+            }else{
+                RtmFpnnErrorLog(@"fpnn processQuest get quest is nil")
+            }
+            
+            
             return nullptr;
             
         }
@@ -181,7 +198,7 @@ fpnn::FPAnswerPtr FPNNCppConnectionListen::processQuest(const fpnn::FPReaderPtr 
                 NSDictionary * data = @{@"code":[NSString stringWithFormat:@"%ld",(long)answer.error.code],
                                         @"ex":answer.error.ex};
             
-                return handleAnswer(data.msgPack, quest);
+                return handleAnswer([data toMsgPack:_pid], quest);
             }
 
 
@@ -189,7 +206,7 @@ fpnn::FPAnswerPtr FPNNCppConnectionListen::processQuest(const fpnn::FPReaderPtr 
 
                
                     
-                    return handleAnswer(answer.responseData.msgPack, quest);
+                    return handleAnswer([answer.responseData toMsgPack:_pid], quest);
                     
                
                 

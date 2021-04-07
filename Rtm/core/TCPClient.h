@@ -26,7 +26,7 @@ namespace fpnn
 	{
 	public:
 		static const char* SDKVersion;
-
+        std::string _pid;
 	private:
 		enum class ConnStatus
 		{
@@ -42,7 +42,7 @@ namespace fpnn
 		std::atomic<bool> _connected;			//-- quickly than _connStatus. But _connStatus is necessary, _connected is optional.
 		ConnStatus _connStatus;
 		ClientEnginePtr _engine;
-
+        
 		IQuestProcessorPtr _questProcessor;
 		ConnectionInfoPtr	_connectionInfo;
 		std::string _endpoint;
@@ -65,7 +65,7 @@ namespace fpnn
 		
 		bool configEncryptedConnection(TCPClientConnection* connection, std::string& publicKey);
 
-		TCPClient(const std::string& host, int port, bool autoReconnect = true);
+		TCPClient(const std::string& host, int port,const std::string& pid , bool autoReconnect = true);
 
 	public:
 		~TCPClient();
@@ -146,11 +146,11 @@ namespace fpnn
 		bool sendQuest(FPQuestPtr quest, AnswerCallback* callback, int timeout = 0);
 		bool sendQuest(FPQuestPtr quest, std::function<void (FPAnswerPtr answer, int errorCode)> task, int timeout = 0);
 
-		inline static TCPClientPtr createClient(const std::string& host, int port, bool autoReconnect = true)
+		inline static TCPClientPtr createClient(const std::string& host, int port, const std::string& pid,bool autoReconnect = true)
 		{
-			return TCPClientPtr(new TCPClient(host, port, autoReconnect));
+			return TCPClientPtr(new TCPClient(host, port, pid,autoReconnect));
 		}
-		inline static TCPClientPtr createClient(const std::string& endpoint, bool autoReconnect = true)
+		inline static TCPClientPtr createClient(const std::string& endpoint,const std::string& pid,bool autoReconnect = true)
 		{
 			std::string host;
 			int port;
@@ -158,7 +158,7 @@ namespace fpnn
 			if (!parseAddress(endpoint, host, port))
 				return nullptr;
 
-			return TCPClientPtr(new TCPClient(host, port, autoReconnect));
+			return TCPClientPtr(new TCPClient(host, port,pid, autoReconnect));
 		}
 
 		bool connect();

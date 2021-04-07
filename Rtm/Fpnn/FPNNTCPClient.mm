@@ -13,6 +13,7 @@
 #import "FPNNQuest.h"
 #import "FPNNAsyncAnswer.h"
 #import "FPNNAnswer.h"
+#import "RtmErrorLog.h"
 @interface FPNNTCPClient()
 //{
 //    int _questTimeout;
@@ -31,47 +32,52 @@
 
 - (void)_initDefaultParameters{
     _autoReconnect = YES;
-    _ocFpnnSdkVersion = @"2.0.0";
+    _ocFpnnSdkVersion = @"2.0.1";
 }
-- (instancetype)initWithEndpoint:(NSString *)endpoint{
+- (instancetype)initWithEndpoint:(NSString *)endpoint pid:(NSString *)pid{
     
    
     if (endpoint == nil) {
-        FPNSLog(@"fpnn FPNNTCPClient init error. Please input valid endpoint");
-        return nil;
-    }
-    
-    self = [super init];
-    if (self) {
-        [self _initDefaultParameters];
-        _client = fpnn::TCPClient::createClient(endpoint.UTF8String, _autoReconnect == YES ? true : false);
-    }
-    return self;
-}
-
-- (instancetype)initWithHost:(NSString *)host port:(int)port{
-    
-    if (host == nil) {
-        FPNSLog(@"fpnn FPNNTCPClient init error. Please input valid host");
-        return nil;
-    }
-    
-    self = [super init];
-    if (self) {
-        [self _initDefaultParameters];
-        _client = fpnn::TCPClient::createClient(host.UTF8String, port,_autoReconnect == YES ? true : false);
         
+        FPNSLog(@"fpnn FPNNTCPClient init error. Please input valid endpoint");
+        
+        return nil;
+    }
+    
+    self = [super init];
+    if (self) {
+        [self _initDefaultParameters];
+        _pid = pid;
+        _client = fpnn::TCPClient::createClient(endpoint.UTF8String, pid.UTF8String,_autoReconnect == YES ? true : false);
     }
     return self;
 }
 
-+ (instancetype)clientWithEndpoint:(NSString *)endpoint{
-    return [[self alloc] initWithEndpoint:endpoint];
+//- (instancetype)initWithHost:(NSString *)host port:(int)port{
+//
+//    if (host == nil) {
+//
+//        FPNSLog(@"fpnn FPNNTCPClient init error. Please input valid host");
+//
+//        return nil;
+//    }
+//
+//    self = [super init];
+//    if (self) {
+//        [self _initDefaultParameters];
+//        _client = fpnn::TCPClient::createClient(host.UTF8String, port,_autoReconnect == YES ? true : false);
+//
+//    }
+//    return self;
+//}
+
++ (instancetype)clientWithEndpoint:(NSString *)endpoint pid:(NSString *)pid{
+    return [[self alloc] initWithEndpoint:endpoint pid:pid];
 }
 
-+ (instancetype)clientWithHost:(NSString *)host port:(int)port{
-    return [[self alloc] initWithHost:host port:port];
-}
+//+ (instancetype)clientWithHost:(NSString *)host port:(int)port{
+//    return [[self alloc] initWithHost:host port:port];
+//}
 
 #pragma mark get set
 
@@ -103,9 +109,9 @@
 }
 
 -(void)dealloc{
-    _client.reset();
-    _client = nullptr;
-    FPNSLog(@"FPNNTCPClient dealloc");
+//    _client.reset();
+//    _client = nullptr;
+//    NSLog(@"FPNNTCPClient dealloc");
 }
 
 

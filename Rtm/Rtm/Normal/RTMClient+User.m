@@ -38,7 +38,7 @@ static NSString *name2Key = @"nameKey2";
                      fail:(RTMAnswerFailCallBack)failCallback{
     
     clientConnectStatueVerify
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"bye" message:nil twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"bye" message:nil twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
@@ -76,7 +76,7 @@ static NSString *name2Key = @"nameKey2";
     
     RTMBaseAnswer * model = [RTMBaseAnswer new];
     clientConnectStatueVerifySync
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"bye" message:nil twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"bye" message:nil twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
@@ -121,7 +121,7 @@ static NSString *name2Key = @"nameKey2";
     clientConnectStatueVerify
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:endPoint forKey:@"ce"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"kickout" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"kickout" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
@@ -145,7 +145,7 @@ static NSString *name2Key = @"nameKey2";
     clientConnectStatueVerifySync
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:endPoint forKey:@"ce"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"kickout" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"kickout" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
@@ -173,7 +173,7 @@ static NSString *name2Key = @"nameKey2";
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:attrs forKey:@"attrs"];
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"addattrs" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"addattrs" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
@@ -199,7 +199,7 @@ static NSString *name2Key = @"nameKey2";
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:attrs forKey:@"attrs"];
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"addattrs" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"addattrs" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
@@ -223,7 +223,7 @@ static NSString *name2Key = @"nameKey2";
                    success:(void(^)(RTMAttriAnswer * _Nullable attri))successCallback
                       fail:(RTMAnswerFailCallBack)failCallback{
     clientConnectStatueVerify
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getattrs" message:@{} twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getattrs" message:@{} twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
@@ -248,7 +248,7 @@ static NSString *name2Key = @"nameKey2";
     
     RTMAttriAnswer * model = [RTMAttriAnswer new];
     clientConnectStatueVerifySync
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getattrs" message:@{} twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getattrs" message:@{} twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
@@ -271,7 +271,7 @@ static NSString *name2Key = @"nameKey2";
     clientConnectStatueVerify
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:@(clear) forKey:@"clear"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getunread" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getunread" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
@@ -302,7 +302,7 @@ static NSString *name2Key = @"nameKey2";
     clientConnectStatueVerifySync
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:@(clear) forKey:@"clear"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getunread" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getunread" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
@@ -324,7 +324,7 @@ static NSString *name2Key = @"nameKey2";
                               success:(void(^)(void))successCallback
                                  fail:(RTMAnswerFailCallBack)failCallback{
     clientConnectStatueVerify
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"cleanunread" message:nil twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"cleanunread" message:nil twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
@@ -347,7 +347,7 @@ static NSString *name2Key = @"nameKey2";
     
     RTMBaseAnswer * model = [RTMBaseAnswer new];
     clientConnectStatueVerifySync
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"cleanunread" message:nil twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"cleanunread" message:nil twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
@@ -371,7 +371,7 @@ static NSString *name2Key = @"nameKey2";
                          success:(void(^)(RTMP2pGroupMemberAnswer * _Nullable memberAnswer))successCallback
                             fail:(RTMAnswerFailCallBack)failCallback{
     clientConnectStatueVerify
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getsession" message:nil twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getsession" message:nil twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     
     
     BOOL result = [fpnnMainClient sendQuest:quest
@@ -402,7 +402,7 @@ static NSString *name2Key = @"nameKey2";
     
     RTMP2pGroupMemberAnswer * model = [RTMP2pGroupMemberAnswer new];
     clientConnectStatueVerifySync
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getsession" message:nil twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getsession" message:nil twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
@@ -433,7 +433,7 @@ static NSString *name2Key = @"nameKey2";
     clientConnectStatueVerify
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:userIds forKey:@"uids"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getonlineusers" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getonlineusers" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
@@ -460,7 +460,7 @@ static NSString *name2Key = @"nameKey2";
     clientConnectStatueVerifySync
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:userIds forKey:@"uids"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getonlineusers" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getonlineusers" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
@@ -487,7 +487,7 @@ static NSString *name2Key = @"nameKey2";
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:openInfo forKey:@"oinfo"];
     [dic setValue:privteInfo forKey:@"pinfo"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"setuserinfo" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"setuserinfo" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
@@ -515,7 +515,7 @@ static NSString *name2Key = @"nameKey2";
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:openInfo forKey:@"oinfo"];
     [dic setValue:privteInfo forKey:@"pinfo"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"setuserinfo" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"setuserinfo" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
@@ -538,7 +538,7 @@ static NSString *name2Key = @"nameKey2";
                          fail:(RTMAnswerFailCallBack)failCallback{
     
     clientConnectStatueVerify
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getuserinfo" message:nil twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getuserinfo" message:nil twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
@@ -565,7 +565,7 @@ static NSString *name2Key = @"nameKey2";
     
     RTMInfoAnswer * model = [RTMInfoAnswer new];
     clientConnectStatueVerifySync
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getuserinfo" message:nil twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getuserinfo" message:nil twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
@@ -592,7 +592,7 @@ static NSString *name2Key = @"nameKey2";
         clientConnectStatueVerify
        NSMutableDictionary * dic = [NSMutableDictionary dictionary];
        [dic setValue:userIds forKey:@"uids"];
-       FPNNQuest * quest = [FPNNQuest questWithMethod:@"getuseropeninfo" message:dic twoWay:YES];
+       FPNNQuest * quest = [FPNNQuest questWithMethod:@"getuseropeninfo" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
        BOOL result = [fpnnMainClient sendQuest:quest
                                    timeout:RTMClientSendQuestTimeout
                                    success:^(NSDictionary * _Nullable data) {
@@ -620,7 +620,7 @@ static NSString *name2Key = @"nameKey2";
     clientConnectStatueVerifySync
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:userIds forKey:@"uids"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getuseropeninfo" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getuseropeninfo" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
@@ -645,7 +645,7 @@ static NSString *name2Key = @"nameKey2";
     
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:key forKey:@"key"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"dataget" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"dataget" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
@@ -673,7 +673,7 @@ static NSString *name2Key = @"nameKey2";
     clientConnectStatueVerifySync
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:key forKey:@"key"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"dataget" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"dataget" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
@@ -700,7 +700,7 @@ static NSString *name2Key = @"nameKey2";
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:key forKey:@"key"];
     [dic setValue:value forKey:@"val"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"dataset" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"dataset" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
@@ -729,7 +729,7 @@ static NSString *name2Key = @"nameKey2";
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:key forKey:@"key"];
     [dic setValue:value forKey:@"val"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"dataset" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"dataset" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
@@ -754,7 +754,7 @@ static NSString *name2Key = @"nameKey2";
     clientConnectStatueVerify
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:key forKey:@"key"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"datadel" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"datadel" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
@@ -780,7 +780,7 @@ static NSString *name2Key = @"nameKey2";
     clientConnectStatueVerifySync
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:key forKey:@"key"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"datadel" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"datadel" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     

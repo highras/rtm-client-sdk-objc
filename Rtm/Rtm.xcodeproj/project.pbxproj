@@ -777,7 +777,6 @@
 		563BD36E243DAE4C00C6AC11 /* TaskThreadPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 563BD05F243DAE4B00C6AC11 /* TaskThreadPool.h */; };
 		563BD36F243DAE4C00C6AC11 /* Endian.h in Headers */ = {isa = PBXBuildFile; fileRef = 563BD060243DAE4B00C6AC11 /* Endian.h */; };
 		563BD370243DAE4C00C6AC11 /* FileSystemUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 563BD061243DAE4B00C6AC11 /* FileSystemUtil.cpp */; };
-		563BD371243DAE4C00C6AC11 /* FPLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 563BD062243DAE4B00C6AC11 /* FPLog.cpp */; };
 		563BD372243DAE4C00C6AC11 /* md5.h in Headers */ = {isa = PBXBuildFile; fileRef = 563BD063243DAE4B00C6AC11 /* md5.h */; };
 		563BD373243DAE4C00C6AC11 /* Endian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 563BD064243DAE4B00C6AC11 /* Endian.cpp */; };
 		563BD374243DAE4C00C6AC11 /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = 563BD065243DAE4B00C6AC11 /* sha1.c */; };
@@ -870,7 +869,7 @@
 		566F0E3723A098FE00D1D949 /* RTMClient+Broadcast.h in Headers */ = {isa = PBXBuildFile; fileRef = 566F0E3523A098FE00D1D949 /* RTMClient+Broadcast.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		566F0E3823A098FE00D1D949 /* RTMClient+Broadcast.m in Sources */ = {isa = PBXBuildFile; fileRef = 566F0E3623A098FE00D1D949 /* RTMClient+Broadcast.m */; };
 		566F0E3B23A0990A00D1D949 /* RTMClient+File.h in Headers */ = {isa = PBXBuildFile; fileRef = 566F0E3923A0990A00D1D949 /* RTMClient+File.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		566F0E3C23A0990A00D1D949 /* RTMClient+File.m in Sources */ = {isa = PBXBuildFile; fileRef = 566F0E3A23A0990A00D1D949 /* RTMClient+File.m */; };
+		566F0E3C23A0990A00D1D949 /* RTMClient+File.mm in Sources */ = {isa = PBXBuildFile; fileRef = 566F0E3A23A0990A00D1D949 /* RTMClient+File.mm */; };
 		566F0E3F23A0991900D1D949 /* RTMClient+Encryptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 566F0E3D23A0991900D1D949 /* RTMClient+Encryptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		566F0E4023A0991900D1D949 /* RTMClient+Encryptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 566F0E3E23A0991900D1D949 /* RTMClient+Encryptor.m */; };
 		566F0E4323A0993300D1D949 /* RTMClient+P2P.h in Headers */ = {isa = PBXBuildFile; fileRef = 566F0E4123A0993300D1D949 /* RTMClient+P2P.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -923,6 +922,9 @@
 		56D2B0A623B9A19100491DF7 /* cmp.h in Headers */ = {isa = PBXBuildFile; fileRef = 56D2B09623B9A19100491DF7 /* cmp.h */; };
 		56DA3F5D2594716B001926C2 /* RTMGetPushAttrsAnswer.h in Headers */ = {isa = PBXBuildFile; fileRef = 56DA3F5B2594716B001926C2 /* RTMGetPushAttrsAnswer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		56DA3F5E2594716B001926C2 /* RTMGetPushAttrsAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DA3F5C2594716B001926C2 /* RTMGetPushAttrsAnswer.m */; };
+		56DD859E2614207B00FF3239 /* RtmErrorLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 56DD859C2614207A00FF3239 /* RtmErrorLog.h */; };
+		56DD859F2614207B00FF3239 /* RtmErrorLog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 56DD859D2614207B00FF3239 /* RtmErrorLog.mm */; };
+		56DD85A4261420B300FF3239 /* FPLog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 56DD85A3261420B300FF3239 /* FPLog.mm */; };
 		56E045E3257F2FF0007BC8CA /* RTMCountAnswer.h in Headers */ = {isa = PBXBuildFile; fileRef = 56E045E1257F2FF0007BC8CA /* RTMCountAnswer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		56E045E4257F2FF0007BC8CA /* RTMCountAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = 56E045E2257F2FF0007BC8CA /* RTMCountAnswer.m */; };
 		56E045E7257FA87E007BC8CA /* FpnnDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = 56E045E5257FA87E007BC8CA /* FpnnDefine.h */; };
@@ -1741,7 +1743,6 @@
 		563BD05F243DAE4B00C6AC11 /* TaskThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskThreadPool.h; sourceTree = "<group>"; };
 		563BD060243DAE4B00C6AC11 /* Endian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Endian.h; sourceTree = "<group>"; };
 		563BD061243DAE4B00C6AC11 /* FileSystemUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileSystemUtil.cpp; sourceTree = "<group>"; };
-		563BD062243DAE4B00C6AC11 /* FPLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FPLog.cpp; sourceTree = "<group>"; };
 		563BD063243DAE4B00C6AC11 /* md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md5.h; sourceTree = "<group>"; };
 		563BD064243DAE4B00C6AC11 /* Endian.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Endian.cpp; sourceTree = "<group>"; };
 		563BD065243DAE4B00C6AC11 /* sha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sha1.c; sourceTree = "<group>"; };
@@ -1837,7 +1838,7 @@
 		566F0E3523A098FE00D1D949 /* RTMClient+Broadcast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTMClient+Broadcast.h"; sourceTree = "<group>"; };
 		566F0E3623A098FE00D1D949 /* RTMClient+Broadcast.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTMClient+Broadcast.m"; sourceTree = "<group>"; };
 		566F0E3923A0990A00D1D949 /* RTMClient+File.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTMClient+File.h"; sourceTree = "<group>"; };
-		566F0E3A23A0990A00D1D949 /* RTMClient+File.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTMClient+File.m"; sourceTree = "<group>"; };
+		566F0E3A23A0990A00D1D949 /* RTMClient+File.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = "RTMClient+File.mm"; sourceTree = "<group>"; };
 		566F0E3D23A0991900D1D949 /* RTMClient+Encryptor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTMClient+Encryptor.h"; sourceTree = "<group>"; };
 		566F0E3E23A0991900D1D949 /* RTMClient+Encryptor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RTMClient+Encryptor.m"; sourceTree = "<group>"; };
 		566F0E4123A0993300D1D949 /* RTMClient+P2P.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RTMClient+P2P.h"; sourceTree = "<group>"; };
@@ -1890,6 +1891,9 @@
 		56D2B09623B9A19100491DF7 /* cmp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cmp.h; sourceTree = "<group>"; };
 		56DA3F5B2594716B001926C2 /* RTMGetPushAttrsAnswer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMGetPushAttrsAnswer.h; sourceTree = "<group>"; };
 		56DA3F5C2594716B001926C2 /* RTMGetPushAttrsAnswer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMGetPushAttrsAnswer.m; sourceTree = "<group>"; };
+		56DD859C2614207A00FF3239 /* RtmErrorLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtmErrorLog.h; sourceTree = "<group>"; };
+		56DD859D2614207B00FF3239 /* RtmErrorLog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RtmErrorLog.mm; sourceTree = "<group>"; };
+		56DD85A3261420B300FF3239 /* FPLog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = FPLog.mm; path = "../../../未命名文件夹 5/FPLog.mm"; sourceTree = "<group>"; };
 		56E045E1257F2FF0007BC8CA /* RTMCountAnswer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMCountAnswer.h; sourceTree = "<group>"; };
 		56E045E2257F2FF0007BC8CA /* RTMCountAnswer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMCountAnswer.m; sourceTree = "<group>"; };
 		56E045E5257FA87E007BC8CA /* FpnnDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FpnnDefine.h; sourceTree = "<group>"; };
@@ -3414,8 +3418,8 @@
 				563BD05F243DAE4B00C6AC11 /* TaskThreadPool.h */,
 				563BD060243DAE4B00C6AC11 /* Endian.h */,
 				563BD061243DAE4B00C6AC11 /* FileSystemUtil.cpp */,
-				563BD062243DAE4B00C6AC11 /* FPLog.cpp */,
 				563BD063243DAE4B00C6AC11 /* md5.h */,
+				56DD85A3261420B300FF3239 /* FPLog.mm */,
 				563BD064243DAE4B00C6AC11 /* Endian.cpp */,
 				563BD065243DAE4B00C6AC11 /* sha1.c */,
 				563BD066243DAE4B00C6AC11 /* sha256.h */,
@@ -3457,7 +3461,7 @@
 			isa = PBXGroup;
 			children = (
 				566F0E3923A0990A00D1D949 /* RTMClient+File.h */,
-				566F0E3A23A0990A00D1D949 /* RTMClient+File.m */,
+				566F0E3A23A0990A00D1D949 /* RTMClient+File.mm */,
 				56C9237B253D379D00839301 /* RTMClient+FileToken.h */,
 				56C9237C253D379D00839301 /* RTMClient+FileToken.m */,
 			);
@@ -3524,6 +3528,8 @@
 		566F074723A0914D00D1D949 /* Rtm */ = {
 			isa = PBXGroup;
 			children = (
+				56DD859C2614207A00FF3239 /* RtmErrorLog.h */,
+				56DD859D2614207B00FF3239 /* RtmErrorLog.mm */,
 				56C7A41824C8463900077C44 /* FPNetworkReachabilityManager.h */,
 				56C7A41724C8463900077C44 /* FPNetworkReachabilityManager.m */,
 				56C8DD6525778133000CBA19 /* RTMNetworkReachabilityShare.h */,
@@ -4276,6 +4282,7 @@
 				563BD094243DAE4B00C6AC11 /* ConnectionMap.h in Headers */,
 				563BD1A3243DAE4C00C6AC11 /* arm.h in Headers */,
 				563BD19D243DAE4C00C6AC11 /* zone_decl.hpp in Headers */,
+				56DD859E2614207B00FF3239 /* RtmErrorLog.h in Headers */,
 				563BD116243DAE4B00C6AC11 /* unpack_decl.hpp in Headers */,
 				563BD0C4243DAE4B00C6AC11 /* array_char.hpp in Headers */,
 				563BD29A243DAE4C00C6AC11 /* punctuation.hpp in Headers */,
@@ -4692,6 +4699,7 @@
 				563BD08B243DAE4B00C6AC11 /* UnencryptedReceiver.cpp in Sources */,
 				56E045E8257FA87E007BC8CA /* FpnnDefine.m in Sources */,
 				566F0B1523A0917700D1D949 /* FPNNTCPClient+Encryptor.mm in Sources */,
+				56DD85A4261420B300FF3239 /* FPLog.mm in Sources */,
 				563BD38F243DAE4C00C6AC11 /* FpnnError.cpp in Sources */,
 				566F0B0F23A0917700D1D949 /* FPNNTCPClient+Send.mm in Sources */,
 				56EA005823B239C2002B5B77 /* RTMClient+P2P_Chat.m in Sources */,
@@ -4758,7 +4766,7 @@
 				56E6B61C24E6751B0099C675 /* RTMTextProfanityAnswer.m in Sources */,
 				563BD099243DAE4B00C6AC11 /* Config.cpp in Sources */,
 				566F0E5023A1E5C900D1D949 /* RTMClient+Tools.m in Sources */,
-				566F0E3C23A0990A00D1D949 /* RTMClient+File.m in Sources */,
+				566F0E3C23A0990A00D1D949 /* RTMClient+File.mm in Sources */,
 				563BD364243DAE4C00C6AC11 /* hex.c in Sources */,
 				563BD377243DAE4C00C6AC11 /* httpcode.cpp in Sources */,
 				563BD08F243DAE4B00C6AC11 /* EncryptedPackageReceiver.cpp in Sources */,
@@ -4769,6 +4777,7 @@
 				563BD0A5243DAE4B00C6AC11 /* asm_arm.inc in Sources */,
 				56D2B0A223B9A19100491DF7 /* NSDictionary+MPMessagePack.m in Sources */,
 				56D2B09D23B9A19100491DF7 /* NSArray+MPMessagePack.m in Sources */,
+				56DD859F2614207B00FF3239 /* RtmErrorLog.mm in Sources */,
 				566F0E4423A0993300D1D949 /* RTMClient+P2P.m in Sources */,
 				563BD092243DAE4B00C6AC11 /* TCPClient.cpp in Sources */,
 				56D2B09A23B9A19100491DF7 /* NSData+MPMessagePack.m in Sources */,
@@ -4789,7 +4798,6 @@
 				566F0B2723A0917700D1D949 /* FPNNCallBackHandler.mm in Sources */,
 				56D2B09F23B9A19100491DF7 /* GHODict.m in Sources */,
 				566F0E1823A0936300D1D949 /* RTMClient.mm in Sources */,
-				563BD371243DAE4C00C6AC11 /* FPLog.cpp in Sources */,
 				566F0E2823A098C300D1D949 /* RTMClient+Friend.m in Sources */,
 				563BD0A3243DAE4B00C6AC11 /* curve-specific.inc in Sources */,
 				563BD0AB243DAE4B00C6AC11 /* asm_avr.inc in Sources */,
@@ -4874,7 +4882,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -4929,7 +4937,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

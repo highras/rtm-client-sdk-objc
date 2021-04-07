@@ -37,13 +37,18 @@ namespace fpnn
 		std::atomic<int> _refCount;
 		RecvBuffer _recvBuffer;
 		SendBuffer _sendBuffer;
+		std::mutex _mutex;
 
 		std::unordered_map<uint32_t, BasicAnswerCallback*> _callbackMap;
 		IQuestProcessorPtr _questProcessor;
 
 	public:
 		virtual bool waitForSendEvent();
-		TCPClientPtr client() { return _client.lock(); }
+		TCPClientPtr client() {
+
+            return _client.lock();
+            
+        }
 		virtual bool releaseable() { return (_refCount == 0); }
 
 		inline bool recvPackage(bool& needNextEvent, bool& closed)
@@ -79,15 +84,21 @@ namespace fpnn
 			return _sendBuffer.send(_connectionInfo->socket, needWaitSendEvent, data);
 		}
 		
-		TCPClientConnection(TCPClientPtr client, std::mutex* mutex,
-			ConnectionInfoPtr connectionInfo, IQuestProcessorPtr questProcessor):
+		TCPClientConnection(TCPClientPtr client, ConnectionInfoPtr connectionInfo, IQuestProcessorPtr questProcessor):
 			_client(client), _connectionInfo(connectionInfo),
-			_refCount(0), _recvBuffer(mutex), _sendBuffer(mutex),
+			_refCount(0), _recvBuffer(NULL), _sendBuffer(NULL),
 			_questProcessor(questProcessor)
 		{
-			_connectionInfo->token = (uint64_t)this;	//-- if use Virtual Derive, must redo this in subclass constructor.
-			_connectionInfo->_mutex = mutex;
+			_connectionInfo->token = (uint64_t)this;
+			resetMutex(&_mutex);	//-- if use Virtual Derive, must redo this in subclass constructor.
 			_activeTime = time(NULL);
+		}
+
+		void resetMutex(std::mutex* mutex)
+		{
+			_connectionInfo->_mutex = mutex;
+			_recvBuffer.setMutex(mutex);
+			_sendBuffer.setMutex(mutex);
 		}
 
 		virtual ~TCPClientConnection()

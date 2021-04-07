@@ -18,6 +18,7 @@
 #import "FPNetworkReachabilityManager.h"
 #import "RTMClient+MessagesManager.h"
 #import "RTMNetworkReachabilityShare.h"
+#import "RtmErrorLog.h"
 typedef NS_ENUM(NSInteger, RTMClientNetStatus){
     RTMClientNetStatusNoDetection = -1,
     RTMClientNetStatusNone = 0,
@@ -90,6 +91,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
     
     if (endpoint == nil || endpoint.length == 0 || projectId == 0 || userId == 0) {
         FPNSLog(@"rtm init client invalid parameter");
+        RtmFpnnErrorLog(([NSString stringWithFormat:@"rtm init client invalid parameter  (pid:%lld)",projectId]))
         return nil;
     }
     
@@ -121,7 +123,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
         _userId = userId;
         _config = config;
         _autoRelogin = autoRelogin;
-        _sdkVersion = @"iOS_2.1.2";
+        _sdkVersion = @"iOS_2.1.3";
         _apiVersion = @"2.6.1";
         _reloginNum = 0;
         _connectStatus = RTMClientConnectStatusConnectClosed;
@@ -154,6 +156,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
         }
         [self _startNetMonitor];
         
+        [RtmErrorLog registerClient:self];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -209,12 +212,14 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
             
             if (self.connectStatus != RTMClientConnectStatusConnectClosed) {
                 FPNSLog(@"rtm loginWithToken error , client is connected or connecting");
+                RtmFpnnErrorLog(([NSString stringWithFormat:@"rtm loginWithToken error , client is connected or connecting  (pid:%lld)",self.projectId]))
                 return;
             }
             
             if ([self.delegate respondsToSelector:@selector(rtmReloginCompleted:reloginCount:reloginResult:error:)] == NO ||
                 [self.delegate respondsToSelector:@selector(rtmReloginWillStart:reloginCount:)] == NO)  {
                 FPNSLog(@"rtm loginWithToken error , no implement RTMProtocol required delegate methods");
+                RtmFpnnErrorLog(([NSString stringWithFormat:@"rtm loginWithToken error , no implement RTMProtocol required delegate methods  (pid:%lld)",self.projectId]))
                 return;
             }
             
@@ -223,6 +228,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
                     loginFail([FPNError errorWithEx:@"RTM_EC_INVALID_AUTH_TOEKN" code:200027]);
                 }
                 FPNSLog(@"rtm loginWithToken error , invalid token");
+                RtmFpnnErrorLog(([NSString stringWithFormat:@"rtm loginWithToken error , invalid token  (pid:%lld)",self.projectId]))
                 return;
             }
             
@@ -325,7 +331,8 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
             
             FPNNQuest * quest = [FPNNQuest questWithMethod:@"which"
                                                    message:whichQuestDic
-                                                    twoWay:YES];
+                                                    twoWay:YES
+                                                    pid:[NSString stringWithFormat:@"%lld",self.projectId]];
             
                 @rtmWeakify(self);
                 BOOL result = [self.whichClient sendQuest:quest
@@ -423,7 +430,8 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
             
             FPNNQuest * quest = [FPNNQuest questWithMethod:@"auth"
                                                    message:authQuestDic
-                                                    twoWay:YES];
+                                                    twoWay:YES 
+                                                    pid:[NSString stringWithFormat:@"%lld",self.projectId]];
             @rtmWeakify(self);
             BOOL result = [self.authClient sendQuest:quest
                                              timeout:self.loginTimeout
@@ -686,7 +694,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
 //        NSLog(@"-(void)_closeConnectHandle:(BOOL)needNotification{");
         [self _notificationClose : needNotification];
     }
-//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"bye" message:nil twoWay:YES];
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"bye" message:nil pid:[NSString stringWithFormat:@"%lld",self.projectId]];
 //    FPNNAnswer * an = [self.usingClient sendQuest:quest
 //                        timeout:2];
 
@@ -990,8 +998,8 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
         
         if (_whichClient == nil && self.whichEndpoint != nil) {
 //            @synchronized (self) {
-                
-                _whichClient = [FPNNTCPClient clientWithEndpoint:self.whichEndpoint];
+            
+                _whichClient = [FPNNTCPClient clientWithEndpoint:self.whichEndpoint pid:[NSString stringWithFormat:@"%lld",self.projectId]] ;
 //            }
         }
         return _whichClient;
@@ -1003,7 +1011,7 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
     
         if (_authClient == nil && self.authEndPoint != nil) {
             @synchronized (self) {
-            _authClient = [FPNNTCPClient clientWithEndpoint:self.authEndPoint];
+            _authClient = [FPNNTCPClient clientWithEndpoint:self.authEndPoint pid:[NSString stringWithFormat:@"%lld",self.projectId]];
             @rtmWeakify(self);
             _authClient.connectionSuccessCallBack = ^{
 

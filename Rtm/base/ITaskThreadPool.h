@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <functional>
 #include <memory>
-#include <pthread.h>
 
 namespace fpnn
 {

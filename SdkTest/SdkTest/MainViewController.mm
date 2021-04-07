@@ -162,7 +162,9 @@
 -(void)rtmConnectClose:(RTMClient *)client{
     NSLog(@"rtmConnectClose  %lld",client.userId);
 }
-
+-(void)rtmErrorLog:(NSString *)errorLog{
+    
+}
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 

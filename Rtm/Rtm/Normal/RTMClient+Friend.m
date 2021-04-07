@@ -23,7 +23,7 @@
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:friendids forKey:@"friends"];
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"addfriends" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"addfriends" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
@@ -50,7 +50,7 @@
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:friendids forKey:@"friends"];
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"addfriends" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"addfriends" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
@@ -75,7 +75,7 @@
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:friendids forKey:@"friends"];
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"delfriends" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"delfriends" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
@@ -102,7 +102,7 @@
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:friendids forKey:@"friends"];
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"delfriends" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"delfriends" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
@@ -123,7 +123,7 @@
                             fail:(RTMAnswerFailCallBack)failCallback{
     
     clientConnectStatueVerify
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getfriends" message:nil twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getfriends" message:nil twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
@@ -146,7 +146,7 @@
     
     RTMMemberAnswer * model = [RTMMemberAnswer new];
     clientConnectStatueVerifySync
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getfriends" message:nil twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getfriends" message:nil twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
@@ -168,7 +168,7 @@
     clientConnectStatueVerify
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:friendids forKey:@"blacks"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"addblacks" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"addblacks" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
@@ -194,7 +194,7 @@
        clientConnectStatueVerifySync
        NSMutableDictionary * dic = [NSMutableDictionary dictionary];
        [dic setValue:friendids forKey:@"blacks"];
-       FPNNQuest * quest = [FPNNQuest questWithMethod:@"addblacks" message:dic twoWay:YES];
+       FPNNQuest * quest = [FPNNQuest questWithMethod:@"addblacks" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
        FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                            timeout:RTMClientSendQuestTimeout];
        
@@ -220,7 +220,7 @@
     
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:friendids forKey:@"blacks"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"delblacks" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"delblacks" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
@@ -247,7 +247,7 @@
     clientConnectStatueVerifySync
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:friendids forKey:@"blacks"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"delblacks" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"delblacks" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     
@@ -268,7 +268,7 @@
                           fail:(RTMAnswerFailCallBack)failCallback{
     
     clientConnectStatueVerify
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getblacks" message:nil twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getblacks" message:nil twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
@@ -290,7 +290,7 @@
     
     RTMMemberAnswer * model = [RTMMemberAnswer new];
     clientConnectStatueVerifySync
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getblacks" message:nil twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getblacks" message:nil twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                         timeout:RTMClientSendQuestTimeout];
     

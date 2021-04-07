@@ -17,11 +17,13 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NSDictionary (MsgPack)
-@property(nonatomic,assign)std::string msgPack;
+//@property(nonatomic,assign)std::string msgPack;
+-(std::string)toMsgPack:(NSString * _Nullable)pid;//rtm专用
 @end
 
 @interface FPNNMessageEncoder : NSObject
-- (instancetype)initWithMessage:(NSDictionary*)message;
+//- (instancetype)initWithMessage:(NSDictionary*)message;
+- (instancetype)initWithMessage:(NSDictionary*)message pid:(NSString * _Nullable)pid;
 @property(nonatomic,assign)std::string encodeResult;
 @end
 

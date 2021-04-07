@@ -14,14 +14,19 @@
 
 using namespace fpnn;
 
-const char* TCPClient::SDKVersion = "0.1.2";
+const char* TCPClient::SDKVersion = "0.1.5";
 
-TCPClient::TCPClient(const std::string& host, int port, bool autoReconnect): _connected(false),
+TCPClient::TCPClient(const std::string& host,
+                     int port,
+                     const std::string& pid,
+                     bool autoReconnect
+                     ): _connected(false),
 	_connStatus(ConnStatus::NoConnected), _timeoutQuest(0),
 	_AESKeyLen(16), _packageEncryptionMode(true), _autoReconnect(autoReconnect)
 {
 	_engine = ClientEngine::instance();
-
+    _pid = pid;
+    
 	if (host.find(':') == std::string::npos)
 	{
 		if (checkIP4(host))
@@ -51,7 +56,7 @@ TCPClient::TCPClient(const std::string& host, int port, bool autoReconnect): _co
 			}
 			else
 			{
-				LOG_ERROR("Get IP address for %s failed. Current client is invalid.", host.c_str());
+				LOG_ERROR("Get IP address for %s failed. Current client is invalid. (pid:%s)", host.c_str(),_pid.c_str());
 
 				//-- for other logic can report error in right way, we still treat the invalid host as IPv4 address.
 				_isIPv4 = true;
@@ -66,11 +71,12 @@ TCPClient::TCPClient(const std::string& host, int port, bool autoReconnect): _co
 		_connectionInfo.reset(new ConnectionInfo(0, port, host, false));
 		_endpoint = std::string("[").append(host).append("]:").append(std::to_string(port));
 	}
+    
+    _connectionInfo->pid = pid;
 }
 
 TCPClient::~TCPClient()
 {
-//    std::cout << "TCPClient::~TCPClient()TCPClient::~TCPClient()" << std::endl;
 	if (_connected)
 	{
 		_autoReconnect = false;
@@ -126,11 +132,11 @@ void TCPClient::connected(TCPClientConnection* connection)
 			_questProcessor->connected(*(connection->_connectionInfo));
 		}
 		catch (const FpnnError& ex){
-			LOG_ERROR("connected() error:(%d)%s. %s", ex.code(), ex.what(), connection->_connectionInfo->str().c_str());
+			LOG_ERROR("connected() error:(%d)%s. %s (pid:%s)", ex.code(), ex.what(), connection->_connectionInfo->str().c_str(),_pid.c_str());
 		}
 		catch (...)
 		{
-			LOG_ERROR("Unknown error when calling connected() function. %s", connection->_connectionInfo->str().c_str());
+			LOG_ERROR("Unknown error when calling connected() function. %s (pid:%s)", connection->_connectionInfo->str().c_str(),_pid.c_str());
 		}
 	}
 }
@@ -141,10 +147,10 @@ class ErrorCloseTask: virtual public ITaskThreadPool::ITask, virtual public IRel
 	bool _executed;
 	TCPClientConnection* _connection;
 	IQuestProcessorPtr _questProcessor;
-
+    std::string _pid;
 public:
-	ErrorCloseTask(IQuestProcessorPtr questProcessor, TCPClientConnection* connection, bool error):
-		_error(error), _executed(false), _connection(connection), _questProcessor(questProcessor) {}
+	ErrorCloseTask(IQuestProcessorPtr questProcessor, TCPClientConnection* connection, bool error,const std::string& pid):
+		_error(error), _executed(false), _connection(connection), _questProcessor(questProcessor),_pid(pid) {}
 
 	virtual ~ErrorCloseTask()
 	{
@@ -169,24 +175,24 @@ public:
 			_questProcessor->connectionWillClose(*(_connection->_connectionInfo), _error);
 		}
 		catch (const FpnnError& ex){
-			LOG_ERROR("ErrorCloseTask::run() error:(%d)%s. %s", ex.code(), ex.what(), _connection->_connectionInfo->str().c_str());
+			LOG_ERROR("ErrorCloseTask::run() error:(%d)%s. %s (pid:%s)", ex.code(), ex.what(), _connection->_connectionInfo->str().c_str(),_pid.c_str());
 		}
 		catch (...)
 		{
-			LOG_ERROR("Unknown error when calling ErrorCloseTask::run() function. %s", _connection->_connectionInfo->str().c_str());
+			LOG_ERROR("Unknown error when calling ErrorCloseTask::run() function. %s (pid:%s)", _connection->_connectionInfo->str().c_str(),_pid.c_str());
 		}
 	}
 };
 
 void TCPClient::willClosed(TCPClientConnection* connection, bool error)
 {
-	std::shared_ptr<ErrorCloseTask> task(new ErrorCloseTask(_questProcessor, connection, error));
+	std::shared_ptr<ErrorCloseTask> task(new ErrorCloseTask(_questProcessor, connection, error,_pid));
 	if (_questProcessor)
 	{
 		bool wakeup = ClientEngine::runTask(task);
 
 		if (!wakeup)
-			LOG_ERROR("wake up thread pool to process connection close event failed. Close callback will be called by Connection Reclaimer. %s", connection->_connectionInfo->str().c_str());
+			LOG_ERROR("wake up thread pool to process connection close event failed. Close callback will be called by Connection Reclaimer. %s (pid:%s)", connection->_connectionInfo->str().c_str(),_pid.c_str());
 	}
 
 	{
@@ -227,12 +233,14 @@ public:
 			_client->processQuest(_quest, _connectionInfo);
 		}
 		catch (const FpnnError& ex){
-			LOG_ERROR("processQuest() error:(%d)%s. Connection will be closed by client. %s", ex.code(), ex.what(), _connectionInfo->str().c_str());
+            
+			LOG_ERROR("processQuest() error:(%d)%s. Connection will be closed by client. %s (pid:%s)", ex.code(), ex.what(), _connectionInfo->str().c_str(),_connectionInfo->pid.c_str());
 			_fatal = true;
 		}
 		catch (...)
 		{
-			LOG_ERROR("Fatal error occurred in processQuest() function. Connection will be closed by client. %s", _connectionInfo->str().c_str());
+           
+			LOG_ERROR("Fatal error occurred in processQuest() function. Connection will be closed by client. %s (pid:%s)", _connectionInfo->str().c_str(),_connectionInfo->pid.c_str());
 			_fatal = true;
 		}
 	}
@@ -240,17 +248,18 @@ public:
 
 void TCPClient::dealQuest(FPQuestPtr quest, ConnectionInfoPtr connectionInfo)		//-- must done in thread pool or other thread.
 {
+    
 	if (!_questProcessor)
 	{
-		LOG_ERROR("Recv a quest but without quest processor. %s", connectionInfo->str().c_str());
+		LOG_ERROR("Recv a quest but without quest processor. %s (pid:%s)", connectionInfo->str().c_str(),_pid.c_str());
 		return;
 	}
 
 	std::shared_ptr<QuestTask> task(new QuestTask(shared_from_this(), quest, connectionInfo));
 	if (ClientEngine::runTask(task) == false)
 	{
-		LOG_ERROR("wake up thread pool to process quest failed. Quest pool limitation is caught. Quest task havn't be executed. %s",
-			connectionInfo->str().c_str());
+		LOG_ERROR("wake up thread pool to process quest failed. Quest pool limitation is caught. Quest task havn't be executed. %s (pid:%s)",
+			connectionInfo->str().c_str(),_pid.c_str());
 
 		if (quest->isTwoWay())
 		{
@@ -262,13 +271,13 @@ void TCPClient::dealQuest(FPQuestPtr quest, ConnectionInfoPtr connectionInfo)		/
 			}
 			catch (const FpnnError& ex)
 			{
-				LOG_ERROR("Generate error answer for duplex client worker queue full failed. No answer returned, peer need to wait timeout. %s, exception:(%d)%s",
-					connectionInfo->str().c_str(), ex.code(), ex.what());
+				LOG_ERROR("Generate error answer for duplex client worker queue full failed. No answer returned, peer need to wait timeout. %s, exception:(%d)%s (pid:%s)",
+					connectionInfo->str().c_str(), ex.code(), ex.what(),_pid.c_str());
 			}
 			catch (...)
 			{
-				LOG_ERROR("Generate error answer for duplex client worker queue full failed. No answer returned, peer need to wait timeout. %s",
-					connectionInfo->str().c_str());
+				LOG_ERROR("Generate error answer for duplex client worker queue full failed. No answer returned, peer need to wait timeout. %s (pid:%s)",
+					connectionInfo->str().c_str(),_pid.c_str());
 			}
 		}
 	}
@@ -281,7 +290,7 @@ void TCPClient::dealAnswer(FPAnswerPtr answer, ConnectionInfoPtr connectionInfo)
 	BasicAnswerCallback* callback = ClientEngine::instance()->takeCallback(connectionInfo->socket, answer->seqNumLE());
 	if (!callback)
 	{
-		LOG_ERROR("Recv an invalied answer, seq is %u. %s", answer->seqNumLE(), connectionInfo->str().c_str());
+		LOG_ERROR("Recv an invalied answer, seq is %u. %s (pid:%s)", answer->seqNumLE(), connectionInfo->str().c_str(),_pid.c_str());
 		return;
 	}
 	if (callback->syncedCallback())		//-- check first, then fill result.
@@ -295,13 +304,12 @@ void TCPClient::dealAnswer(FPAnswerPtr answer, ConnectionInfoPtr connectionInfo)
 	BasicAnswerCallbackPtr task(callback);
 
 	if (ClientEngine::runTask(task) == false)
-		LOG_ERROR("[Fatal] wake up thread pool to process answer failed. Close callback havn't called. %s", connectionInfo->str().c_str());
+		LOG_ERROR("[Fatal] wake up thread pool to process answer failed. Close callback havn't called. %s (pid:%s)", connectionInfo->str().c_str(),_pid.c_str());
 }
 
 void TCPClient::processQuest(FPQuestPtr quest, ConnectionInfoPtr connectionInfo)
 {
 	FPAnswerPtr answer = NULL;
-
 	_questProcessor->initAnswerStatus(connectionInfo, quest);
 
 	try
@@ -310,7 +318,7 @@ void TCPClient::processQuest(FPQuestPtr quest, ConnectionInfoPtr connectionInfo)
 		answer = _questProcessor->processQuest(args, quest, *connectionInfo);
 	}
 	catch (const FpnnError& ex){
-		LOG_ERROR("processQuest ERROR:(%d) %s, connection:%s", ex.code(), ex.what(), connectionInfo->str().c_str());
+		LOG_ERROR("processQuest ERROR:(%d) %s, connection:%s (pid:%s)", ex.code(), ex.what(), connectionInfo->str().c_str(),_pid.c_str());
 		if (quest->isTwoWay())
 		{
 			if (_questProcessor->getQuestAnsweredStatus() == false)
@@ -318,7 +326,7 @@ void TCPClient::processQuest(FPQuestPtr quest, ConnectionInfoPtr connectionInfo)
 		}
 	}
 	catch (...){
-		LOG_ERROR("Unknown error when calling processQuest() function. %s", connectionInfo->str().c_str());
+		LOG_ERROR("Unknown error when calling processQuest() function. %s (pid:%s)", connectionInfo->str().c_str(),_pid.c_str());
 		if (quest->isTwoWay())
 		{
 			if (_questProcessor->getQuestAnsweredStatus() == false)
@@ -333,7 +341,7 @@ void TCPClient::processQuest(FPQuestPtr quest, ConnectionInfoPtr connectionInfo)
 		{
 			if (answer)
 			{
-				LOG_ERROR("Double answered after an advance answer sent, or async answer generated. %s", connectionInfo->str().c_str());
+				LOG_ERROR("Double answered after an advance answer sent, or async answer generated. %s (pid:%s)", connectionInfo->str().c_str(),_pid.c_str());
 			}
 			return;
 		}
@@ -342,7 +350,7 @@ void TCPClient::processQuest(FPQuestPtr quest, ConnectionInfoPtr connectionInfo)
 	}
 	else if (answer)
 	{
-		LOG_ERROR("Oneway quest return an answer. %s", connectionInfo->str().c_str());
+		LOG_ERROR("Oneway quest return an answer. %s (pid:%s)", connectionInfo->str().c_str(),_pid.c_str());
 		answer = NULL;
 	}
 
@@ -420,7 +428,7 @@ void TCPClient::clearConnectionQuestCallbacks(TCPClientConnection* connection, i
 
 			if (ClientEngine::runTask(task) == false)
 			{
-				LOG_ERROR("wake up thread pool to process quest callback when connection closing failed. Quest callback will be called in current thread. %s", connection->_connectionInfo->str().c_str());
+				LOG_ERROR("wake up thread pool to process quest callback when connection closing failed. Quest callback will be called in current thread. %s (pid:%s)", connection->_connectionInfo->str().c_str(),_pid.c_str());
 				task->run();
 			}
 		}
@@ -517,13 +525,13 @@ bool TCPClient::configEncryptedConnection(TCPClientConnection* connection, std::
 	uint8_t iv[16];
 	if (keysMaker.calcKey(key, iv, _AESKeyLen) == false)
 	{
-		LOG_ERROR("Client's keys maker calcKey failed. Peer %s", connection->_connectionInfo->str().c_str());
+		LOG_ERROR("Client's keys maker calcKey failed. Peer %s (pid:%s)", connection->_connectionInfo->str().c_str(),_pid.c_str());
 		return false;
 	}
 
 	if (!connection->entryEncryptMode(key, _AESKeyLen, iv, !_packageEncryptionMode))
 	{
-		LOG_ERROR("Client connection entry encrypt mode failed. Peer %s", connection->_connectionInfo->str().c_str());
+		LOG_ERROR("Client connection entry encrypt mode failed. Peer %s (pid:%s)", connection->_connectionInfo->str().c_str(),_pid.c_str());
 		return false;
 	}
 	connection->encryptAfterFirstPackageSent();
@@ -537,7 +545,7 @@ ConnectionInfoPtr TCPClient::perpareConnection(int socket, std::string& publicKe
 	{
 		std::unique_lock<std::mutex> lck(_mutex);
 		newConnectionInfo.reset(new ConnectionInfo(socket, _connectionInfo->port, _connectionInfo->ip, _isIPv4));
-		connection = new TCPClientConnection(shared_from_this(), &_mutex, newConnectionInfo, _questProcessor);
+		connection = new TCPClientConnection(shared_from_this(), newConnectionInfo, _questProcessor);
 	}
 
 	if (configEncryptedConnection(connection, publicKey) == false)
@@ -551,7 +559,7 @@ ConnectionInfoPtr TCPClient::perpareConnection(int socket, std::string& publicKe
 	bool joined = ClientEngine::instance()->join(connection);
 	if (!joined)
 	{
-		LOG_ERROR("Join client engine failed after connected event. %s", connection->_connectionInfo->str().c_str());
+		LOG_ERROR("Join client engine failed after connected event. %s (pid:%s)", connection->_connectionInfo->str().c_str(),_pid.c_str());
 		willClosed(connection, true);
 
 		return nullptr;
@@ -646,7 +654,7 @@ bool TCPClient::connect()
 
 	if (socket == 0)
 	{
-		LOG_ERROR("Connect remote server %s failed.", oldConnInfo->str().c_str());
+		LOG_ERROR("Connect remote server %s failed. (pid:%s)", oldConnInfo->str().c_str(),_pid.c_str());
 		return false;
 	}
 
@@ -676,7 +684,7 @@ bool TCPClient::connect()
 
 		if (answer->status() != 0)
 		{
-			LOG_ERROR("Client's key exchanging failed. Peer %s", newConnInfo->str().c_str());
+			LOG_ERROR("Client's key exchanging failed. Peer %s (pid:%s)", newConnInfo->str().c_str(),_pid.c_str());
 			
 			TCPClientConnection* conn = _engine->takeConnection(newConnInfo.get());
 			if (conn == NULL)

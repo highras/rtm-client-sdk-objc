@@ -32,7 +32,7 @@
     [dic setValue:attrs forKey:@"attrs"];
 
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
@@ -70,7 +70,7 @@
     [dic setValue:attrs forKey:@"attrs"];
 
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                        timeout:RTMClientSendQuestTimeout];
     
@@ -140,7 +140,7 @@
             endPoint = [[RTMIPv6Adapter getInstance] handleIpv4Address:endPoint];
         }
         FPNNTCPClient * fileClient = [self getFileClient:endPoint];
-        FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroomfile" message:resultBody twoWay:YES];
+        FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroomfile" message:resultBody twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
         BOOL result = [fileClient sendQuest:quest
                                     timeout:RTMClientSendQuestTimeout
                                     success:^(NSDictionary * _Nullable data) {
@@ -203,7 +203,7 @@
 //    NSData * strData = [NSJSONSerialization dataWithJSONObject:attrsDic options:NSJSONWritingPrettyPrinted error:nil];
 //    [dic setValue:[[NSString alloc] initWithData:strData encoding:NSUTF8StringEncoding] forKey:@"attrs"];
 //    
-//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES];
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
 //    BOOL result = [fpnnMainClient sendQuest:quest
 //                                timeout:RTMClientSendQuestTimeout
 //                                success:^(NSDictionary * _Nullable data) {
@@ -273,7 +273,7 @@
             endPoint = [[RTMIPv6Adapter getInstance] handleIpv4Address:endPoint];
         }
         FPNNTCPClient * fileClient = [self getFileClient:endPoint];
-        FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroomfile" message:resultBody twoWay:YES];
+        FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroomfile" message:resultBody twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
         FPNNAnswer * answer = [fileClient sendQuest:quest timeout:RTMClientSendQuestTimeout];
         if (answer.error == nil) {
             model.mtime = [[answer.responseData objectForKey:@"mtime"] longLongValue];
@@ -330,7 +330,7 @@
 //                NSData * strData = [NSJSONSerialization dataWithJSONObject:attrsDic options:NSJSONWritingPrettyPrinted error:nil];
 //                [dic setValue:[[NSString alloc] initWithData:strData encoding:NSUTF8StringEncoding] forKey:@"attrs"];
 //                
-//                FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES];
+//                FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
 //                
 //                FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
 //                                                   timeout:RTMClientSendQuestTimeout];
@@ -389,7 +389,7 @@
 //    NSData * strData = [NSJSONSerialization dataWithJSONObject:attrsDic options:NSJSONWritingPrettyPrinted error:nil];
 //    [dic setValue:[[NSString alloc] initWithData:strData encoding:NSUTF8StringEncoding] forKey:@"attrs"];
 //    
-//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES];
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
 //    BOOL result = [fpnnMainClient sendQuest:quest
 //                                timeout:RTMClientSendQuestTimeout
 //                                success:^(NSDictionary * _Nullable data) {
@@ -443,7 +443,7 @@
 //    NSData * strData = [NSJSONSerialization dataWithJSONObject:attrsDic options:NSJSONWritingPrettyPrinted error:nil];
 //    [dic setValue:[[NSString alloc] initWithData:strData encoding:NSUTF8StringEncoding] forKey:@"attrs"];
 //    
-//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES];
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
 //    
 //    return  handlerResult(quest,timeout);
 //    
@@ -468,7 +468,7 @@
     [dic setValue:attrs forKey:@"attrs"];
 
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
@@ -506,7 +506,7 @@
     [dic setValue:attrs forKey:@"attrs"];
 
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"sendroommsg" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                        timeout:RTMClientSendQuestTimeout];
     
@@ -545,7 +545,7 @@
     [dic setValue:lastid forKey:@"lastid"];
     [dic setValue:@[@(30),@(31),@(32),@(40),@(41),@(42)] forKey:@"mtypes"];
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroommsg" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroommsg" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     
 //    BOOL result = [fpnnMainClient sendQuest:quest
 //                                timeout:(timeout <= 0 ? self.sendQuestTimeout : timeout)
@@ -630,7 +630,7 @@
     [dic setValue:lastid forKey:@"lastid"];
     [dic setValue:@[@(30),@(31),@(32),@(40),@(41),@(42)] forKey:@"mtypes"];
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroommsg" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroommsg" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                        timeout:RTMClientSendQuestTimeout];
     
@@ -682,7 +682,7 @@
 //    [dic setValue:@[@(30),@(31),@(32),@(40),@(41),@(42)] forKey:@"mtypes"];
 //    
 //    
-//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroommsg" message:dic twoWay:YES];
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getroommsg" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
 //    
 ////    RTMAnswer * answer = (RTMAnswer*)[fpnnMainClient sendQuest:quest timeout:(timeout <= 0 ? self.sendQuestTimeout : timeout)];
 ////    if (answer.error == nil && answer.responseData != nil) {

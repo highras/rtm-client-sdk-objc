@@ -25,7 +25,7 @@
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:userId forKey:@"to"];
     [dic setValue:@"sendfile" forKey:@"cmd"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
@@ -71,7 +71,7 @@
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:groupId forKey:@"gid"];
     [dic setValue:@"sendgroupfile" forKey:@"cmd"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]] ;
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
@@ -115,7 +115,7 @@
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:roomId forKey:@"rid"];
     [dic setValue:@"sendroomfile" forKey:@"cmd"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"filetoken" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]] ;
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
@@ -158,7 +158,7 @@
             if (cacheClient) {
                 return cacheClient;
             }else{
-                FPNNTCPClient * newClient = [FPNNTCPClient clientWithEndpoint:endPoint];
+                FPNNTCPClient * newClient = [FPNNTCPClient clientWithEndpoint:endPoint pid:[NSString stringWithFormat:@"%lld",self.projectId]];
                 [fileClientCache setObject:newClient forKey:endPoint];
                 return newClient;
             }

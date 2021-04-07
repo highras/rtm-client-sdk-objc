@@ -44,6 +44,7 @@ class FPNNCppConnectionListen: public fpnn::IQuestProcessor{
     
 public:
     
+     NSString * _pid;
      FPNNConnectionSuccessCallBack _connectionSuccessCallBack;
      FPNNConnectionCloseCallBack _connectionCloseCallBack;
      FPNNListenAndReplyCallBack _listenAndReplyCallBack;
@@ -58,19 +59,32 @@ public:
     
     fpnn::FPAnswerPtr handleAnswer(std::string msgPackResult , const fpnn::FPQuestPtr quest);
     
-    FPNNCppConnectionListen(FPNNConnectionSuccessCallBack connectionSuccessCallBack,FPNNConnectionCloseCallBack connectionCloseCallBack,FPNNListenAndReplyCallBack listenAndReplyCallBack,FPNNTCPClient* client){
+    FPNNCppConnectionListen(FPNNConnectionSuccessCallBack connectionSuccessCallBack,
+                            FPNNConnectionCloseCallBack connectionCloseCallBack,
+                            FPNNListenAndReplyCallBack listenAndReplyCallBack,
+                            FPNNTCPClient* client,
+                            NSString * pid){
         _connectionSuccessCallBack = connectionSuccessCallBack;
         _connectionCloseCallBack = connectionCloseCallBack;
         _listenAndReplyCallBack = listenAndReplyCallBack;
         _client = client;
+        _pid = pid;
 //        _quest = quest;
     }
     
     
-    inline static FPNNCppConnectionListenPtr createCppConnectionListen(FPNNConnectionSuccessCallBack connectionSuccessCallBack,FPNNConnectionCloseCallBack connectionCloseCallBack,FPNNListenAndReplyCallBack listenAndReplyCallBack,FPNNTCPClient* client)
+    inline static FPNNCppConnectionListenPtr createCppConnectionListen(FPNNConnectionSuccessCallBack connectionSuccessCallBack,
+                                                                       FPNNConnectionCloseCallBack connectionCloseCallBack,
+                                                                       FPNNListenAndReplyCallBack listenAndReplyCallBack,
+                                                                       FPNNTCPClient* client,
+                                                                       NSString * pid)
     {
         
-        return FPNNCppConnectionListenPtr(new FPNNCppConnectionListen(connectionSuccessCallBack, connectionCloseCallBack, listenAndReplyCallBack,client));
+        return FPNNCppConnectionListenPtr(new FPNNCppConnectionListen(connectionSuccessCallBack,
+                                                                      connectionCloseCallBack,
+                                                                      listenAndReplyCallBack,
+                                                                      client,
+                                                                      pid));
     }
     virtual ~FPNNCppConnectionListen();
     

@@ -41,6 +41,12 @@ namespace fpnn
 			if (rev) _receivedPackage += 1;
 			return rev;
 		}
+
+		inline void setMutex(std::mutex* mutex)
+		{
+			_mutex = mutex;
+		}
+
 		inline bool getToken()
 		{
 			std::unique_lock<std::mutex> lck(*_mutex);
@@ -97,6 +103,11 @@ namespace fpnn
 
 			if (_encryptor)
 				delete _encryptor;
+		}
+
+		inline void setMutex(std::mutex* mutex)
+		{
+			_mutex = mutex;
 		}
 
 		/** returned INT: id 0, success, else, is errno. */
