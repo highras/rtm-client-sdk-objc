@@ -106,6 +106,8 @@ iOS RTM Usage document (integration + interface description)
 -(void)rtmPushRoomChatCmd:(RTMClient *)client message:(RTMMessage * _Nullable)message;
 -(void)rtmPushBroadcastChatCmd:(RTMClient *)client message:(RTMMessage * _Nullable)message;
 
+//error log
+-(void)rtmErrorLog:(NSString*)errorLog;
 ```
 
 
