@@ -1144,7 +1144,6 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
         self.loginTimeoutTimer = nil;
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [NSThread sleepForTimeInterval:0.2];
 }
 @end
 
