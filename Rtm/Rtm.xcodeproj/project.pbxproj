@@ -885,6 +885,7 @@
 		56776E8825399E8D007372C6 /* RTMReviewAnswer.h in Headers */ = {isa = PBXBuildFile; fileRef = 56776E8625399E8D007372C6 /* RTMReviewAnswer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		56776E8925399E8D007372C6 /* RTMReviewAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = 56776E8725399E8D007372C6 /* RTMReviewAnswer.m */; };
 		568A8FA2255BE1D3008805B3 /* RTMLanguageCode.h in Headers */ = {isa = PBXBuildFile; fileRef = 568A8FA1255BE1D3008805B3 /* RTMLanguageCode.h */; };
+		568DF2A7261ECE4400DAE210 /* FPLog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 568DF2A6261ECE4400DAE210 /* FPLog.mm */; };
 		568F8ED32408AA6100FE2D8A /* RTMIPv6Adapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 568F8ECF2408AA6000FE2D8A /* RTMIPv6Adapter.m */; };
 		568F8ED42408AA6100FE2D8A /* RTMIPv6PrefixResolver.mm in Sources */ = {isa = PBXBuildFile; fileRef = 568F8ED02408AA6100FE2D8A /* RTMIPv6PrefixResolver.mm */; };
 		568F8ED52408AA6100FE2D8A /* RTMIPv6PrefixResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 568F8ED12408AA6100FE2D8A /* RTMIPv6PrefixResolver.h */; };
@@ -924,7 +925,6 @@
 		56DA3F5E2594716B001926C2 /* RTMGetPushAttrsAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DA3F5C2594716B001926C2 /* RTMGetPushAttrsAnswer.m */; };
 		56DD859E2614207B00FF3239 /* RtmErrorLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 56DD859C2614207A00FF3239 /* RtmErrorLog.h */; };
 		56DD859F2614207B00FF3239 /* RtmErrorLog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 56DD859D2614207B00FF3239 /* RtmErrorLog.mm */; };
-		56DD85A4261420B300FF3239 /* FPLog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 56DD85A3261420B300FF3239 /* FPLog.mm */; };
 		56E045E3257F2FF0007BC8CA /* RTMCountAnswer.h in Headers */ = {isa = PBXBuildFile; fileRef = 56E045E1257F2FF0007BC8CA /* RTMCountAnswer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		56E045E4257F2FF0007BC8CA /* RTMCountAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = 56E045E2257F2FF0007BC8CA /* RTMCountAnswer.m */; };
 		56E045E7257FA87E007BC8CA /* FpnnDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = 56E045E5257FA87E007BC8CA /* FpnnDefine.h */; };
@@ -1854,6 +1854,7 @@
 		56776E8625399E8D007372C6 /* RTMReviewAnswer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMReviewAnswer.h; sourceTree = "<group>"; };
 		56776E8725399E8D007372C6 /* RTMReviewAnswer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMReviewAnswer.m; sourceTree = "<group>"; };
 		568A8FA1255BE1D3008805B3 /* RTMLanguageCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTMLanguageCode.h; sourceTree = "<group>"; };
+		568DF2A6261ECE4400DAE210 /* FPLog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FPLog.mm; sourceTree = "<group>"; };
 		568F8ECF2408AA6000FE2D8A /* RTMIPv6Adapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RTMIPv6Adapter.m; sourceTree = "<group>"; };
 		568F8ED02408AA6100FE2D8A /* RTMIPv6PrefixResolver.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RTMIPv6PrefixResolver.mm; sourceTree = "<group>"; };
 		568F8ED12408AA6100FE2D8A /* RTMIPv6PrefixResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTMIPv6PrefixResolver.h; sourceTree = "<group>"; };
@@ -1893,7 +1894,6 @@
 		56DA3F5C2594716B001926C2 /* RTMGetPushAttrsAnswer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMGetPushAttrsAnswer.m; sourceTree = "<group>"; };
 		56DD859C2614207A00FF3239 /* RtmErrorLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtmErrorLog.h; sourceTree = "<group>"; };
 		56DD859D2614207B00FF3239 /* RtmErrorLog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RtmErrorLog.mm; sourceTree = "<group>"; };
-		56DD85A3261420B300FF3239 /* FPLog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = FPLog.mm; path = "../../../未命名文件夹 5/FPLog.mm"; sourceTree = "<group>"; };
 		56E045E1257F2FF0007BC8CA /* RTMCountAnswer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMCountAnswer.h; sourceTree = "<group>"; };
 		56E045E2257F2FF0007BC8CA /* RTMCountAnswer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMCountAnswer.m; sourceTree = "<group>"; };
 		56E045E5257FA87E007BC8CA /* FpnnDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FpnnDefine.h; sourceTree = "<group>"; };
@@ -3415,11 +3415,11 @@
 				563BD05C243DAE4B00C6AC11 /* NetworkUtility.cpp */,
 				563BD05D243DAE4B00C6AC11 /* jenkins.c */,
 				563BD05E243DAE4B00C6AC11 /* FPLog.h */,
+				568DF2A6261ECE4400DAE210 /* FPLog.mm */,
 				563BD05F243DAE4B00C6AC11 /* TaskThreadPool.h */,
 				563BD060243DAE4B00C6AC11 /* Endian.h */,
 				563BD061243DAE4B00C6AC11 /* FileSystemUtil.cpp */,
 				563BD063243DAE4B00C6AC11 /* md5.h */,
-				56DD85A3261420B300FF3239 /* FPLog.mm */,
 				563BD064243DAE4B00C6AC11 /* Endian.cpp */,
 				563BD065243DAE4B00C6AC11 /* sha1.c */,
 				563BD066243DAE4B00C6AC11 /* sha256.h */,
@@ -4699,7 +4699,7 @@
 				563BD08B243DAE4B00C6AC11 /* UnencryptedReceiver.cpp in Sources */,
 				56E045E8257FA87E007BC8CA /* FpnnDefine.m in Sources */,
 				566F0B1523A0917700D1D949 /* FPNNTCPClient+Encryptor.mm in Sources */,
-				56DD85A4261420B300FF3239 /* FPLog.mm in Sources */,
+				568DF2A7261ECE4400DAE210 /* FPLog.mm in Sources */,
 				563BD38F243DAE4C00C6AC11 /* FpnnError.cpp in Sources */,
 				566F0B0F23A0917700D1D949 /* FPNNTCPClient+Send.mm in Sources */,
 				56EA005823B239C2002B5B77 /* RTMClient+P2P_Chat.m in Sources */,

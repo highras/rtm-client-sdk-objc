@@ -49,9 +49,11 @@ void FPLog::log(FPLogLevel currLevel,bool compulsory, const char* fileName, int3
 	if(!logItemBuffer)
 		return;
 
-	int32_t s = snprintf(logItemBuffer, FPLogBufferSize, "[%s]~[%s]~[%s@%s:%d]~[%s]: ", 
-		TimeUtil::getDateTimeMS().c_str(),
-		dbgLevelStr[currLevel], funcName, fileName, line, tag);
+//	int32_t s = snprintf(logItemBuffer, FPLogBufferSize, "[%s]~[%s]~[%s@%s:%d]~[%s]: ",
+//		TimeUtil::getDateTimeMS().c_str(),
+//		dbgLevelStr[currLevel], funcName, fileName, line, tag);
+    int32_t s = snprintf(logItemBuffer, FPLogBufferSize, "[%s]~[%s@%s:%d]~[%s]: ",
+        dbgLevelStr[currLevel], funcName, fileName, line, tag);
 
 	if (s > 0 && s < FPLogBufferSize)
 	{
