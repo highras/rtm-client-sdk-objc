@@ -345,6 +345,21 @@ self.client = [RTMClient clientWithEndpoint:
                                 timeout:(int)timeout;
 
 
+/// To detect the number of offline chats of group, unread messages can be obtained as long as they are set to saved messages. It is not limited to chat, CMD and file.
+/// @param groupIds int64 
+/// @param mtime Ms time stamp, gets the unread message after this timestamp. If mtime is empty, it will get the unread message after the last logout
+/// @param messageTypes Message type collection (if all chat related message types are not passed by default, there is no custom type)
+/// @param timeout Request timeout seconds
+/// @param successCallback 
+/// @param failCallback
+
+-(void)getGroupUnreadWithGroupIds:(NSArray<NSNumber*> * _Nonnull)groupIds
+                            mtime:(int64_t)mtime
+                     messageTypes:(NSArray<NSNumber*> * _Nullable)messageTypes
+                          timeout:(int)timeout
+                          success:(void(^)(RTMUnreadAnswer *_Nullable history))successCallback
+                             fail:(RTMAnswerFailCallBack)failCallback;
+                             
 
 /// get group history msg
 /// @param groupId int64 
