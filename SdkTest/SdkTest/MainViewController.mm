@@ -179,7 +179,7 @@
     if (indexPath.section == 0) {
 
         if (indexPath.row == 0) {//@[@"验证登录"]
-
+            
             self.client = [RTMClient clientWithEndpoint:@""
                                               projectId:0
                                                  userId:666

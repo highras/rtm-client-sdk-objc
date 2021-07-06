@@ -98,6 +98,9 @@ typedef NS_ENUM(NSInteger, RTMClientNetStatus){
     return client;
     
 }
++(NSString*)getSdkVersion{
+    return @"iOS_2.7.0";
+}
 - (instancetype)initWithEndpoint:(NSString * _Nonnull)endpoint
                        projectId:(int64_t)projectId
                           userId:(int64_t)userId
