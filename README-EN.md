@@ -233,13 +233,13 @@ self.client = [RTMClient clientWithEndpoint:
 
 
 
-/// Detect the number of P2P offline chats, as long as it is set to save the message, can get unread. Not limited to chat、cmd、file。
+/// Detect the number of offline chats in P2P. As long as the number of offline chats is set to save, unread messages can be obtained. It is not limited to chat, CMD and file.
 /// @param userIds int64 
 /// @param mtime Millisecond timestamps to get the unread messages after this timestamp. If mtime is empty, the unread messages after the last logout are obtained
 /// @param messageTypes int Message type collection (if all the default chat related message types are not transmitted, the custom type is not included)
-/// @param timeout   Request timeout seconds
-/// @param successCallback
-/// @param failCallback 
+/// @param timeout Request timeout seconds
+/// @param successCallback 
+/// @param failCallback
 
 -(void)getP2pUnreadWithUserIds:(NSArray<NSNumber*> * _Nonnull)userIds
                          mtime:(int64_t)mtime
@@ -247,10 +247,6 @@ self.client = [RTMClient clientWithEndpoint:
                        timeout:(int)timeout
                        success:(void(^)(RTMUnreadAnswer *_Nullable history))successCallback
                           fail:(RTMAnswerFailCallBack)failCallback;
--(RTMUnreadAnswer * _Nullable)getP2pUnreadWithUserIds:(NSArray<NSNumber*> * _Nonnull)userIds
-                                                mtime:(int64_t)mtime
-                                         messageTypes:(NSArray<NSNumber*> * _Nullable)messageTypes
-                                              timeout:(int)timeout;
 
 
 
