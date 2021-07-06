@@ -463,6 +463,19 @@ self.client = [RTMClient clientWithEndpoint:
                                  timeout:(int)timeout;
 
 
+/// get all members in the group
+/// @param groupId int64 
+/// @param online 
+/// @param timeout Request timeout seconds
+/// @param successCallback 
+/// @param failCallback
+-(void)getGroupMembersWithId:(NSNumber * _Nonnull)groupId
+                      online:(BOOL)online
+                     timeout:(int)timeout
+                     success:(void(^)(RTMMemberAnswer * _Nullable memberCountAnswer))successCallback
+                        fail:(RTMAnswerFailCallBack)failCallback;
+                        
+                        
 /// get user in which groups 
 /// @param timeout Request timeout seconds
 /// @param successCallback 
