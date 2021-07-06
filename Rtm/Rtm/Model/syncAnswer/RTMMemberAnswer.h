@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface RTMMemberAnswer : RTMBaseAnswer
 @property(nonatomic,strong)NSArray * dataArray;
+@property(nonatomic,strong)NSArray * onlinesArray;
 @end
 
 NS_ASSUME_NONNULL_END

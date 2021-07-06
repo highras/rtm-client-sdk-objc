@@ -32,7 +32,7 @@ namespace fpnn
 		friend class IQuestProcessor;
 
 		std::mutex* _mutex;		//-- only for sync quest to set answer map.
-		bool _isIPv4;
+		
 		bool _encrypted;
         
 		ConnectionInfo(int socket_, int port_, const std::string& ip_, bool isIPv4): _mutex(0), _isIPv4(isIPv4),
@@ -46,7 +46,7 @@ namespace fpnn
 		int socket;
 		int port;
 		std::string ip;
-
+        bool _isIPv4;
         std::string pid;
         
 		std::string str() const {

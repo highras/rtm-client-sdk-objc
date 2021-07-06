@@ -44,6 +44,8 @@
         return nil;
     }
     
+    
+    
     self = [super init];
     if (self) {
         [self _initDefaultParameters];
@@ -80,6 +82,23 @@
 //}
 
 #pragma mark get set
+-(NSString*)getIp{
+    std::string ip = _client->_connectionInfo->ip;
+    if (ip.empty()) {
+        return nil;
+    }
+    return [NSString stringWithCString:ip.c_str() encoding:NSUTF8StringEncoding];
+}
+-(int)getPort{
+    return _client->_connectionInfo->port;
+}
+-(BOOL)isIpv4{
+    if(_client->_connectionInfo->_isIPv4 == true){
+        return YES;
+    }else{
+        return false;
+    }
+}
 
 - (void *)getPrivateClient{
     void * clientPoint = &_client;

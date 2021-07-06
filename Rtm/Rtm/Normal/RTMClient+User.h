@@ -31,17 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
 -(RTMBaseAnswer*)offLineWithTimeout:(int)timeout;
 
 
-/// 踢掉一个链接（只对多用户登录有效，不能踢掉自己，可以用来实现同类设备，只容许一个登录）
-/// @param endPoint  链接的endpoint，可以通过调用 getAttrsWithTimeout 获取
-/// @param timeout 请求超时时间 秒
-/// @param successCallback 成功回调
-/// @param failCallback 失败回调
--(void)kickoutWithEndPoint:(NSString * _Nonnull)endPoint
-                   timeout:(int)timeout
-                   success:(void(^)(void))successCallback
-                      fail:(RTMAnswerFailCallBack)failCallback;
--(RTMBaseAnswer*)kickoutWithEndPoint:(NSString * _Nonnull)endPoint
-                             timeout:(int)timeout;
 
 
 /// 添加key_value形式的变量（例如设置客户端信息，会保存在当前链接中，客户端可以获取到）

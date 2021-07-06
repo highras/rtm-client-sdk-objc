@@ -113,50 +113,50 @@ static NSString *name2Key = @"nameKey2";
 
 
 
--(void)kickoutWithEndPoint:(NSString * _Nonnull)endPoint
-                   timeout:(int)timeout
-                   success:(void(^)(void))successCallback
-                      fail:(RTMAnswerFailCallBack)failCallback{
-    
-    clientConnectStatueVerify
-    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    [dic setValue:endPoint forKey:@"ce"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"kickout" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
-    BOOL result = [fpnnMainClient sendQuest:quest
-                                timeout:RTMClientSendQuestTimeout
-                                success:^(NSDictionary * _Nullable data) {
-        
-        if (successCallback) {
-            successCallback();
-        }
-    
-    }fail:^(FPNError * _Nullable error) {
-        
-          _failCallback(error);
-
-    }];
-        
-    handlerNetworkError;
-}
--(RTMBaseAnswer*)kickoutWithEndPoint:(NSString * _Nonnull)endPoint
-                         timeout:(int)timeout{
-    
-    RTMBaseAnswer * model = [RTMBaseAnswer new];
-    clientConnectStatueVerifySync
-    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
-    [dic setValue:endPoint forKey:@"ce"];
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"kickout" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
-    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
-                                        timeout:RTMClientSendQuestTimeout];
-    
-    if (answer.error == nil) {
-        
-    }else{
-        model.error = answer.error;
-    }
-    
-    return model;
-}
+//-(void)kickoutWithEndPoint:(NSString * _Nonnull)endPoint
+//                   timeout:(int)timeout
+//                   success:(void(^)(void))successCallback
+//                      fail:(RTMAnswerFailCallBack)failCallback{
+//
+//    clientConnectStatueVerify
+//    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+//    [dic setValue:endPoint forKey:@"ce"];
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"kickout" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
+//    BOOL result = [fpnnMainClient sendQuest:quest
+//                                timeout:RTMClientSendQuestTimeout
+//                                success:^(NSDictionary * _Nullable data) {
+//
+//        if (successCallback) {
+//            successCallback();
+//        }
+//
+//    }fail:^(FPNError * _Nullable error) {
+//
+//          _failCallback(error);
+//
+//    }];
+//
+//    handlerNetworkError;
+//}
+//-(RTMBaseAnswer*)kickoutWithEndPoint:(NSString * _Nonnull)endPoint
+//                         timeout:(int)timeout{
+//
+//    RTMBaseAnswer * model = [RTMBaseAnswer new];
+//    clientConnectStatueVerifySync
+//    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+//    [dic setValue:endPoint forKey:@"ce"];
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"kickout" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
+//    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
+//                                        timeout:RTMClientSendQuestTimeout];
+//
+//    if (answer.error == nil) {
+//
+//    }else{
+//        model.error = answer.error;
+//    }
+//
+//    return model;
+//}
 
 
 

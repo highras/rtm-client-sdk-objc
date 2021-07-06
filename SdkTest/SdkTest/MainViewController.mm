@@ -426,16 +426,10 @@
 
             }else if (indexPath.row == 6){//获取group中的所有member
 
-                [self.client getGroupMembersWithId:@(666)
-                                           timeout:10
-                                           success:^(NSArray * _Nullable uidsArray) {
-
-                    NSLog(@"%@",uidsArray);
-
+                [self.client getGroupMembersWithId:@(666) online:YES timeout:10 success:^(RTMMemberAnswer * _Nullable memberCountAnswer) {
+                    
                 } fail:^(FPNError * _Nullable error) {
-
-                    NSLog(@"%@",error);
-
+                    
                 }];
 
             }else if (indexPath.row == 7){//获取用户在哪些组里
@@ -910,20 +904,9 @@
 
                         }];
 
-                    }else if (indexPath.row == 1){//踢掉一个链接（只对多用户登录有效，不能踢掉自己，可以用来实现同类设备，只容许一个登录）
+                    }else if (indexPath.row == 1){
 
-                        [self.client kickoutWithEndPoint:@"endpoint"
-                                                 timeout:10
-                                                 success:^{
-
-                            NSLog(@"kickoutWithEndPoint success");
-
-                        } fail:^(FPNError * _Nullable error) {
-
-                            NSLog(@"%@",error);
-
-                        }];
-
+                        
                     }else if (indexPath.row == 2){//添加key_value形式的变量（例如设置客户端信息，会保存在当前链接中，客户端可以获取到）
 
                         [self.client addAttrsWithAttrs:@{@"key2":@"value2"}
@@ -1650,7 +1633,7 @@
         @{
             @"typeName":@"用户接口",
             @"names":@[@"客户端主动断开",
-                       @"踢掉一个链接（只对多用户登录有效，不能踢掉自己，可以用来实现同类设备，只容许一个登录）",
+                       @"踢掉一个链接（只对多用户登录有效，不能踢掉自己，可以用来实现同类设备，只容许一个登录）--- 已废弃",
                        @"添加key_value形式的变量（例如设置客户端信息，会保存在当前链接中，客户端可以获取到）",
                        @"获取attrs",
                        @"检测离线聊天  只有通过Chat类接口才会产生",

@@ -37,6 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype _Nullable)clientWithEndpoint:(NSString * _Nonnull)endpoint pid:(NSString *)pid;;
 //+ (instancetype _Nullable)clientWithHost:(NSString * _Nonnull)host port:(int)port;
 
+-(NSString*)getIp;
+-(int)getPort;
+-(BOOL)isIpv4;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

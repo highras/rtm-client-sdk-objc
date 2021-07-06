@@ -9,6 +9,9 @@
 #import "AppDelegate.h"
 #import <Rtm/Rtm.h>
 #import "MainViewController.h"
+#include <atomic>
+#include <mutex>
+#include <memory>
 @interface AppDelegate ()
 
 @end
@@ -22,8 +25,6 @@
     UINavigationController * nav = [[UINavigationController alloc]initWithRootViewController:[[MainViewController alloc]init] ];
     [self.window setRootViewController:nav];
     [self.window makeKeyAndVisible];
-    
-    
     
     return YES;
 }

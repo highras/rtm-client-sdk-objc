@@ -165,72 +165,138 @@
 
 
 
+//-(void)getGroupUnreadWithGroupIds:(NSArray<NSNumber*> * _Nonnull)groupIds
+//                            mtime:(int64_t)mtime
+//                     messageTypes:(NSArray<NSNumber*> * _Nullable)messageTypes
+//                          timeout:(int)timeout
+//                          success:(void(^)(RTMUnreadAnswer * _Nullable unreadAnswer))successCallback
+//                             fail:(RTMAnswerFailCallBack)failCallback{
+//
+//
+//    clientConnectStatueVerify
+//    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+//    [dic setValue:groupIds forKey:@"gids"];
+//    [dic setValue:@(mtime) forKey:@"mtime"];
+//    [dic setValue:messageTypes forKey:@"mtypes"];
+//
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getgroupunread" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
+//
+//    BOOL result = [fpnnMainClient sendQuest:quest
+//                                timeout:RTMClientSendQuestTimeout
+//                                success:^(NSDictionary * _Nullable data) {
+//
+//
+//        if (successCallback) {
+//            RTMUnreadAnswer* unreadAnswer  = [RTMUnreadAnswer new];
+//            unreadAnswer.unreadDictionary = [data objectForKey:@"group"];
+//            successCallback(unreadAnswer);
+//        }
+//
+//    }fail:^(FPNError * _Nullable error) {
+//
+//          _failCallback(error);
+//
+//    }];
+//
+//    handlerNetworkError;
+//
+//}
+//
+//-(RTMUnreadAnswer *)getGroupUnreadWithGroupIds:(NSArray<NSNumber*> * _Nonnull)groupIds
+//                                         mtime:(int64_t)mtime
+//                                  messageTypes:(NSArray<NSNumber*> * _Nullable)messageTypes
+//                                       timeout:(int)timeout{
+//
+//        RTMUnreadAnswer* model  = [RTMUnreadAnswer new];
+//        clientConnectStatueVerifySync
+//
+//        NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+//        [dic setValue:groupIds forKey:@"gids"];
+//        [dic setValue:@(mtime) forKey:@"mtime"];
+//        [dic setValue:messageTypes forKey:@"mtypes"];
+//
+//        FPNNQuest * quest = [FPNNQuest questWithMethod:@"getgroupunread" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
+//        FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
+//                                           timeout:RTMClientSendQuestTimeout];
+//
+//        if (answer.error == nil) {
+//
+//            model.unreadDictionary = [answer.responseData objectForKey:@"group"];
+//
+//        }else{
+//            model.error = answer.error;
+//        }
+//
+//        return model;
+//
+//}
 -(void)getGroupUnreadWithGroupIds:(NSArray<NSNumber*> * _Nonnull)groupIds
                             mtime:(int64_t)mtime
                      messageTypes:(NSArray<NSNumber*> * _Nullable)messageTypes
                           timeout:(int)timeout
                           success:(void(^)(RTMUnreadAnswer * _Nullable unreadAnswer))successCallback
                              fail:(RTMAnswerFailCallBack)failCallback{
-    
-    
+
+
     clientConnectStatueVerify
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:groupIds forKey:@"gids"];
     [dic setValue:@(mtime) forKey:@"mtime"];
     [dic setValue:messageTypes forKey:@"mtypes"];
-    
+
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getgroupunread" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
-    
+
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
-        
-        
+
+
         if (successCallback) {
             RTMUnreadAnswer* unreadAnswer  = [RTMUnreadAnswer new];
             unreadAnswer.unreadDictionary = [data objectForKey:@"group"];
+            unreadAnswer.lastMsgTimeDictionary = [data objectForKey:@"ltime"];
             successCallback(unreadAnswer);
         }
-    
+
     }fail:^(FPNError * _Nullable error) {
-        
+
           _failCallback(error);
 
     }];
-        
+
     handlerNetworkError;
-    
+
 }
 
 -(RTMUnreadAnswer *)getGroupUnreadWithGroupIds:(NSArray<NSNumber*> * _Nonnull)groupIds
                                          mtime:(int64_t)mtime
                                   messageTypes:(NSArray<NSNumber*> * _Nullable)messageTypes
                                        timeout:(int)timeout{
-    
+
         RTMUnreadAnswer* model  = [RTMUnreadAnswer new];
         clientConnectStatueVerifySync
-        
+
         NSMutableDictionary * dic = [NSMutableDictionary dictionary];
         [dic setValue:groupIds forKey:@"gids"];
         [dic setValue:@(mtime) forKey:@"mtime"];
         [dic setValue:messageTypes forKey:@"mtypes"];
-        
+
         FPNNQuest * quest = [FPNNQuest questWithMethod:@"getgroupunread" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
         FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                            timeout:RTMClientSendQuestTimeout];
-        
+
         if (answer.error == nil) {
-            
+
             model.unreadDictionary = [answer.responseData objectForKey:@"group"];
-            
+            model.lastMsgTimeDictionary = [answer.responseData objectForKey:@"ltime"];
+
         }else{
             model.error = answer.error;
         }
-        
-        return model;
-    
-}
 
+        return model;
+
+}
 
 
 
@@ -625,21 +691,144 @@
 
 
 
+//-(void)getGroupMembersWithId:(NSNumber * _Nonnull)groupId
+//                     timeout:(int)timeout
+//                     success:(void(^)(NSArray * _Nullable uidsArray))successCallback
+//                        fail:(RTMAnswerFailCallBack)failCallback{
+//
+//    clientConnectStatueVerify
+//    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+//    [dic setValue:groupId forKey:@"gid"];
+//
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getgroupmembers" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
+//    BOOL result = [fpnnMainClient sendQuest:quest
+//                                timeout:RTMClientSendQuestTimeout
+//                                success:^(NSDictionary * _Nullable data) {
+//        if (successCallback) {
+//            successCallback([data objectForKey:@"uids"]);
+//        }
+//
+//    }fail:^(FPNError * _Nullable error) {
+//
+//        _failCallback(error);
+//
+//    }];
+//
+//
+//    handlerNetworkError;
+//
+//}
+//-(RTMMemberAnswer*)getGroupMembersWithId:(NSNumber * _Nonnull)groupId
+//                                 timeout:(int)timeout{
+//
+//    RTMMemberAnswer * model = [RTMMemberAnswer new];
+//    clientConnectStatueVerifySync
+//
+//    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+//    [dic setValue:groupId forKey:@"gid"];
+//
+//    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getgroupmembers" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
+//    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
+//                                       timeout:RTMClientSendQuestTimeout];
+//
+//    if (answer.error == nil) {
+////        NSLog(@"%@",answer.responseData);
+//        model.dataArray = [answer.responseData objectForKey:@"uids"];
+//
+//    }else{
+//        model.error = answer.error;
+//    }
+//
+//    return model;
+//
+//
+//
+//}
 -(void)getGroupMembersWithId:(NSNumber * _Nonnull)groupId
+                      online:(BOOL)online
                      timeout:(int)timeout
-                     success:(void(^)(NSArray * _Nullable uidsArray))successCallback
+                     success:(void(^)(RTMMemberAnswer * _Nullable model))successCallback
                         fail:(RTMAnswerFailCallBack)failCallback{
-    
+
     clientConnectStatueVerify
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:groupId forKey:@"gid"];
-    
+    [dic setValue:@(online) forKey:@"online"];
+
     FPNNQuest * quest = [FPNNQuest questWithMethod:@"getgroupmembers" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     BOOL result = [fpnnMainClient sendQuest:quest
                                 timeout:RTMClientSendQuestTimeout
                                 success:^(NSDictionary * _Nullable data) {
         if (successCallback) {
-            successCallback([data objectForKey:@"uids"]);
+            RTMMemberAnswer * model = [RTMMemberAnswer new];
+            model.dataArray = [data objectForKey:@"uids"];
+            model.onlinesArray = [data objectForKey:@"onlines"];
+            successCallback(model);
+        }
+
+    }fail:^(FPNError * _Nullable error) {
+
+        _failCallback(error);
+
+    }];
+
+
+    handlerNetworkError;
+
+}
+-(RTMMemberAnswer*)getGroupMembersWithId:(NSNumber * _Nonnull)groupId
+                                  online:(BOOL)online
+                                 timeout:(int)timeout{
+
+    RTMMemberAnswer * model = [RTMMemberAnswer new];
+    clientConnectStatueVerifySync
+
+    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+    [dic setValue:groupId forKey:@"gid"];
+    [dic setValue:@(online) forKey:@"online"];
+
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getgroupmembers" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
+    FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
+                                       timeout:RTMClientSendQuestTimeout];
+
+    if (answer.error == nil) {
+//        NSLog(@"%@",answer.responseData);
+        model.dataArray = [answer.responseData objectForKey:@"uids"];
+        model.onlinesArray = [answer.responseData objectForKey:@"onlines"];
+
+    }else{
+        model.error = answer.error;
+    }
+
+    return model;
+
+
+
+}
+
+
+-(void)getGroupCountWithId:(NSNumber * _Nonnull)groupId
+                    online:(BOOL)online
+                   timeout:(int)timeout
+                   success:(void(^)(RTMMemberCountAnswer * _Nullable memberCountAnswer))successCallback
+                      fail:(RTMAnswerFailCallBack)failCallback{
+    
+    
+    clientConnectStatueVerify
+    NSMutableDictionary * dic = [NSMutableDictionary dictionary];
+    [dic setValue:groupId forKey:@"gid"];
+    [dic setValue:@(online) forKey:@"online"];
+    
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getgroupcount" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
+    BOOL result = [fpnnMainClient sendQuest:quest
+                                timeout:RTMClientSendQuestTimeout
+                                success:^(NSDictionary * _Nullable data) {
+//        NSLog(@"%@",data);
+        if (successCallback) {
+            RTMMemberCountAnswer * model = [RTMMemberCountAnswer new];
+            model.count = [[data objectForKey:@"cn"] longLongValue];
+            model.onlineCount = [[data objectForKey:@"online"] longLongValue];
+            successCallback(model);
         }
 
     }fail:^(FPNError * _Nullable error) {
@@ -652,30 +841,32 @@
     handlerNetworkError;
     
 }
--(RTMMemberAnswer*)getGroupMembersWithId:(NSNumber * _Nonnull)groupId
-                                 timeout:(int)timeout{
+-(RTMMemberCountAnswer*)getGroupCountWithId:(NSNumber * _Nonnull)groupId
+                                     online:(BOOL)online
+                                    timeout:(int)timeout{
     
-    RTMMemberAnswer * model = [RTMMemberAnswer new];
+    
+    RTMMemberCountAnswer * model = [RTMMemberCountAnswer new];
     clientConnectStatueVerifySync
     
     NSMutableDictionary * dic = [NSMutableDictionary dictionary];
     [dic setValue:groupId forKey:@"gid"];
+    [dic setValue:@(online) forKey:@"online"];
     
-    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getgroupmembers" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
+    FPNNQuest * quest = [FPNNQuest questWithMethod:@"getgroupcount" message:dic twoWay:YES pid:[NSString stringWithFormat:@"%lld",self.projectId]];
     FPNNAnswer * answer = [fpnnMainClient sendQuest:quest
                                        timeout:RTMClientSendQuestTimeout];
     
     if (answer.error == nil) {
 //        NSLog(@"%@",answer.responseData);
-        model.dataArray = [answer.responseData objectForKey:@"uids"];
+        model.count = [[answer.responseData objectForKey:@"cn"] longLongValue];
+        model.onlineCount = [[answer.responseData objectForKey:@"online"] longLongValue];
         
     }else{
         model.error = answer.error;
     }
     
     return model;
-    
-    
     
 }
 

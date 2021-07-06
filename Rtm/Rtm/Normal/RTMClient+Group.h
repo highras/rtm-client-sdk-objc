@@ -18,6 +18,7 @@
 #import "RTMSpeechRecognitionAnswer.h"
 #import "RTMAttriAnswer.h"
 #import "RTMUnreadAnswer.h"
+#import "RTMMemberCountAnswer.h"
 NS_ASSUME_NONNULL_BEGIN
 
 
@@ -190,17 +191,41 @@ NS_ASSUME_NONNULL_BEGIN
                                   timeout:(int)timeout;
 
 
+
+
+/// 获取group中的用户数量   online = true，则返回在线数量
+/// @param groupId int64 群组id
+/// @param online bool 是否返回在线数量
+/// @param timeout 请求超时时间 秒
+/// @param successCallback 成功回调
+/// @param failCallback 失败回调
+-(void)getGroupCountWithId:(NSNumber * _Nonnull)groupId
+                    online:(BOOL)online
+                   timeout:(int)timeout
+                   success:(void(^)(RTMMemberCountAnswer * _Nullable memberCountAnswer))successCallback
+                      fail:(RTMAnswerFailCallBack)failCallback;
+-(RTMMemberCountAnswer*)getGroupCountWithId:(NSNumber * _Nonnull)groupId
+                                     online:(BOOL)online
+                                    timeout:(int)timeout;
+
+
+
 /// 获取group中的所有member
 /// @param groupId int64 群组id
+/// @param online 是否在线
 /// @param timeout 请求超时时间 秒
 /// @param successCallback 成功回调
 /// @param failCallback 失败回调
 -(void)getGroupMembersWithId:(NSNumber * _Nonnull)groupId
+                      online:(BOOL)online
                      timeout:(int)timeout
-                     success:(void(^)(NSArray * _Nullable uidsArray))successCallback
+                     success:(void(^)(RTMMemberAnswer * _Nullable memberCountAnswer))successCallback
                         fail:(RTMAnswerFailCallBack)failCallback;
 -(RTMMemberAnswer*)getGroupMembersWithId:(NSNumber * _Nonnull)groupId
+                                  online:(BOOL)online
                                  timeout:(int)timeout;
+
+
 
 
 /// 获取用户在哪些组里

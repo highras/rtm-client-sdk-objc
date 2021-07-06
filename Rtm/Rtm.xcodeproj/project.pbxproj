@@ -26,6 +26,8 @@
 		56058E0D23AA0F2200523627 /* RTMAsyncAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = 56058E0B23AA0F2200523627 /* RTMAsyncAnswer.m */; };
 		56058E1023AB1B0D00523627 /* NSData+RTMTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 56058E0E23AB1B0D00523627 /* NSData+RTMTools.h */; };
 		56058E1123AB1B0D00523627 /* NSData+RTMTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 56058E0F23AB1B0D00523627 /* NSData+RTMTools.m */; };
+		562463F92692DDA800A425B0 /* RTMMemberCountAnswer.h in Headers */ = {isa = PBXBuildFile; fileRef = 562463F72692DDA800A425B0 /* RTMMemberCountAnswer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		562463FA2692DDA800A425B0 /* RTMMemberCountAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = 562463F82692DDA800A425B0 /* RTMMemberCountAnswer.m */; };
 		5627135723A790E1009EF54E /* NSString+RTMTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 5627135523A790E1009EF54E /* NSString+RTMTools.h */; };
 		5627135823A790E1009EF54E /* NSString+RTMTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 5627135623A790E1009EF54E /* NSString+RTMTools.m */; };
 		5627135A23A7AEF1009EF54E /* RTMProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 5627135923A7AEF1009EF54E /* RTMProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -992,6 +994,8 @@
 		56058E0B23AA0F2200523627 /* RTMAsyncAnswer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMAsyncAnswer.m; sourceTree = "<group>"; };
 		56058E0E23AB1B0D00523627 /* NSData+RTMTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSData+RTMTools.h"; sourceTree = "<group>"; };
 		56058E0F23AB1B0D00523627 /* NSData+RTMTools.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+RTMTools.m"; sourceTree = "<group>"; };
+		562463F72692DDA800A425B0 /* RTMMemberCountAnswer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMMemberCountAnswer.h; sourceTree = "<group>"; };
+		562463F82692DDA800A425B0 /* RTMMemberCountAnswer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RTMMemberCountAnswer.m; sourceTree = "<group>"; };
 		5627135523A790E1009EF54E /* NSString+RTMTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+RTMTools.h"; sourceTree = "<group>"; };
 		5627135623A790E1009EF54E /* NSString+RTMTools.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+RTMTools.m"; sourceTree = "<group>"; };
 		5627135923A7AEF1009EF54E /* RTMProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTMProtocol.h; sourceTree = "<group>"; };
@@ -3710,6 +3714,8 @@
 				56DA3F5C2594716B001926C2 /* RTMGetPushAttrsAnswer.m */,
 				5647F0F725AD825C007A4414 /* RTMRoomMemberCountAnswer.h */,
 				5647F0F825AD825C007A4414 /* RTMRoomMemberCountAnswer.m */,
+				562463F72692DDA800A425B0 /* RTMMemberCountAnswer.h */,
+				562463F82692DDA800A425B0 /* RTMMemberCountAnswer.m */,
 			);
 			path = syncAnswer;
 			sourceTree = "<group>";
@@ -3736,6 +3742,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				562463F92692DDA800A425B0 /* RTMMemberCountAnswer.h in Headers */,
 				5647F0F925AD825C007A4414 /* RTMRoomMemberCountAnswer.h in Headers */,
 				56DA3F5D2594716B001926C2 /* RTMGetPushAttrsAnswer.h in Headers */,
 				56E045E3257F2FF0007BC8CA /* RTMCountAnswer.h in Headers */,
@@ -4778,6 +4785,7 @@
 				56D2B0A223B9A19100491DF7 /* NSDictionary+MPMessagePack.m in Sources */,
 				56D2B09D23B9A19100491DF7 /* NSArray+MPMessagePack.m in Sources */,
 				56DD859F2614207B00FF3239 /* RtmErrorLog.mm in Sources */,
+				562463FA2692DDA800A425B0 /* RTMMemberCountAnswer.m in Sources */,
 				566F0E4423A0993300D1D949 /* RTMClient+P2P.m in Sources */,
 				563BD092243DAE4B00C6AC11 /* TCPClient.cpp in Sources */,
 				56D2B09A23B9A19100491DF7 /* NSData+MPMessagePack.m in Sources */,

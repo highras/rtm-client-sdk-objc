@@ -27,6 +27,8 @@ namespace fpnn
 	public:
 		static const char* SDKVersion;
         std::string _pid;
+        ConnectionInfoPtr    _connectionInfo;
+        
 	private:
 		enum class ConnStatus
 		{
@@ -44,7 +46,7 @@ namespace fpnn
 		ClientEnginePtr _engine;
         
 		IQuestProcessorPtr _questProcessor;
-		ConnectionInfoPtr	_connectionInfo;
+		
 		std::string _endpoint;
 
 		int _timeoutQuest;
