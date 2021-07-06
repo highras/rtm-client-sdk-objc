@@ -454,6 +454,22 @@ self.client = [RTMClient clientWithEndpoint:
 -(RTMBaseAnswer*)deleteGroupMembersWithId:(NSNumber * _Nonnull)groupId
                                 membersId:(NSArray <NSNumber* >* _Nonnull)membersId
                                   timeout:(int)timeout;
+                                  
+                                  
+/// 获取group中的用户数量   online = true，则返回在线数量
+/// @param groupId int64 群组id
+/// @param online bool 是否返回在线数量
+/// @param timeout 请求超时时间 秒
+/// @param successCallback 成功回调
+/// @param failCallback 失败回调
+-(void)getGroupCountWithId:(NSNumber * _Nonnull)groupId
+                    online:(BOOL)online
+                   timeout:(int)timeout
+                   success:(void(^)(RTMMemberCountAnswer * _Nullable memberCountAnswer))successCallback
+                      fail:(RTMAnswerFailCallBack)failCallback;
+-(RTMMemberCountAnswer*)getGroupCountWithId:(NSNumber * _Nonnull)groupId
+                                     online:(BOOL)online
+                                    timeout:(int)timeout;
 
 
 /// 获取group中的所有member
