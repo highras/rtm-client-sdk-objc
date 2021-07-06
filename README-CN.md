@@ -341,7 +341,20 @@ self.client = [RTMClient clientWithEndpoint:
                                   attrs:(NSString * _Nonnull)attrs
                                 timeout:(int)timeout;
 
+/// 检测group离线聊天数目   只要是设置为保存的消息，均可获取未读。不限于 chat、cmd、file。
+/// @param groupIds int64 用户集合
+/// @param mtime 毫秒级时间戳，获取这个时间戳之后的未读消息，如果mtime 为空，则获取上一次logout后的未读消息
+/// @param messageTypes int 消息类型集合 (如果不传默认所有聊天相关消息类型，不包含自定义的type)
+/// @param timeout 请求超时时间 秒
+/// @param successCallback 成功回调
+/// @param failCallback 失败回调
 
+-(void)getGroupUnreadWithGroupIds:(NSArray<NSNumber*> * _Nonnull)groupIds
+                            mtime:(int64_t)mtime
+                     messageTypes:(NSArray<NSNumber*> * _Nullable)messageTypes
+                          timeout:(int)timeout
+                          success:(void(^)(RTMUnreadAnswer *_Nullable history))successCallback
+                             fail:(RTMAnswerFailCallBack)failCallback;
 
 /// 获取group历史消息
 /// @param groupId int64 获取group历史消息
