@@ -449,15 +449,15 @@ self.client = [RTMClient clientWithEndpoint:
 
 /// 获取group中的所有member
 /// @param groupId int64 群组id
+/// @param online 是否在线
 /// @param timeout 请求超时时间 秒
 /// @param successCallback 成功回调
 /// @param failCallback 失败回调
 -(void)getGroupMembersWithId:(NSNumber * _Nonnull)groupId
+                      online:(BOOL)online
                      timeout:(int)timeout
-                     success:(void(^)(NSArray * _Nullable uidsArray))successCallback
+                     success:(void(^)(RTMMemberAnswer * _Nullable memberCountAnswer))successCallback
                         fail:(RTMAnswerFailCallBack)failCallback;
--(RTMMemberAnswer*)getGroupMembersWithId:(NSNumber * _Nonnull)groupId
-                                 timeout:(int)timeout;
 
 
 /// 获取用户在哪些组里
