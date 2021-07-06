@@ -234,7 +234,7 @@ self.client = [RTMClient clientWithEndpoint:
 /// 检测p2p离线聊天数目  只要是设置为保存的消息，均可获取未读。不限于 chat、cmd、file。
 /// @param userIds int64 用户集合
 /// @param mtime 毫秒级时间戳，获取这个时间戳之后的未读消息，如果mtime 为空，则获取上一次logout后的未读消息
-/// @param messageTypes int 消息类型集合 (如果不传默认所有聊天相关消息类型，不包含自定义的type)
+/// @param messageTypes int 消息类型集合 (获取指定mtype的未读消息，为空则获取聊天相关未读消息 只要是设置为保存的消息，均可获取未读。不限于 chat、cmd、file)
 /// @param timeout 请求超时时间 秒
 /// @param successCallback 成功回调
 /// @param failCallback 失败回调
@@ -245,10 +245,6 @@ self.client = [RTMClient clientWithEndpoint:
                        timeout:(int)timeout
                        success:(void(^)(RTMUnreadAnswer *_Nullable history))successCallback
                           fail:(RTMAnswerFailCallBack)failCallback;
--(RTMUnreadAnswer * _Nullable)getP2pUnreadWithUserIds:(NSArray<NSNumber*> * _Nonnull)userIds
-                                                mtime:(int64_t)mtime
-                                         messageTypes:(NSArray<NSNumber*> * _Nullable)messageTypes
-                                              timeout:(int)timeout;
 
 
 /// 删除消息 p2p
@@ -345,7 +341,20 @@ self.client = [RTMClient clientWithEndpoint:
                                   attrs:(NSString * _Nonnull)attrs
                                 timeout:(int)timeout;
 
+/// 检测group离线聊天数目   只要是设置为保存的消息，均可获取未读。不限于 chat、cmd、file。
+/// @param groupIds int64 用户集合
+/// @param mtime 毫秒级时间戳，获取这个时间戳之后的未读消息，如果mtime 为空，则获取上一次logout后的未读消息
+/// @param messageTypes int 消息类型集合 (如果不传默认所有聊天相关消息类型，不包含自定义的type)
+/// @param timeout 请求超时时间 秒
+/// @param successCallback 成功回调
+/// @param failCallback 失败回调
 
+-(void)getGroupUnreadWithGroupIds:(NSArray<NSNumber*> * _Nonnull)groupIds
+                            mtime:(int64_t)mtime
+                     messageTypes:(NSArray<NSNumber*> * _Nullable)messageTypes
+                          timeout:(int)timeout
+                          success:(void(^)(RTMUnreadAnswer *_Nullable history))successCallback
+                             fail:(RTMAnswerFailCallBack)failCallback;
 
 /// 获取group历史消息
 /// @param groupId int64 获取group历史消息
@@ -445,19 +454,35 @@ self.client = [RTMClient clientWithEndpoint:
 -(RTMBaseAnswer*)deleteGroupMembersWithId:(NSNumber * _Nonnull)groupId
                                 membersId:(NSArray <NSNumber* >* _Nonnull)membersId
                                   timeout:(int)timeout;
+                                  
+                                  
+/// 获取group中的用户数量   online = true，则返回在线数量
+/// @param groupId int64 群组id
+/// @param online bool 是否返回在线数量
+/// @param timeout 请求超时时间 秒
+/// @param successCallback 成功回调
+/// @param failCallback 失败回调
+-(void)getGroupCountWithId:(NSNumber * _Nonnull)groupId
+                    online:(BOOL)online
+                   timeout:(int)timeout
+                   success:(void(^)(RTMMemberCountAnswer * _Nullable memberCountAnswer))successCallback
+                      fail:(RTMAnswerFailCallBack)failCallback;
+-(RTMMemberCountAnswer*)getGroupCountWithId:(NSNumber * _Nonnull)groupId
+                                     online:(BOOL)online
+                                    timeout:(int)timeout;
 
 
 /// 获取group中的所有member
 /// @param groupId int64 群组id
+/// @param online 是否在线
 /// @param timeout 请求超时时间 秒
 /// @param successCallback 成功回调
 /// @param failCallback 失败回调
 -(void)getGroupMembersWithId:(NSNumber * _Nonnull)groupId
+                      online:(BOOL)online
                      timeout:(int)timeout
-                     success:(void(^)(NSArray * _Nullable uidsArray))successCallback
+                     success:(void(^)(RTMMemberAnswer * _Nullable memberCountAnswer))successCallback
                         fail:(RTMAnswerFailCallBack)failCallback;
--(RTMMemberAnswer*)getGroupMembersWithId:(NSNumber * _Nonnull)groupId
-                                 timeout:(int)timeout;
 
 
 /// 获取用户在哪些组里

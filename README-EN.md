@@ -233,13 +233,13 @@ self.client = [RTMClient clientWithEndpoint:
 
 
 
-/// Detect the number of P2P offline chats, as long as it is set to save the message, can get unread. Not limited to chat、cmd、file。
+/// Detect the number of offline chats in P2P. As long as the number of offline chats is set to save, unread messages can be obtained. It is not limited to chat, CMD and file.
 /// @param userIds int64 
 /// @param mtime Millisecond timestamps to get the unread messages after this timestamp. If mtime is empty, the unread messages after the last logout are obtained
 /// @param messageTypes int Message type collection (if all the default chat related message types are not transmitted, the custom type is not included)
-/// @param timeout   Request timeout seconds
-/// @param successCallback
-/// @param failCallback 
+/// @param timeout Request timeout seconds
+/// @param successCallback 
+/// @param failCallback
 
 -(void)getP2pUnreadWithUserIds:(NSArray<NSNumber*> * _Nonnull)userIds
                          mtime:(int64_t)mtime
@@ -247,10 +247,6 @@ self.client = [RTMClient clientWithEndpoint:
                        timeout:(int)timeout
                        success:(void(^)(RTMUnreadAnswer *_Nullable history))successCallback
                           fail:(RTMAnswerFailCallBack)failCallback;
--(RTMUnreadAnswer * _Nullable)getP2pUnreadWithUserIds:(NSArray<NSNumber*> * _Nonnull)userIds
-                                                mtime:(int64_t)mtime
-                                         messageTypes:(NSArray<NSNumber*> * _Nullable)messageTypes
-                                              timeout:(int)timeout;
 
 
 
@@ -349,6 +345,21 @@ self.client = [RTMClient clientWithEndpoint:
                                 timeout:(int)timeout;
 
 
+/// To detect the number of offline chats of group, unread messages can be obtained as long as they are set to saved messages. It is not limited to chat, CMD and file.
+/// @param groupIds int64 
+/// @param mtime Ms time stamp, gets the unread message after this timestamp. If mtime is empty, it will get the unread message after the last logout
+/// @param messageTypes Message type collection (if all chat related message types are not passed by default, there is no custom type)
+/// @param timeout Request timeout seconds
+/// @param successCallback 
+/// @param failCallback
+
+-(void)getGroupUnreadWithGroupIds:(NSArray<NSNumber*> * _Nonnull)groupIds
+                            mtime:(int64_t)mtime
+                     messageTypes:(NSArray<NSNumber*> * _Nullable)messageTypes
+                          timeout:(int)timeout
+                          success:(void(^)(RTMUnreadAnswer *_Nullable history))successCallback
+                             fail:(RTMAnswerFailCallBack)failCallback;
+                             
 
 /// get group history msg
 /// @param groupId int64 
@@ -450,6 +461,19 @@ self.client = [RTMClient clientWithEndpoint:
                                   timeout:(int)timeout;
 
 
+/// Get the number of users in the group. If online = true, the number of online users will be returned
+/// @param groupId int64 
+/// @param online bool 
+/// @param timeout Request timeout seconds
+/// @param successCallback 
+/// @param failCallback
+-(void)getGroupCountWithId:(NSNumber * _Nonnull)groupId
+                    online:(BOOL)online
+                   timeout:(int)timeout
+                   success:(void(^)(RTMMemberCountAnswer * _Nullable memberCountAnswer))successCallback
+                      fail:(RTMAnswerFailCallBack)failCallback;
+                      
+
 /// get all group member
 /// @param groupId int64 
 /// @param timeout Request timeout seconds
@@ -463,6 +487,19 @@ self.client = [RTMClient clientWithEndpoint:
                                  timeout:(int)timeout;
 
 
+/// get all members in the group
+/// @param groupId int64 
+/// @param online 
+/// @param timeout Request timeout seconds
+/// @param successCallback 
+/// @param failCallback
+-(void)getGroupMembersWithId:(NSNumber * _Nonnull)groupId
+                      online:(BOOL)online
+                     timeout:(int)timeout
+                     success:(void(^)(RTMMemberAnswer * _Nullable memberCountAnswer))successCallback
+                        fail:(RTMAnswerFailCallBack)failCallback;
+                        
+                        
 /// get user in which groups 
 /// @param timeout Request timeout seconds
 /// @param successCallback 
