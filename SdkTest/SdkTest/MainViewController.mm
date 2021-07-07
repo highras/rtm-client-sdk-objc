@@ -177,7 +177,7 @@
 
 #pragma mark 验证登录
     if (indexPath.section == 0) {
-
+        
         if (indexPath.row == 0) {//@[@"验证登录"]
             
             self.client = [RTMClient clientWithEndpoint:@""

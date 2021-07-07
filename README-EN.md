@@ -1047,17 +1047,6 @@ self.client = [RTMClient clientWithEndpoint:
 -(RTMBaseAnswer*)offLineWithTimeout:(int)timeout;
 
 
-/// Kick off a link (only valid for multi-user login, can't kick yourself off, can be used to implement similar devices, only one login is allowed)
-/// @param endPoint  link endpoint，through getAttrsWithTimeout get
-/// @param timeout Request timeout seconds
-/// @param successCallback 
-/// @param failCallback
--(void)kickoutWithEndPoint:(NSString * _Nonnull)endPoint
-                   timeout:(int)timeout
-                   success:(void(^)(void))successCallback
-                      fail:(RTMAnswerFailCallBack)failCallback;
--(RTMBaseAnswer*)kickoutWithEndPoint:(NSString * _Nonnull)endPoint
-                             timeout:(int)timeout;
 
 
 /// Key add_ Variable in the form of value (for example, setting the client information will be saved in the current link and the client can get it)
